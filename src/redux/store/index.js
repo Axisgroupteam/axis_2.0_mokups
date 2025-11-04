@@ -11,7 +11,6 @@ import {
   REGISTER,
 } from "redux-persist";
 import rootReducer from "@/redux/store/root.reducer";
-import apiSlice from "@/redux/api/index";
 
 const persistConfig = {
   key: "root",
@@ -28,7 +27,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware);
+    });
   },
 });
 
