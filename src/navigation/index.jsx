@@ -1,5 +1,4 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import LandingPage from "@/pages/Landing";
 import PublicRoutes from "./public";
 import useUserDetails from "@/hooks/useUserDetails";
 import AuthenticatedRoutes from "./auth";
@@ -16,6 +15,7 @@ const Root = () => {
             path="/app/*"
             element={<AuthenticatedRoutes userRole={"All"} />}
           />
+          <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
         </>
       ) : (
         <>
@@ -23,8 +23,6 @@ const Root = () => {
           <Route path="/*" element={<PublicRoutes />} />
         </>
       )}
-
-      <Route path="/" element={<LandingPage />} />
     </Routes>
   );
 };

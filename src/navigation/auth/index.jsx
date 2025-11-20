@@ -27,7 +27,7 @@ const AuthenticatedRoutes = ({ userRole }) => {
         <Route key={route.path} path={route.path} element={route.element} />
       ))}
 
-      <Route path="*" element={<Navigate to="/entity-home" replace />} />
+      <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
     </Routes>
   );
 };

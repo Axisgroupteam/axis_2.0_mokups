@@ -1,0 +1,94 @@
+** Vehicle
+
+- Tractor number
+- Service status
+- in Service date
+
+General
+- Make
+- Model
+- Year
+- Tare
+- Type
+- Fleet
+- Status
+- Payee option
+- Tpp
+- Owner
+- Assined Driver
+- Home terminal
+- Date assigned
+- By
+- Team driver
+- Dispatcher
+- Revenue goal
+- Blanket permit
+- Distance gol
+- Expiration date
+
+Safety
+- Tag/State
+- Expiration
+- Serial number
+- last inspection
+- video safety
+- physical amount
+- liability on date
+- liability off date
+
+Equipment
+- Returned date
+- Equipment type
+- State
+- Memo
+- Issued date
+- Issued by
+- Location
+- Receiv
+- Quantity
+- Value
+
+Allocation
+- Allocation mode
+- Description
+- Effective date
+
+
+--------------------------- 
+** Trailer
+
+-- Trailer number
+-- Service status
+-- In service date
+-- Out of service date
+-- Forklift number
+-- Planning comment
+
+General
+-- Type
+-- Tag/State
+-- Length
+-- Make
+-- Expiration
+-- Width
+-- Year
+-- Serial Number
+-- Height
+-- Features
+-- Last inspection
+-- Fleet
+-- Temperature range
+-- GPS provider
+-- Tare
+-- Trailer value
+-- Serial number
+-- GVW
+-- Axles
+
+Comments
+-- Date and time
+-- Entered by
+-- Type
+-- Attachement
+-- Comment
+

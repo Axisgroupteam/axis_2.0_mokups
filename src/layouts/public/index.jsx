@@ -21,7 +21,7 @@ const PublicLayout = ({ children }) => {
       <header className="px-5 py-3 h-[8vh] flex justify-between items-center border-b">
         <h1 className="text-xl font-semibold">Enterprise Pro</h1>
         <div className="flex items-center gap-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             {pathname === "/signup"
               ? "Already have an account?"
               : "Dont have an account?"}
@@ -41,7 +41,7 @@ const PublicLayout = ({ children }) => {
       <main className="flex-1 overflow-auto">{children}</main>
 
       {/* Footer */}
-      <footer className="h-[12vh] border-t flex flex-col text-sm text-gray-500">
+      <footer className="h-[12vh] border-t flex flex-col text-sm text-muted-foreground">
         <div className="flex h-full justify-center items-center gap-20">
           <div>Privacy Policy</div>
           <div>Terms of Service</div>
