@@ -1,27 +1,28 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FaIdBadge, FaEdit, FaPlus } from "react-icons/fa";
-import { FileText, Expand, Download } from "lucide-react";
+import { FaPlus, FaIdCard } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FileText, Eye, Download, Trash2 } from "lucide-react";
 
 const LicenseInformationCard = ({
   hasDriverInfo,
   driverInfoData,
   onEdit,
-  onAdd
+  onAdd,
 }) => {
   return (
     <div className="border rounded-sm bg-card flex-1 flex flex-col">
       <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <FaIdBadge className="size-4" />
+          <FaIdCard className="size-4" />
           License Information
         </h3>
         {hasDriverInfo && (
           <button
             onClick={onEdit}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-slate-500 hover:text-foreground transition-colors"
           >
-            <FaEdit className="size-3.5" />
+            <MdEdit className="size-4" />
           </button>
         )}
       </div>
@@ -29,13 +30,17 @@ const LicenseInformationCard = ({
         <div className="divide-y divide-border">
           <div className="grid grid-cols-2 divide-x divide-border">
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">License Category</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                License Category
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.licenseCategory}
               </p>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">License State</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                License State
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.licenseState}
               </p>
@@ -43,13 +48,17 @@ const LicenseInformationCard = ({
           </div>
           <div className="grid grid-cols-2 divide-x divide-border">
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">License Number</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                License Number
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.licenseNumber}
               </p>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">SSN or Fed Id</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                SSN or Fed Id
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.ssnOrFedId}
               </p>
@@ -57,13 +66,17 @@ const LicenseInformationCard = ({
           </div>
           <div className="grid grid-cols-2 divide-x divide-border">
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">License Expire Date</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                License Expire Date
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.licenseExpireDate}
               </p>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">License Effective Date</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                License Effective Date
+              </p>
               <p className="text-sm font-medium text-foreground">
                 {driverInfoData.licenseEffectiveDate}
               </p>
@@ -73,18 +86,41 @@ const LicenseInformationCard = ({
             <p className="text-xs text-muted-foreground mb-1.5">
               Uploaded File (License Image)
             </p>
-            <div className="relative bg-muted rounded border h-20 flex items-center justify-center">
-              <FileText className="size-8 text-muted-foreground" />
-              <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
-                <span className="text-xs font-medium text-muted-foreground mr-0.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="size-4 text-rose-500" />
+                <a
+                  href="#"
+                  className="text-sm font-medium text-rose-500  underline hover:underline cursor-pointer"
+                >
                   {driverInfoData.uploadFile}
-                </span>
-                <button className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-accent rounded">
-                  <Expand className="size-3" />
-                </button>
-                <button className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-accent rounded">
-                  <Download className="size-3" />
-                </button>
+                </a>
+              </div>
+              <div className="flex items-center">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10"
+                  title="View"
+                >
+                  <Eye className="size-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-green-600 dark:text-green-400 hover:bg-green-500/10"
+                  title="Download"
+                >
+                  <Download className="size-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
+                  title="Delete"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
               </div>
             </div>
           </div>

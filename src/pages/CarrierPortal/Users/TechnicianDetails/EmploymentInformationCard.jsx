@@ -3,7 +3,7 @@ import { MdEdit } from "react-icons/md";
 
 const EmploymentInformationCard = () => {
   return (
-    <div className="border rounded-sm bg-card">
+    <div className="w-full border rounded-sm bg-card">
       <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
           <FaBriefcase className="size-4" />
@@ -20,12 +20,12 @@ const EmploymentInformationCard = () => {
             <p className="text-sm font-medium text-foreground">Yes</p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Truck Number</p>
-            <p className="text-sm font-medium text-foreground">TRK-2024-001</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Department</p>
+            <p className="text-sm font-medium text-foreground">Maintenance</p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Dot Logging Required</p>
-            <p className="text-sm font-medium text-foreground">Yes</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Shift</p>
+            <p className="text-sm font-medium text-foreground">Day Shift</p>
           </div>
         </div>
         <div className="grid grid-cols-3 divide-x divide-border">

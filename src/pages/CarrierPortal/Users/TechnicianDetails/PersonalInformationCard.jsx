@@ -3,7 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { User, Edit, Trash2 } from "lucide-react";
 import { MdEdit } from "react-icons/md";
 
-const PersonalInformationCard = ({ driverData }) => {
+const PersonalInformationCard = ({ technicianData }) => {
   return (
     <div className="w-full border rounded-sm bg-card flex flex-col">
       <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
@@ -27,19 +27,19 @@ const PersonalInformationCard = ({ driverData }) => {
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Phone Number</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.phoneNumber || "-"}
+                  {technicianData.phoneNumber || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Birth Date</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.birthDate || "-"}
+                  {technicianData.birthDate || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Gender</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.gender || "-"}
+                  {technicianData.gender || "-"}
                 </p>
               </div>
             </div>
@@ -51,7 +51,7 @@ const PersonalInformationCard = ({ driverData }) => {
                   Social Security
                 </p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.socialSecurity || "-"}
+                  {technicianData.socialSecurity || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
@@ -59,13 +59,13 @@ const PersonalInformationCard = ({ driverData }) => {
                   Emergency Contact
                 </p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.emergencyContact || "-"}
+                  {technicianData.emergencyContact || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Spouse Name</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.spouseName || "-"}
+                  {technicianData.spouseName || "-"}
                 </p>
               </div>
             </div>
@@ -75,19 +75,19 @@ const PersonalInformationCard = ({ driverData }) => {
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Race</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.race || "-"}
+                  {technicianData.race || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Ethnicity</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.ethnicity || "-"}
+                  {technicianData.ethnicity || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
                 <p className="text-xs text-muted-foreground mb-0.5">Languages</p>
                 <p className="text-sm font-medium text-foreground">
-                  {driverData.languages || "-"}
+                  {technicianData.languages || "-"}
                 </p>
               </div>
             </div>
@@ -96,7 +96,7 @@ const PersonalInformationCard = ({ driverData }) => {
           {/* Right side - Profile Image */}
           <div className="relative px-6 py-4 flex items-center justify-center">
             <div className="w-36 h-36 rounded-full border-2 border-border overflow-hidden bg-muted">
-              {driverData.pictureProfile ? (
+              {technicianData.pictureProfile ? (
                 <img
                   src="https://imgs.search.brave.com/0lv__h3DhQ2vTyW5lTr5pOgrIR2oUVnuJ3qBfOHNt9Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by91c2VyLXByb2Zp/bGUtcG5nLXByb2Zl/c3Npb25hbC1idXNp/bmVzc21hbi1zdGlj/a2VyLXRyYW5zcGFy/ZW50LWJhY2tncm91/bmRfNTM4NzYtMTA0/ODkyOS5qcGc_c2Vt/dD1haXNfaHlicmlk/Jnc9NzQwJnE9ODA"
                   alt="Profile"
@@ -127,19 +127,19 @@ const PersonalInformationCard = ({ driverData }) => {
               Preferred Language
             </p>
             <p className="text-sm font-medium text-foreground">
-              {driverData.preferredLanguage || "-"}
+              {technicianData.preferredLanguage || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
             <p className="text-xs text-muted-foreground mb-0.5">Latitude</p>
             <p className="text-sm font-medium text-foreground">
-              {driverData.latitude || "-"}
+              {technicianData.latitude || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
             <p className="text-xs text-muted-foreground mb-0.5">Longitude</p>
             <p className="text-sm font-medium text-foreground">
-              {driverData.longitude || "-"}
+              {technicianData.longitude || "-"}
             </p>
           </div>
         </div>

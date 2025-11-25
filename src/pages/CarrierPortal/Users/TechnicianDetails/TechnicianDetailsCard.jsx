@@ -1,14 +1,14 @@
 import { Badge } from "@/components/ui/badge";
-import { FaUserCheck } from "react-icons/fa";
+import { FaWrench } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
-const DriverBasicInformationCard = () => {
+const TechnicianDetailsCard = () => {
   return (
-    <div className="border rounded-sm bg-card flex-1 flex flex-col">
+    <div className="w-full border rounded-sm bg-card">
       <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <FaUserCheck className="size-4" />
-          Driver Basic Information
+          <FaWrench className="size-4" />
+          Technician Details
         </h3>
         <button className="text-slate-500 hover:text-foreground transition-colors">
           <MdEdit className="size-4" />
@@ -17,13 +17,15 @@ const DriverBasicInformationCard = () => {
       <div className="divide-y divide-border">
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Driver Code</p>
-            <p className="text-sm font-medium text-foreground">DRV-001</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Job Title</p>
+            <p className="text-sm font-medium text-foreground">
+              Senior Mechanic
+            </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Driver Type</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Qualification</p>
             <p className="text-sm font-medium text-foreground">
-              Company Driver
+              ASE Certified
             </p>
           </div>
         </div>
@@ -46,4 +48,4 @@ const DriverBasicInformationCard = () => {
   );
 };
 
-export default DriverBasicInformationCard;
+export default TechnicianDetailsCard;

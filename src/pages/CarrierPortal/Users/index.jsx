@@ -46,7 +46,6 @@ import {
   FuelIcon,
   FileTextIcon,
   KeyIcon,
-  TrashIcon,
 } from "lucide-react";
 import { FaUser } from "react-icons/fa";
 import SmartFilter from "@/components/SmartFilter";
@@ -177,42 +176,18 @@ const Users = () => {
       Administrator: [
         { label: "Profile", action: "profile", icon: UserIcon },
         { label: "Permissions", action: "permissions", icon: KeyIcon },
-        {
-          label: "Delete",
-          action: "delete",
-          icon: TrashIcon,
-          className: "text-red-600",
-        },
       ],
       Manager: [
         { label: "Profile", action: "profile", icon: UserIcon },
         { label: "Permissions", action: "permissions", icon: KeyIcon },
-        {
-          label: "Delete",
-          action: "delete",
-          icon: TrashIcon,
-          className: "text-red-600",
-        },
       ],
       Dispatcher: [
         { label: "Profile", action: "profile", icon: UserIcon },
         { label: "Permissions", action: "permissions", icon: KeyIcon },
-        {
-          label: "Delete",
-          action: "delete",
-          icon: TrashIcon,
-          className: "text-red-600",
-        },
       ],
       Employee: [
         { label: "Profile", action: "profile", icon: UserIcon },
         { label: "Permissions", action: "permissions", icon: KeyIcon },
-        {
-          label: "Delete",
-          action: "delete",
-          icon: TrashIcon,
-          className: "text-red-600",
-        },
       ],
       Driver: [
         { label: "Profile", action: "profile", icon: UserIcon },
@@ -228,6 +203,7 @@ const Users = () => {
         { label: "Audit Log", action: "audit-log", icon: FileTextIcon },
       ],
       Technician: [
+        { label: "Profile", action: "profile", icon: UserIcon },
         { label: "Metrics", action: "metrics", icon: ChartBarIcon },
         { label: "Finance", action: "finance", icon: BanknoteIcon },
         { label: "Audit Log", action: "audit-log", icon: FileTextIcon },
@@ -269,18 +245,21 @@ const Users = () => {
     const userTabMap = {
       "profile": "profile",
       "permissions": "permissions",
-      "delete": "delete",
     };
 
-    // Check if action belongs to Driver actions
-    if (driverTabMap[action] && user.roles.includes("Driver")) {
-      navigate(`/app/carrier-portal/master/users/driver-details?tab=${driverTabMap[action]}`);
-      return;
+    // Determine which detail page to navigate to based on user roles
+    // Priority: Driver > Technician > Other roles
+    let detailsPage = null;
+
+    if (user.roles.includes("Driver")) {
+      detailsPage = "driver-details";
+    } else if (user.roles.includes("Technician")) {
+      detailsPage = "technician-details";
     }
 
-    // Check if action belongs to Technician actions
-    if (driverTabMap[action] && user.roles.includes("Technician")) {
-      navigate(`/app/carrier-portal/master/users/driver-details?tab=${driverTabMap[action]}`);
+    // Check if action belongs to Driver/Technician actions
+    if (driverTabMap[action] && detailsPage) {
+      navigate(`/app/carrier-portal/master/users/${detailsPage}?tab=${driverTabMap[action]}`);
       return;
     }
 
@@ -372,7 +351,6 @@ const Users = () => {
               {actions.map((actionItem, index) => {
                 const Icon = actionItem.icon;
                 const needsSeparator = [
-                  "delete",
                   "safety-compliance",
                   "audit-log",
                 ].includes(actionItem.action);

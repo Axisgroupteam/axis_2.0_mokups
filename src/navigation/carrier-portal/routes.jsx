@@ -1,9 +1,15 @@
 import OrdersDashboard from "@/pages/CarrierPortal/OrdersDashboard";
 import Users from "@/pages/CarrierPortal/Users";
 import DriverDetails from "@/pages/CarrierPortal/Users/DriverDetails";
+import TechnicianDetails from "@/pages/CarrierPortal/Users/TechnicianDetails";
 import UserDetails from "@/pages/CarrierPortal/Users/UserDetails";
 import Assets from "@/pages/CarrierPortal/Assets";
+import AssetDetails from "@/pages/CarrierPortal/Assets/AssetDetails";
+import TrailerDetails from "@/pages/CarrierPortal/Assets/TrailerDetails";
 import Shippers from "@/pages/CarrierPortal/Shippers";
+import CustomerDetails from "@/pages/CarrierPortal/Customers/CustomerDetails";
+import Payee from "@/pages/CarrierPortal/Payee";
+import PayeeDetails from "@/pages/CarrierPortal/Payee/PayeeDetails";
 
 export const carrierPortalRoutes = [
   {
@@ -58,14 +64,34 @@ export const carrierPortalRoutes = [
     label: "Driver Details",
   },
   {
+    path: "master/users/technician-details",
+    element: <TechnicianDetails />,
+    label: "Technician Details",
+  },
+  {
     path: "master/users/user-details",
     element: <UserDetails />,
     label: "User Details",
   },
   {
-    path: "master/shippers",
+    path: "master/customers",
     element: <Shippers />,
-    label: "Shippers",
+    label: "Customers",
+  },
+  {
+    path: "master/customers/customer-details",
+    element: <CustomerDetails />,
+    label: "Customer Details",
+  },
+  {
+    path: "master/payee",
+    element: <Payee />,
+    label: "Payee",
+  },
+  {
+    path: "master/payee/payee-details",
+    element: <PayeeDetails />,
+    label: "Payee Details",
   },
   {
     path: "master/rates",
@@ -89,5 +115,15 @@ export const carrierPortalRoutes = [
     path: "master/assets",
     element: <Assets />,
     label: "Assets",
+  },
+  {
+    path: "master/assets/asset-details",
+    element: <AssetDetails />,
+    label: "Asset Details",
+  },
+  {
+    path: "master/assets/trailer-details",
+    element: <TrailerDetails />,
+    label: "Trailer Details",
   },
 ];

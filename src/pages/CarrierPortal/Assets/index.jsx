@@ -55,66 +55,570 @@ const Assets = () => {
   // Combined mock data for Vehicles and Trailers
   const assets = [
     // Vehicles (25 entries)
-    { id: 1, type: "Vehicle", name: "VIN123456", vinSn: "1HGBH41JXMN109186", safetyStatus: "Pass", status: true, dispatcher: "YPR22", trailer: "109", driver: "John Smith" },
-    { id: 2, type: "Vehicle", name: "VIN234567", vinSn: "2HGBH41JXMN109187", safetyStatus: "Pass", status: true, dispatcher: "YPR23", trailer: "110", driver: "Sarah Johnson" },
-    { id: 3, type: "Vehicle", name: "VIN345678", vinSn: "3HGBH41JXMN109188", safetyStatus: "Fail", status: false, dispatcher: "YPR24", trailer: "111", driver: "Michael Brown" },
-    { id: 4, type: "Vehicle", name: "VIN456789", vinSn: "4HGBH41JXMN109189", safetyStatus: "Pass", status: true, dispatcher: "YPR25", trailer: "112", driver: "Emily Davis" },
-    { id: 5, type: "Vehicle", name: "VIN567890", vinSn: "5HGBH41JXMN109190", safetyStatus: "Pass", status: true, dispatcher: "YPR26", trailer: "113", driver: "David Wilson" },
-    { id: 6, type: "Vehicle", name: "VIN678901", vinSn: "6HGBH41JXMN109191", safetyStatus: "Pending", status: true, dispatcher: "YPR27", trailer: "114", driver: "Jessica Martinez" },
-    { id: 7, type: "Vehicle", name: "VIN789012", vinSn: "7HGBH41JXMN109192", safetyStatus: "Pass", status: true, dispatcher: "YPR28", trailer: "115", driver: "Robert Taylor" },
-    { id: 8, type: "Vehicle", name: "VIN890123", vinSn: "8HGBH41JXMN109193", safetyStatus: "Fail", status: false, dispatcher: "YPR29", trailer: "116", driver: "Amanda Anderson" },
-    { id: 9, type: "Vehicle", name: "VIN901234", vinSn: "9HGBH41JXMN109194", safetyStatus: "Pass", status: true, dispatcher: "YPR30", trailer: "117", driver: "James Thomas" },
-    { id: 10, type: "Vehicle", name: "VIN012345", vinSn: "0HGBH41JXMN109195", safetyStatus: "Pass", status: true, dispatcher: "YPR31", trailer: "118", driver: "Jennifer Garcia" },
-    { id: 11, type: "Vehicle", name: "VIN112233", vinSn: "1HGBH41JXMN109196", safetyStatus: "Pass", status: true, dispatcher: "YPR32", trailer: "119", driver: "Christopher Lee" },
-    { id: 12, type: "Vehicle", name: "VIN223344", vinSn: "2HGBH41JXMN109197", safetyStatus: "Pending", status: true, dispatcher: "YPR33", trailer: "120", driver: "Ashley Harris" },
-    { id: 13, type: "Vehicle", name: "VIN334455", vinSn: "3HGBH41JXMN109198", safetyStatus: "Pass", status: true, dispatcher: "YPR34", trailer: "121", driver: "Matthew Clark" },
-    { id: 14, type: "Vehicle", name: "VIN445566", vinSn: "4HGBH41JXMN109199", safetyStatus: "Fail", status: false, dispatcher: "YPR35", trailer: "122", driver: "Brittany Lewis" },
-    { id: 15, type: "Vehicle", name: "VIN556677", vinSn: "5HGBH41JXMN109200", safetyStatus: "Pass", status: true, dispatcher: "YPR36", trailer: "123", driver: "Daniel Robinson" },
-    { id: 16, type: "Vehicle", name: "VIN667788", vinSn: "6HGBH41JXMN109201", safetyStatus: "Pass", status: true, dispatcher: "YPR37", trailer: "124", driver: "Samantha Walker" },
-    { id: 17, type: "Vehicle", name: "VIN778899", vinSn: "7HGBH41JXMN109202", safetyStatus: "Pass", status: true, dispatcher: "YPR38", trailer: "125", driver: "Andrew Young" },
-    { id: 18, type: "Vehicle", name: "VIN889900", vinSn: "8HGBH41JXMN109203", safetyStatus: "Pending", status: true, dispatcher: "YPR39", trailer: "126", driver: "Megan Allen" },
-    { id: 19, type: "Vehicle", name: "VIN990011", vinSn: "9HGBH41JXMN109204", safetyStatus: "Pass", status: true, dispatcher: "YPR40", trailer: "127", driver: "Joshua King" },
-    { id: 20, type: "Vehicle", name: "VIN001122", vinSn: "0HGBH41JXMN109205", safetyStatus: "Fail", status: false, dispatcher: "YPR41", trailer: "128", driver: "Lauren Wright" },
-    { id: 21, type: "Vehicle", name: "VIN112244", vinSn: "1HGBH41JXMN109206", safetyStatus: "Pass", status: true, dispatcher: "YPR42", trailer: "129", driver: "Ryan Scott" },
-    { id: 22, type: "Vehicle", name: "VIN223355", vinSn: "2HGBH41JXMN109207", safetyStatus: "Pass", status: true, dispatcher: "YPR43", trailer: "130", driver: "Kayla Green" },
-    { id: 23, type: "Vehicle", name: "VIN334466", vinSn: "3HGBH41JXMN109208", safetyStatus: "Pass", status: true, dispatcher: "YPR44", trailer: "131", driver: "Brandon Adams" },
-    { id: 24, type: "Vehicle", name: "VIN445577", vinSn: "4HGBH41JXMN109209", safetyStatus: "Pending", status: true, dispatcher: "YPR45", trailer: "132", driver: "Nicole Baker" },
-    { id: 25, type: "Vehicle", name: "VIN556688", vinSn: "5HGBH41JXMN109210", safetyStatus: "Pass", status: true, dispatcher: "YPR46", trailer: "133", driver: "Tyler Nelson" },
+    {
+      id: 1,
+      type: "Vehicle",
+      name: "VIN123456",
+      vinSn: "1HGBH41JXMN109186",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR22",
+      trailer: "109",
+      driver: "John Smith",
+    },
+    {
+      id: 2,
+      type: "Vehicle",
+      name: "VIN234567",
+      vinSn: "2HGBH41JXMN109187",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR23",
+      trailer: "110",
+      driver: "Sarah Johnson",
+    },
+    {
+      id: 3,
+      type: "Vehicle",
+      name: "VIN345678",
+      vinSn: "3HGBH41JXMN109188",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: "YPR24",
+      trailer: "111",
+      driver: "Michael Brown",
+    },
+    {
+      id: 4,
+      type: "Vehicle",
+      name: "VIN456789",
+      vinSn: "4HGBH41JXMN109189",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR25",
+      trailer: "112",
+      driver: "Emily Davis",
+    },
+    {
+      id: 5,
+      type: "Vehicle",
+      name: "VIN567890",
+      vinSn: "5HGBH41JXMN109190",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR26",
+      trailer: "113",
+      driver: "David Wilson",
+    },
+    {
+      id: 6,
+      type: "Vehicle",
+      name: "VIN678901",
+      vinSn: "6HGBH41JXMN109191",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: "YPR27",
+      trailer: "114",
+      driver: "Jessica Martinez",
+    },
+    {
+      id: 7,
+      type: "Vehicle",
+      name: "VIN789012",
+      vinSn: "7HGBH41JXMN109192",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR28",
+      trailer: "115",
+      driver: "Robert Taylor",
+    },
+    {
+      id: 8,
+      type: "Vehicle",
+      name: "VIN890123",
+      vinSn: "8HGBH41JXMN109193",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: "YPR29",
+      trailer: "116",
+      driver: "Amanda Anderson",
+    },
+    {
+      id: 9,
+      type: "Vehicle",
+      name: "VIN901234",
+      vinSn: "9HGBH41JXMN109194",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR30",
+      trailer: "117",
+      driver: "James Thomas",
+    },
+    {
+      id: 10,
+      type: "Vehicle",
+      name: "VIN012345",
+      vinSn: "0HGBH41JXMN109195",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR31",
+      trailer: "118",
+      driver: "Jennifer Garcia",
+    },
+    {
+      id: 11,
+      type: "Vehicle",
+      name: "VIN112233",
+      vinSn: "1HGBH41JXMN109196",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR32",
+      trailer: "119",
+      driver: "Christopher Lee",
+    },
+    {
+      id: 12,
+      type: "Vehicle",
+      name: "VIN223344",
+      vinSn: "2HGBH41JXMN109197",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: "YPR33",
+      trailer: "120",
+      driver: "Ashley Harris",
+    },
+    {
+      id: 13,
+      type: "Vehicle",
+      name: "VIN334455",
+      vinSn: "3HGBH41JXMN109198",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR34",
+      trailer: "121",
+      driver: "Matthew Clark",
+    },
+    {
+      id: 14,
+      type: "Vehicle",
+      name: "VIN445566",
+      vinSn: "4HGBH41JXMN109199",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: "YPR35",
+      trailer: "122",
+      driver: "Brittany Lewis",
+    },
+    {
+      id: 15,
+      type: "Vehicle",
+      name: "VIN556677",
+      vinSn: "5HGBH41JXMN109200",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR36",
+      trailer: "123",
+      driver: "Daniel Robinson",
+    },
+    {
+      id: 16,
+      type: "Vehicle",
+      name: "VIN667788",
+      vinSn: "6HGBH41JXMN109201",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR37",
+      trailer: "124",
+      driver: "Samantha Walker",
+    },
+    {
+      id: 17,
+      type: "Vehicle",
+      name: "VIN778899",
+      vinSn: "7HGBH41JXMN109202",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR38",
+      trailer: "125",
+      driver: "Andrew Young",
+    },
+    {
+      id: 18,
+      type: "Vehicle",
+      name: "VIN889900",
+      vinSn: "8HGBH41JXMN109203",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: "YPR39",
+      trailer: "126",
+      driver: "Megan Allen",
+    },
+    {
+      id: 19,
+      type: "Vehicle",
+      name: "VIN990011",
+      vinSn: "9HGBH41JXMN109204",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR40",
+      trailer: "127",
+      driver: "Joshua King",
+    },
+    {
+      id: 20,
+      type: "Vehicle",
+      name: "VIN001122",
+      vinSn: "0HGBH41JXMN109205",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: "YPR41",
+      trailer: "128",
+      driver: "Lauren Wright",
+    },
+    {
+      id: 21,
+      type: "Vehicle",
+      name: "VIN112244",
+      vinSn: "1HGBH41JXMN109206",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR42",
+      trailer: "129",
+      driver: "Ryan Scott",
+    },
+    {
+      id: 22,
+      type: "Vehicle",
+      name: "VIN223355",
+      vinSn: "2HGBH41JXMN109207",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR43",
+      trailer: "130",
+      driver: "Kayla Green",
+    },
+    {
+      id: 23,
+      type: "Vehicle",
+      name: "VIN334466",
+      vinSn: "3HGBH41JXMN109208",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR44",
+      trailer: "131",
+      driver: "Brandon Adams",
+    },
+    {
+      id: 24,
+      type: "Vehicle",
+      name: "VIN445577",
+      vinSn: "4HGBH41JXMN109209",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: "YPR45",
+      trailer: "132",
+      driver: "Nicole Baker",
+    },
+    {
+      id: 25,
+      type: "Vehicle",
+      name: "VIN556688",
+      vinSn: "5HGBH41JXMN109210",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: "YPR46",
+      trailer: "133",
+      driver: "Tyler Nelson",
+    },
     // Trailers (25 entries)
-    { id: 26, type: "Trailer", name: "TRAIL123456", vinSn: "1T9BH41JXMN109186", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 27, type: "Trailer", name: "TRAIL234567", vinSn: "2T9BH41JXMN109187", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 28, type: "Trailer", name: "TRAIL345678", vinSn: "3T9BH41JXMN109188", safetyStatus: "Fail", status: false, dispatcher: null, trailer: null, driver: null },
-    { id: 29, type: "Trailer", name: "TRAIL456789", vinSn: "4T9BH41JXMN109189", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 30, type: "Trailer", name: "TRAIL567890", vinSn: "5T9BH41JXMN109190", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 31, type: "Trailer", name: "TRAIL678901", vinSn: "6T9BH41JXMN109191", safetyStatus: "Pending", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 32, type: "Trailer", name: "TRAIL789012", vinSn: "7T9BH41JXMN109192", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 33, type: "Trailer", name: "TRAIL890123", vinSn: "8T9BH41JXMN109193", safetyStatus: "Fail", status: false, dispatcher: null, trailer: null, driver: null },
-    { id: 34, type: "Trailer", name: "TRAIL901234", vinSn: "9T9BH41JXMN109194", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 35, type: "Trailer", name: "TRAIL012345", vinSn: "0T9BH41JXMN109195", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 36, type: "Trailer", name: "TRAIL112233", vinSn: "1T9BH41JXMN109196", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 37, type: "Trailer", name: "TRAIL223344", vinSn: "2T9BH41JXMN109197", safetyStatus: "Pending", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 38, type: "Trailer", name: "TRAIL334455", vinSn: "3T9BH41JXMN109198", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 39, type: "Trailer", name: "TRAIL445566", vinSn: "4T9BH41JXMN109199", safetyStatus: "Fail", status: false, dispatcher: null, trailer: null, driver: null },
-    { id: 40, type: "Trailer", name: "TRAIL556677", vinSn: "5T9BH41JXMN109200", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 41, type: "Trailer", name: "TRAIL667788", vinSn: "6T9BH41JXMN109201", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 42, type: "Trailer", name: "TRAIL778899", vinSn: "7T9BH41JXMN109202", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 43, type: "Trailer", name: "TRAIL889900", vinSn: "8T9BH41JXMN109203", safetyStatus: "Pending", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 44, type: "Trailer", name: "TRAIL990011", vinSn: "9T9BH41JXMN109204", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 45, type: "Trailer", name: "TRAIL001122", vinSn: "0T9BH41JXMN109205", safetyStatus: "Fail", status: false, dispatcher: null, trailer: null, driver: null },
-    { id: 46, type: "Trailer", name: "TRAIL112244", vinSn: "1T9BH41JXMN109206", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 47, type: "Trailer", name: "TRAIL223355", vinSn: "2T9BH41JXMN109207", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 48, type: "Trailer", name: "TRAIL334466", vinSn: "3T9BH41JXMN109208", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 49, type: "Trailer", name: "TRAIL445577", vinSn: "4T9BH41JXMN109209", safetyStatus: "Pending", status: true, dispatcher: null, trailer: null, driver: null },
-    { id: 50, type: "Trailer", name: "TRAIL556688", vinSn: "5T9BH41JXMN109210", safetyStatus: "Pass", status: true, dispatcher: null, trailer: null, driver: null },
+    {
+      id: 26,
+      type: "Trailer",
+      name: "TRAIL123456",
+      vinSn: "1T9BH41JXMN109186",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 27,
+      type: "Trailer",
+      name: "TRAIL234567",
+      vinSn: "2T9BH41JXMN109187",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 28,
+      type: "Trailer",
+      name: "TRAIL345678",
+      vinSn: "3T9BH41JXMN109188",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 29,
+      type: "Trailer",
+      name: "TRAIL456789",
+      vinSn: "4T9BH41JXMN109189",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 30,
+      type: "Trailer",
+      name: "TRAIL567890",
+      vinSn: "5T9BH41JXMN109190",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 31,
+      type: "Trailer",
+      name: "TRAIL678901",
+      vinSn: "6T9BH41JXMN109191",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 32,
+      type: "Trailer",
+      name: "TRAIL789012",
+      vinSn: "7T9BH41JXMN109192",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 33,
+      type: "Trailer",
+      name: "TRAIL890123",
+      vinSn: "8T9BH41JXMN109193",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 34,
+      type: "Trailer",
+      name: "TRAIL901234",
+      vinSn: "9T9BH41JXMN109194",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 35,
+      type: "Trailer",
+      name: "TRAIL012345",
+      vinSn: "0T9BH41JXMN109195",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 36,
+      type: "Trailer",
+      name: "TRAIL112233",
+      vinSn: "1T9BH41JXMN109196",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 37,
+      type: "Trailer",
+      name: "TRAIL223344",
+      vinSn: "2T9BH41JXMN109197",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 38,
+      type: "Trailer",
+      name: "TRAIL334455",
+      vinSn: "3T9BH41JXMN109198",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 39,
+      type: "Trailer",
+      name: "TRAIL445566",
+      vinSn: "4T9BH41JXMN109199",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 40,
+      type: "Trailer",
+      name: "TRAIL556677",
+      vinSn: "5T9BH41JXMN109200",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 41,
+      type: "Trailer",
+      name: "TRAIL667788",
+      vinSn: "6T9BH41JXMN109201",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 42,
+      type: "Trailer",
+      name: "TRAIL778899",
+      vinSn: "7T9BH41JXMN109202",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 43,
+      type: "Trailer",
+      name: "TRAIL889900",
+      vinSn: "8T9BH41JXMN109203",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 44,
+      type: "Trailer",
+      name: "TRAIL990011",
+      vinSn: "9T9BH41JXMN109204",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 45,
+      type: "Trailer",
+      name: "TRAIL001122",
+      vinSn: "0T9BH41JXMN109205",
+      safetyStatus: "Fail",
+      status: false,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 46,
+      type: "Trailer",
+      name: "TRAIL112244",
+      vinSn: "1T9BH41JXMN109206",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 47,
+      type: "Trailer",
+      name: "TRAIL223355",
+      vinSn: "2T9BH41JXMN109207",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 48,
+      type: "Trailer",
+      name: "TRAIL334466",
+      vinSn: "3T9BH41JXMN109208",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 49,
+      type: "Trailer",
+      name: "TRAIL445577",
+      vinSn: "4T9BH41JXMN109209",
+      safetyStatus: "Pending",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
+    {
+      id: 50,
+      type: "Trailer",
+      name: "TRAIL556688",
+      vinSn: "5T9BH41JXMN109210",
+      safetyStatus: "Pass",
+      status: true,
+      dispatcher: null,
+      trailer: null,
+      driver: null,
+    },
   ];
 
   const getSafetyStatusBadgeColor = (status) => {
     const colors = {
       Pass: "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50",
       Fail: "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
-      Pending: "bg-yellow-500/10 hover:bg-yellow-500/30 text-yellow-700 dark:text-yellow-400 border border-yellow-500/50",
+      Pending:
+        "bg-yellow-500/10 hover:bg-yellow-500/30 text-yellow-700 dark:text-yellow-400 border border-yellow-500/50",
     };
-    return colors[status] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+    return (
+      colors[status] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
   };
 
   const getTypeBadgeColor = (type) => {
@@ -254,9 +758,33 @@ const Assets = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  "/app/carrier-portal/master/assets/asset-details?tab=general"
+                )
+              }
+            >
+              General
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  "/app/carrier-portal/master/assets/asset-details?tab=equipment"
+                )
+              }
+            >
+              Equipment
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  "/app/carrier-portal/master/assets/asset-details?tab=allocation"
+                )
+              }
+            >
+              Allocation
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -354,9 +882,24 @@ const Assets = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  "/app/carrier-portal/master/assets/trailer-details?tab=general"
+                )
+              }
+            >
+              General
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  "/app/carrier-portal/master/assets/trailer-details?tab=comments"
+                )
+              }
+            >
+              Comments
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -419,9 +962,12 @@ const Assets = () => {
 
   // Get filtered data and columns based on active tab
   const filteredData = assets.filter((asset) =>
-    activeTab === "vehicle" ? asset.type === "Vehicle" : asset.type === "Trailer"
+    activeTab === "vehicle"
+      ? asset.type === "Vehicle"
+      : asset.type === "Trailer"
   );
-  const currentColumns = activeTab === "vehicle" ? vehicleColumns : trailerColumns;
+  const currentColumns =
+    activeTab === "vehicle" ? vehicleColumns : trailerColumns;
 
   return (
     <div className="flex flex-col h-full overflow-auto bg-background">
@@ -476,7 +1022,11 @@ const Assets = () => {
         </div>
 
         {/* Data Table */}
-        <DataTable columns={currentColumns} data={filteredData} showViewOptions={false} />
+        <DataTable
+          columns={currentColumns}
+          data={filteredData}
+          showViewOptions={false}
+        />
       </div>
 
       {/* Add Vehicle Sheet */}

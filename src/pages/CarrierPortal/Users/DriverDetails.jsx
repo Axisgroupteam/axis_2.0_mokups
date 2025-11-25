@@ -30,6 +30,8 @@ import {
   FaClock,
   FaPlus,
 } from "react-icons/fa";
+import { UserCircle, IdCard, BadgeCheck } from "lucide-react";
+import UserInfoCard from "./DriverDetails/UserInfoCard";
 import PersonalInformationCard from "./DriverDetails/PersonalInformationCard";
 import DriverBasicInformationCard from "./DriverDetails/DriverBasicInformationCard";
 import LicenseInformationCard from "./DriverDetails/LicenseInformationCard";
@@ -136,25 +138,21 @@ const DriverDetails = () => {
     <div className="flex flex-col h-full bg-background overflow-hidden">
       <Tabs
         defaultValue={activeTab}
-        className="w-full h-full flex flex-col overflow-hidden"
+        className="w-full h-full flex flex-col overflow-hidden "
       >
-        <div className="px-4 pt-4 flex-shrink-0">
-          <TabsList className="mb-3">
+        <div className="flex-shrink-0">
+          <TabsList className="mb-0 rounded-none ">
             <TabsTrigger value="profile" className="h-full">
               <FaUser className="size-4" />
               Profile
-            </TabsTrigger>
-            <TabsTrigger value="metrics" className="h-full">
-              <FaChartLine className="size-4" />
-              Metrics
             </TabsTrigger>
             <TabsTrigger value="finance" className="h-full">
               <FaDollarSign className="size-4" />
               Finance
             </TabsTrigger>
-            <TabsTrigger value="comments" className="h-full">
-              <FaComments className="size-4" />
-              Comments
+            <TabsTrigger value="fuel" className="h-full">
+              <FaGasPump className="size-4" />
+              Fuel
             </TabsTrigger>
             <TabsTrigger value="safety" className="h-full">
               <FaShieldAlt className="size-4" />
@@ -164,9 +162,13 @@ const DriverDetails = () => {
               <FaCogs className="size-4" />
               Operation
             </TabsTrigger>
-            <TabsTrigger value="fuel" className="h-full">
-              <FaGasPump className="size-4" />
-              Fuel
+            <TabsTrigger value="comments" className="h-full">
+              <FaComments className="size-4" />
+              Comments
+            </TabsTrigger>
+            <TabsTrigger value="metrics" className="h-full">
+              <FaChartLine className="size-4" />
+              Metrics
             </TabsTrigger>
             <TabsTrigger value="audit" className="h-full">
               <FaHistory className="size-4" />
@@ -175,29 +177,67 @@ const DriverDetails = () => {
           </TabsList>
         </div>
 
-        <div className="flex-1 overflow-auto px-4">
-          <TabsContent
-            value="profile"
-            className="space-y-4 px-0.5 pb-4 h-full mt-0"
-          >
-            <div className="flex gap-4 h-fit">
-              {/* Personal Information Card */}
-              <PersonalInformationCard driverData={driverData} />
+        <div className="flex-1 overflow-auto -mt-1">
+          <TabsContent value="profile" className="space-y-2  h-full mt-0 px-2">
+            <Tabs
+              defaultValue="personal"
+              className="w-full border-none shadow-none"
+            >
+              <TabsList className="border-none shadow-none  bg-transparent h-auto px-2  gap-2 justify-start">
+                <TabsTrigger
+                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
+                  value="personal"
+                >
+                  <UserCircle className="size-4 mr-1" />
+                  Personal Information
+                </TabsTrigger>
+                <TabsTrigger
+                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
+                  value="credentials"
+                >
+                  <BadgeCheck className="size-4 mr-1" />
+                  Driver Credentials
+                </TabsTrigger>
+                <TabsTrigger
+                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
+                  value="license"
+                >
+                  <IdCard className="size-4 mr-1" />
+                  License Information
+                </TabsTrigger>
+              </TabsList>
 
-              {/* Right Column Container */}
-              <div className="w-1/2 flex flex-col gap-4 h-full">
-                <DriverBasicInformationCard />
+              <TabsContent value="personal" className=" px-2 ">
+                <div className="flex gap-4">
+                  <div className="w-1/2">
+                    <UserInfoCard driverData={driverData} />
+                  </div>
+                  <div className="w-1/2">
+                    <PersonalInformationCard driverData={driverData} />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="license" className="px-2">
                 <LicenseInformationCard
                   hasDriverInfo={hasDriverInfo}
                   driverInfoData={driverInfoData}
                   onEdit={handleDriverInfoEdit}
                   onAdd={() => setIsDriverInfoSheetOpen(true)}
                 />
-              </div>
-            </div>
+              </TabsContent>
 
-            {/* Employment Information Card */}
-            <EmploymentInformationCard />
+              <TabsContent value="credentials" className="px-2">
+                <div className="flex gap-4">
+                  <div className="w-1/2">
+                    <DriverBasicInformationCard />
+                  </div>
+                  <div className="w-1/2">
+                    <EmploymentInformationCard />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           {/* License Information Sheet */}
@@ -339,7 +379,7 @@ const DriverDetails = () => {
             </SheetContent>
           </Sheet>
 
-          <TabsContent value="metrics" className="space-y-4 pb-4 h-full mt-0">
+          <TabsContent value="metrics" className="space-y-4 pb-4 h-full mt-2">
             <div className="border rounded-lg p-6 bg-gray-50">
               <p className="text-gray-500">Metrics content coming soon...</p>
             </div>
@@ -347,7 +387,7 @@ const DriverDetails = () => {
 
           <TabsContent
             value="finance"
-            className="space-y-4 px-0.5 pb-4 h-full mt-0"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
           >
             <div className="flex gap-4 h-fit">
               {/* Left Column */}
@@ -369,7 +409,7 @@ const DriverDetails = () => {
 
           <TabsContent
             value="comments"
-            className="space-y-4 px-0.5 pb-4 h-full mt-0"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
           >
             <div className="border rounded-sm bg-card">
               <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
@@ -453,20 +493,20 @@ const DriverDetails = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="safety" className="space-y-4 px-0.5 pb-4 mt-0 ">
+          <TabsContent value="safety" className="space-y-4 px-4 pb-4 h-full mt-2">
             <SafetyComplianceTab />
             <OperationTab />
           </TabsContent>
 
-          <TabsContent value="operation" className="space-y-4 pb-4 h-full mt-0">
+          <TabsContent value="operation" className="space-y-4 px-4 pb-4 h-full mt-2">
             <OperationTab />
           </TabsContent>
 
-          <TabsContent value="fuel" className="space-y-4 pb-4 h-full mt-0">
+          <TabsContent value="fuel" className="space-y-4 px-4 pb-4 h-full mt-2">
             <FuelTab />
           </TabsContent>
 
-          <TabsContent value="audit" className="space-y-4 pb-4 h-full mt-0">
+          <TabsContent value="audit" className="space-y-4 pb-4 h-full mt-2">
             <div className="border rounded-lg p-6 bg-gray-50">
               <p className="text-gray-500">Audit Log content coming soon...</p>
             </div>

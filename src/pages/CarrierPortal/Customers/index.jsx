@@ -25,13 +25,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlusIcon, MoreHorizontalIcon } from "lucide-react";
+import { PlusIcon, MoreHorizontalIcon, BuildingIcon } from "lucide-react";
 import SmartFilter from "@/components/SmartFilter";
 
-const Shippers = () => {
+const Customers = () => {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState([]);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -46,350 +46,60 @@ const Shippers = () => {
     milesMeterSystem: "",
     fleetType: "",
     milesCalcType: "",
-    autoEmailExport: "off",
+    autoEmailExport: false,
   });
 
-  // Mock data - 20 customers with all fields
+  // Mock customer data
   const customers = [
     {
       id: 1,
-      name: "Acme Corporation",
-      code: "ACM-001",
-      email: "contact@acmecorp.com",
+      name: "ABC Logistics",
+      email: "contact@abclogistics.com",
       phone: "+1 (555) 123-4567",
-      addressLine1: "123 Main St",
-      state: "NY",
       city: "New York",
-      zipCode: "10001",
-      customerRegion: "Northeast",
+      state: "NY",
       billingType: "Factored customer",
-      milesMeterSystem: "Google",
       fleetType: "Bulk",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
     },
     {
       id: 2,
-      name: "TechFlow Industries",
-      code: "TFI-002",
-      email: "info@techflow.com",
+      name: "XYZ Transport",
+      email: "info@xyztransport.com",
       phone: "+1 (555) 234-5678",
-      addressLine1: "456 Oak Ave",
-      state: "CA",
       city: "Los Angeles",
-      zipCode: "90001",
-      customerRegion: "West",
+      state: "CA",
       billingType: "Non factored customer",
-      milesMeterSystem: "PC miler",
       fleetType: "Aggregate",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "off",
     },
     {
       id: 3,
-      name: "Global Solutions Ltd",
-      code: "GSL-003",
-      email: "support@globalsol.com",
+      name: "Global Shipping Co",
+      email: "support@globalshipping.com",
       phone: "+1 (555) 345-6789",
-      addressLine1: "789 Pine Rd",
-      state: "IL",
       city: "Chicago",
-      zipCode: "60601",
-      customerRegion: "Midwest",
+      state: "IL",
       billingType: "Factored customer",
-      milesMeterSystem: "Google",
       fleetType: "Flatbed",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
     },
     {
       id: 4,
-      name: "Pioneer Manufacturing",
-      code: "PMF-004",
-      email: "sales@pioneermfg.com",
+      name: "FastTrack Freight",
+      email: "hello@fasttrack.com",
       phone: "+1 (555) 456-7890",
-      addressLine1: "321 Elm St",
-      state: "TX",
       city: "Houston",
-      zipCode: "77001",
-      customerRegion: "Southwest",
+      state: "TX",
       billingType: "Non factored customer",
-      milesMeterSystem: "PC miler",
       fleetType: "Bulk",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "off",
     },
     {
       id: 5,
-      name: "Stellar Enterprises",
-      code: "STE-005",
-      email: "hello@stellarent.com",
+      name: "Express Carriers",
+      email: "contact@expresscarriers.com",
       phone: "+1 (555) 567-8901",
-      addressLine1: "654 Maple Dr",
-      state: "AZ",
       city: "Phoenix",
-      zipCode: "85001",
-      customerRegion: "Southwest",
+      state: "AZ",
       billingType: "Factored customer",
-      milesMeterSystem: "Google",
       fleetType: "Aggregate",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 6,
-      name: "NextGen Systems",
-      code: "NGS-006",
-      email: "contact@nextgensys.com",
-      phone: "+1 (555) 678-9012",
-      addressLine1: "987 Cedar Ln",
-      state: "PA",
-      city: "Philadelphia",
-      zipCode: "19101",
-      customerRegion: "Northeast",
-      billingType: "Factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Bulk",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "on",
-    },
-    {
-      id: 7,
-      name: "Atlas Distribution",
-      code: "ATD-007",
-      email: "ops@atlasdist.com",
-      phone: "+1 (555) 789-0123",
-      addressLine1: "147 Birch Blvd",
-      state: "TX",
-      city: "San Antonio",
-      zipCode: "78201",
-      customerRegion: "Southwest",
-      billingType: "Non factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Flatbed",
-      milesCalcType: "Point to point",
-      autoEmailExport: "off",
-    },
-    {
-      id: 8,
-      name: "Vertex Technologies",
-      code: "VTX-008",
-      email: "info@vertextech.com",
-      phone: "+1 (555) 890-1234",
-      addressLine1: "258 Walnut St",
-      state: "CA",
-      city: "San Diego",
-      zipCode: "92101",
-      customerRegion: "West",
-      billingType: "Factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Aggregate",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "on",
-    },
-    {
-      id: 9,
-      name: "Omega Logistics",
-      code: "OML-009",
-      email: "dispatch@omegalog.com",
-      phone: "+1 (555) 901-2345",
-      addressLine1: "369 Cherry Ave",
-      state: "TX",
-      city: "Dallas",
-      zipCode: "75201",
-      customerRegion: "Southwest",
-      billingType: "Factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Bulk",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 10,
-      name: "Summit Partners",
-      code: "SMP-010",
-      email: "partners@summitpart.com",
-      phone: "+1 (555) 012-3456",
-      addressLine1: "741 Spruce Rd",
-      state: "CA",
-      city: "San Jose",
-      zipCode: "95101",
-      customerRegion: "West",
-      billingType: "Non factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Flatbed",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "off",
-    },
-    {
-      id: 11,
-      name: "Horizon Group",
-      code: "HRG-011",
-      email: "contact@horizongrp.com",
-      phone: "+1 (555) 111-2222",
-      addressLine1: "852 Ash Dr",
-      state: "WA",
-      city: "Seattle",
-      zipCode: "98101",
-      customerRegion: "West",
-      billingType: "Factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Bulk",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 12,
-      name: "Quantum Dynamics",
-      code: "QTD-012",
-      email: "info@quantumdyn.com",
-      phone: "+1 (555) 222-3333",
-      addressLine1: "963 Hickory Ln",
-      state: "FL",
-      city: "Miami",
-      zipCode: "33101",
-      customerRegion: "Southeast",
-      billingType: "Non factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Aggregate",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "off",
-    },
-    {
-      id: 13,
-      name: "Eagle Transport",
-      code: "EGT-013",
-      email: "dispatch@eagletrans.com",
-      phone: "+1 (555) 333-4444",
-      addressLine1: "159 Willow St",
-      state: "GA",
-      city: "Atlanta",
-      zipCode: "30301",
-      customerRegion: "Southeast",
-      billingType: "Factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Flatbed",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 14,
-      name: "Nova Industries",
-      code: "NVI-014",
-      email: "sales@novaind.com",
-      phone: "+1 (555) 444-5555",
-      addressLine1: "267 Poplar Ave",
-      state: "OH",
-      city: "Columbus",
-      zipCode: "43201",
-      customerRegion: "Midwest",
-      billingType: "Factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Bulk",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "on",
-    },
-    {
-      id: 15,
-      name: "Prime Ventures",
-      code: "PRV-015",
-      email: "invest@primevent.com",
-      phone: "+1 (555) 555-6666",
-      addressLine1: "378 Cypress Rd",
-      state: "NC",
-      city: "Charlotte",
-      zipCode: "28201",
-      customerRegion: "Southeast",
-      billingType: "Non factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Aggregate",
-      milesCalcType: "Point to point",
-      autoEmailExport: "off",
-    },
-    {
-      id: 16,
-      name: "Delta Manufacturing",
-      code: "DLM-016",
-      email: "orders@deltamfg.com",
-      phone: "+1 (555) 666-7777",
-      addressLine1: "489 Magnolia Dr",
-      state: "IN",
-      city: "Indianapolis",
-      zipCode: "46201",
-      customerRegion: "Midwest",
-      billingType: "Factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Flatbed",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "on",
-    },
-    {
-      id: 17,
-      name: "Apex Solutions",
-      code: "APS-017",
-      email: "support@apexsol.com",
-      phone: "+1 (555) 777-8888",
-      addressLine1: "591 Redwood Ln",
-      state: "CO",
-      city: "Denver",
-      zipCode: "80201",
-      customerRegion: "West",
-      billingType: "Factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Bulk",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 18,
-      name: "Titan Holdings",
-      code: "TTH-018",
-      email: "info@titanhld.com",
-      phone: "+1 (555) 888-9999",
-      addressLine1: "612 Sequoia St",
-      state: "MA",
-      city: "Boston",
-      zipCode: "02101",
-      customerRegion: "Northeast",
-      billingType: "Non factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Aggregate",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "off",
-    },
-    {
-      id: 19,
-      name: "Fusion Corp",
-      code: "FSC-019",
-      email: "contact@fusioncorp.com",
-      phone: "+1 (555) 999-0000",
-      addressLine1: "723 Palm Ave",
-      state: "TN",
-      city: "Nashville",
-      zipCode: "37201",
-      customerRegion: "Southeast",
-      billingType: "Factored customer",
-      milesMeterSystem: "Google",
-      fleetType: "Flatbed",
-      milesCalcType: "Point to point",
-      autoEmailExport: "on",
-    },
-    {
-      id: 20,
-      name: "Pinnacle Group",
-      code: "PNG-020",
-      email: "hello@pinnaclegr.com",
-      phone: "+1 (555) 000-1111",
-      addressLine1: "834 Juniper Rd",
-      state: "OR",
-      city: "Portland",
-      zipCode: "97201",
-      customerRegion: "West",
-      billingType: "Factored customer",
-      milesMeterSystem: "PC miler",
-      fleetType: "Bulk",
-      milesCalcType: "zipcode to zipcode",
-      autoEmailExport: "on",
     },
   ];
 
@@ -416,7 +126,7 @@ const Shippers = () => {
       milesMeterSystem: "",
       fleetType: "",
       milesCalcType: "",
-      autoEmailExport: "off",
+      autoEmailExport: false,
     });
   };
 
@@ -436,8 +146,17 @@ const Shippers = () => {
       milesMeterSystem: "",
       fleetType: "",
       milesCalcType: "",
-      autoEmailExport: "off",
+      autoEmailExport: false,
     });
+  };
+
+  const handleActionClick = (action, customer) => {
+    console.log(`Action: ${action}, Customer:`, customer);
+    if (action === "view") {
+      navigate(
+        `/app/carrier-portal/master/customers/customer-details?id=${customer.id}`
+      );
+    }
   };
 
   const filterGroups = [
@@ -450,13 +169,6 @@ const Shippers = () => {
           type: "input",
           group: "Basic",
           placeholder: "Enter customer name...",
-        },
-        {
-          key: "code",
-          label: "Code",
-          type: "input",
-          group: "Basic",
-          placeholder: "Enter code...",
         },
         {
           key: "email",
@@ -475,6 +187,17 @@ const Shippers = () => {
             { value: "Non factored customer", label: "Non factored customer" },
           ],
         },
+        {
+          key: "fleetType",
+          label: "Fleet Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Bulk", label: "Bulk" },
+            { value: "Aggregate", label: "Aggregate" },
+            { value: "Flatbed", label: "Flatbed" },
+          ],
+        },
       ],
     },
   ];
@@ -490,11 +213,25 @@ const Shippers = () => {
       : "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50";
   };
 
+  const getFleetTypeBadgeColor = (type) => {
+    const colors = {
+      Bulk: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Aggregate:
+        "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Flatbed:
+        "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+    };
+    return (
+      colors[type] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
+  };
+
   const columns = [
     {
       id: "actions",
       header: "Actions",
-      size: 80,
+      size: 60,
       cell: ({ row }) => {
         const customer = row.original;
         return (
@@ -504,113 +241,29 @@ const Shippers = () => {
                 <MoreHorizontalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuContent side="right" align="start" className="w-56">
               <div className="px-3 py-2 border-b flex items-start gap-2">
+                <div className="p-1.5 bg-gray-100 rounded-full mt-0.5">
+                  <BuildingIcon className="h-5 w-5 text-gray-600" />
+                </div>
                 <div className="overflow-hidden">
                   <p className="font-medium text-sm">{customer.name}</p>
                   <p className="text-xs text-gray-500 truncate">
-                    {customer.code}
+                    {customer.email}
                   </p>
                 </div>
               </div>
               <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=profile`
-                  )
-                }
+                className="cursor-pointer"
+                onClick={() => handleActionClick("view", customer)}
               >
-                Profile
+                View Details
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=metrics`
-                  )
-                }
+                className="cursor-pointer"
+                onClick={() => handleActionClick("edit", customer)}
               >
-                Metrics
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=orders`
-                  )
-                }
-              >
-                Orders
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=reports`
-                  )
-                }
-              >
-                Reports
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=payments`
-                  )
-                }
-              >
-                Payments
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=receivables`
-                  )
-                }
-              >
-                Receivables
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=rates`
-                  )
-                }
-              >
-                Rates
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=sales`
-                  )
-                }
-              >
-                Sales
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=instructions`
-                  )
-                }
-              >
-                Instructions
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=vault`
-                  )
-                }
-              >
-                Vault
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=locations`
-                  )
-                }
-              >
-                Locations
+                Edit Customer
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -622,24 +275,39 @@ const Shippers = () => {
     {
       accessorKey: "name",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Customer Name" />
       ),
       enableSorting: true,
       enableHiding: true,
     },
     {
-      accessorKey: "code",
+      accessorKey: "email",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Code" />
+        <DataTableColumnHeader column={column} title="Email" />
       ),
-      size: 120,
       enableSorting: true,
       enableHiding: true,
     },
     {
-      accessorKey: "addressLine1",
+      accessorKey: "phone",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Address Line 1" />
+        <DataTableColumnHeader column={column} title="Phone" />
+      ),
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "city",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="City" />
+      ),
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "state",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="State" />
       ),
       enableSorting: true,
       enableHiding: true,
@@ -657,47 +325,13 @@ const Shippers = () => {
       enableHiding: true,
     },
     {
-      accessorKey: "milesMeterSystem",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Miles Meter System" />
-      ),
-      enableSorting: true,
-      enableHiding: true,
-    },
-    {
       accessorKey: "fleetType",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Fleet Type" />
       ),
-      enableSorting: true,
-      enableHiding: true,
-    },
-    {
-      accessorKey: "milesCalcType",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Miles Calc Type" />
-      ),
-      enableSorting: true,
-      enableHiding: true,
-    },
-    {
-      accessorKey: "autoEmailExport",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Auto Email Export" />
-      ),
       cell: ({ row }) => {
-        const value = row.getValue("autoEmailExport");
-        return (
-          <Badge
-            className={
-              value === "on"
-                ? "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50"
-                : "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
-            }
-          >
-            {value === "on" ? "On" : "Off"}
-          </Badge>
-        );
+        const type = row.getValue("fleetType");
+        return <Badge className={getFleetTypeBadgeColor(type)}>{type}</Badge>;
       },
       enableSorting: true,
       enableHiding: true,
@@ -705,7 +339,7 @@ const Shippers = () => {
   ];
 
   return (
-    <div className="flex flex-col h-full overflow-auto bg-background">
+    <div className="flex flex-col h-full w-full border bg-red-5000 overflow-auto bg-background">
       <div className="px-6 py-4">
         {/* Filter and Add Customer */}
         <div className="flex items-center justify-between mb-1">
@@ -718,7 +352,7 @@ const Shippers = () => {
             onClick={() => setIsSheetOpen(true)}
           >
             <PlusIcon className="size-4 mr-2" />
-            Add Customer
+            Add Customer here
           </Button>
         </div>
 
@@ -910,11 +544,11 @@ const Shippers = () => {
                   <SelectValue placeholder="Select region" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Northeast">Northeast</SelectItem>
-                  <SelectItem value="Southeast">Southeast</SelectItem>
-                  <SelectItem value="Midwest">Midwest</SelectItem>
-                  <SelectItem value="Southwest">Southwest</SelectItem>
-                  <SelectItem value="West">West</SelectItem>
+                  <SelectItem value="northeast">Northeast</SelectItem>
+                  <SelectItem value="southeast">Southeast</SelectItem>
+                  <SelectItem value="midwest">Midwest</SelectItem>
+                  <SelectItem value="southwest">Southwest</SelectItem>
+                  <SelectItem value="west">West</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -933,7 +567,7 @@ const Shippers = () => {
                   handleInputChange("billingType", value)
                 }
               >
-                <SelectTrigger className="h-10">
+                <SelectTrigger className="h-10 w-full">
                   <SelectValue placeholder="Select billing type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1030,9 +664,9 @@ const Shippers = () => {
                 Auto Email Export
               </Label>
               <Select
-                value={formData.autoEmailExport}
+                value={formData.autoEmailExport ? "on" : "off"}
                 onValueChange={(value) =>
-                  handleInputChange("autoEmailExport", value)
+                  handleInputChange("autoEmailExport", value === "on")
                 }
               >
                 <SelectTrigger className="h-10 w-full">
@@ -1069,4 +703,4 @@ const Shippers = () => {
   );
 };
 
-export default Shippers;
+export default Customers;

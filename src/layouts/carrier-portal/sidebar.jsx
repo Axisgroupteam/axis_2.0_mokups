@@ -40,6 +40,7 @@ import {
   DollarSignIcon,
   MapPinIcon,
   BoxIcon,
+  WalletIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
@@ -95,8 +96,13 @@ const CarrierPortalSidebar = () => {
     },
     {
       label: "Customers",
-      href: "/app/carrier-portal/master/shippers",
+      href: "/app/carrier-portal/master/customers",
       icon: PackageSearchIcon,
+    },
+    {
+      label: "Payee",
+      href: "/app/carrier-portal/master/payee",
+      icon: WalletIcon,
     },
     {
       label: "Rates",
