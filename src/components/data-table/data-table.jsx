@@ -72,46 +72,44 @@ export function DataTable({
         filterConfig={filterConfig}
         showViewOptions={showViewOptions}
       />
-      <div className="rounded-lg border border-border bg-background overflow-hidden">
-        <Table style={{ tableLayout: "fixed" }}>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-b">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{
-                        width: header.getSize(),
-                        position: "relative",
-                      }}
-                      className="bg-muted h-11 px-4 text-left align-middle font-medium text-muted-foreground border-r border-border dark:border-white/20 last:border-r-0"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                      <div
-                        onMouseDown={header.getResizeHandler()}
-                        onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${
-                          header.column.getIsResizing()
-                            ? "bg-primary opacity-100"
-                            : "bg-border opacity-0 hover:opacity-100"
-                        }`}
-                      />
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-        </Table>
-        <ScrollArea className="h-[700px]">
-          <Table style={{ tableLayout: "fixed" }}>
+      <div className="rounded-lg border border-border bg-background w-full">
+        <div className="max-h-[700px] overflow-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+          <Table style={{ tableLayout: "fixed", width: "max-content", minWidth: "100%" }}>
+            <TableHeader className="sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="border-b">
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        style={{
+                          width: header.getSize(),
+                          position: "relative",
+                        }}
+                        className="bg-muted h-11 px-4 text-left align-middle font-medium text-muted-foreground border-r border-border dark:border-white/20 last:border-r-0"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        <div
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${
+                            header.column.getIsResizing()
+                              ? "bg-primary opacity-100"
+                              : "bg-border opacity-0 hover:opacity-100"
+                          }`}
+                        />
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => (
@@ -152,8 +150,7 @@ export function DataTable({
               )}
             </TableBody>
           </Table>
-          <ScrollBar orientation="vertical" />
-        </ScrollArea>
+        </div>
         <DataTablePagination table={table} />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -15,19 +15,67 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { FaGasPump, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { PlusIcon, MoreHorizontalIcon } from "lucide-react";
 
 const FuelTab = () => {
   const [isFuelCardSheetOpen, setIsFuelCardSheetOpen] = useState(false);
   const [editingFuelCard, setEditingFuelCard] = useState(null);
+  const [filters, setFilters] = useState([]);
+
+  // Filter configurations
+  const filterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "cardProvider",
+          label: "Card Provider",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "EFS", label: "EFS" },
+            { value: "Comdata", label: "Comdata" },
+            { value: "T-Chek", label: "T-Chek" },
+            { value: "Fleet One", label: "Fleet One" },
+          ],
+        },
+        {
+          key: "cardStatus",
+          label: "Card Status",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Active", label: "Active" },
+            { value: "Inactive", label: "Inactive" },
+            { value: "Suspended", label: "Suspended" },
+          ],
+        },
+        {
+          key: "cardType",
+          label: "Card Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Fuel", label: "Fuel" },
+            { value: "Cash", label: "Cash" },
+            { value: "Both", label: "Both" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const handleFiltersChange = useCallback((newFilters) => {
+    setFilters(newFilters);
+  }, []);
 
   // Mock fuel card data
   const [fuelCards, setFuelCards] = useState([
@@ -59,7 +107,145 @@ const FuelTab = () => {
       assignType: "Driver",
       cardType: "Fuel",
     },
+    {
+      id: 3,
+      cardProvider: "T-Chek",
+      account: "ACC-11111",
+      subaccount: "SUB-003",
+      cardNumber: "**** **** **** 9012",
+      tractor: "TRC-103",
+      cardPayee: "John Smith",
+      chargePayee: "John Smith",
+      expenseCode: "FUEL-003",
+      cardStatus: "Inactive",
+      assignType: "Tractor",
+      cardType: "Both",
+    },
   ]);
+
+  // Column definitions
+  const columns = [
+    {
+      id: "actions",
+      header: "Actions",
+      size: 80,
+      cell: ({ row }) => {
+        const card = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem onClick={() => handleEditFuelCard(card)}>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-600"
+                onClick={() => handleDeleteFuelCard(card.id)}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+    },
+    {
+      accessorKey: "cardProvider",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Card Provider" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "account",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Account" />
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "subaccount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Subaccount" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "cardNumber",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Card Number" />
+      ),
+      size: 150,
+    },
+    {
+      accessorKey: "tractor",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Tractor" />
+      ),
+      size: 90,
+    },
+    {
+      accessorKey: "cardPayee",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Card Payee" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "chargePayee",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Charge Payee" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "expenseCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Expense Code" />
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "cardStatus",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Card Status" />
+      ),
+      size: 100,
+      cell: ({ row }) => {
+        const status = row.getValue("cardStatus");
+        return (
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+              status === "Active"
+                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                : status === "Inactive"
+                ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "assignType",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Assign Type" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "cardType",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Card Type" />
+      ),
+      size: 90,
+    },
+  ];
 
   const handleAddFuelCard = () => {
     setEditingFuelCard(null);
@@ -109,85 +295,28 @@ const FuelTab = () => {
   return (
     <>
       <div className="space-y-4 px-0.5 pb-4">
-        <div className="border rounded-sm bg-card">
-          <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <FaGasPump className="size-4" />
-              Fuel Card
-            </h3>
+        <div className="border border-border rounded-lg overflow-hidden bg-background">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+            <SmartFilter
+              filterGroups={filterGroups}
+              onFiltersChange={handleFiltersChange}
+            />
             <Button
               size="sm"
               onClick={handleAddFuelCard}
               className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
             >
-              <FaPlus className="size-3" />
+              <PlusIcon className="size-3" />
               Add Fuel Card
             </Button>
           </div>
           <div className="p-4">
-            {fuelCards.length > 0 ? (
-              <div className="border rounded-md overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Card Provider</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Account</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Subaccount</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Card Number</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Tractor</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Card Payee</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Charge Payee</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Expense Code</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Card Status</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Assign Type</TableHead>
-                      <TableHead className="text-xs font-semibold border-r h-9 py-2">Card Type</TableHead>
-                      <TableHead className="text-xs font-semibold text-right h-9 py-2">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {fuelCards.map((card) => (
-                      <TableRow key={card.id}>
-                        <TableCell className="text-xs border-r py-2.5">{card.cardProvider}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.account}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.subaccount}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.cardNumber}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.tractor}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.cardPayee}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.chargePayee}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.expenseCode}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            {card.cardStatus}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.assignType}</TableCell>
-                        <TableCell className="text-xs border-r py-2.5">{card.cardType}</TableCell>
-                        <TableCell className="text-right py-2.5">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => handleEditFuelCard(card)}
-                              className="text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              <FaEdit className="size-3.5" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteFuelCard(card.id)}
-                              className="text-muted-foreground hover:text-destructive transition-colors"
-                            >
-                              <FaTrash className="size-3.5" />
-                            </button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                No fuel cards added yet
-              </p>
-            )}
+          <DataTable
+            columns={columns}
+            data={fuelCards}
+            showViewOptions={false}
+            pageSize={10}
+          />
           </div>
         </div>
       </div>

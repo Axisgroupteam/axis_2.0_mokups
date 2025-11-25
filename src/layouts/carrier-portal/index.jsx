@@ -6,9 +6,9 @@ const CarrierPortalLayout = ({ children }) => {
   return (
     <SidebarProvider>
       <CarrierPortalSidebar />
-      <main className="flex flex-col h-screen w-screen bg-muted">
+      <main className="flex flex-col h-screen flex-1 min-w-0 bg-muted">
         <CarrierPortalNavbar />
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-auto min-h-0">
           {children}
         </div>
       </main>

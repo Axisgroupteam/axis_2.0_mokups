@@ -18,29 +18,27 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
-  FaUser,
-  FaChartLine,
-  FaDollarSign,
-  FaShieldAlt,
-  FaCogs,
-  FaGasPump,
-  FaHistory,
-  FaComments,
-  FaPaperclip,
-  FaClock,
-  FaPlus,
-} from "react-icons/fa";
-import { UserCircle, IdCard, BadgeCheck } from "lucide-react";
+  UserCircle,
+  IdCard,
+  BadgeCheck,
+  User,
+  DollarSign,
+  Fuel,
+  ShieldCheck,
+  Settings,
+  MessageSquare,
+  BarChart3,
+  History,
+  Paperclip,
+  Clock,
+  Plus,
+} from "lucide-react";
 import UserInfoCard from "./DriverDetails/UserInfoCard";
 import PersonalInformationCard from "./DriverDetails/PersonalInformationCard";
 import DriverBasicInformationCard from "./DriverDetails/DriverBasicInformationCard";
 import LicenseInformationCard from "./DriverDetails/LicenseInformationCard";
 import EmploymentInformationCard from "./DriverDetails/EmploymentInformationCard";
 import PayeeInformationCard from "./DriverDetails/PayeeInformationCard";
-import BankInformationCard from "./DriverDetails/BankInformationCard";
-import QuickCashCard from "./DriverDetails/QuickCashCard";
-import FeeManagementCard from "./DriverDetails/FeeManagementCard";
-import DeductionTypesCard from "./DriverDetails/DeductionTypesCard";
 import OperationTab from "./DriverDetails/OperationTab";
 import FuelTab from "./DriverDetails/FuelTab";
 import SafetyComplianceTab from "./DriverDetails/SafetyComplianceTab";
@@ -143,71 +141,71 @@ const DriverDetails = () => {
         <div className="flex-shrink-0">
           <TabsList className="mb-0 rounded-none ">
             <TabsTrigger value="profile" className="h-full">
-              <FaUser className="size-4" />
+              <User className="size-4" />
               Profile
             </TabsTrigger>
             <TabsTrigger value="finance" className="h-full">
-              <FaDollarSign className="size-4" />
+              <DollarSign className="size-4" />
               Finance
             </TabsTrigger>
             <TabsTrigger value="fuel" className="h-full">
-              <FaGasPump className="size-4" />
+              <Fuel className="size-4" />
               Fuel
             </TabsTrigger>
             <TabsTrigger value="safety" className="h-full">
-              <FaShieldAlt className="size-4" />
+              <ShieldCheck className="size-4" />
               Safety Compliance
             </TabsTrigger>
             <TabsTrigger value="operation" className="h-full">
-              <FaCogs className="size-4" />
+              <Settings className="size-4" />
               Operation
             </TabsTrigger>
             <TabsTrigger value="comments" className="h-full">
-              <FaComments className="size-4" />
+              <MessageSquare className="size-4" />
               Comments
             </TabsTrigger>
             <TabsTrigger value="metrics" className="h-full">
-              <FaChartLine className="size-4" />
+              <BarChart3 className="size-4" />
               Metrics
             </TabsTrigger>
             <TabsTrigger value="audit" className="h-full">
-              <FaHistory className="size-4" />
+              <History className="size-4" />
               Audit Log
             </TabsTrigger>
           </TabsList>
         </div>
 
-        <div className="flex-1 overflow-auto -mt-1">
-          <TabsContent value="profile" className="space-y-2  h-full mt-0 px-2">
-            <Tabs
-              defaultValue="personal"
-              className="w-full border-none shadow-none"
-            >
-              <TabsList className="border-none shadow-none  bg-transparent h-auto px-2  gap-2 justify-start">
+        <div
+          className="flex-1 overflow-auto 
+        "
+        >
+          <TabsContent value="profile" className="space-y-2 h-full mt-0 px-4">
+            <Tabs defaultValue="personal" className="w-full mt-0">
+              <TabsList className="mb-1 h-14">
                 <TabsTrigger
-                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
                   value="personal"
+                  className="flex items-center gap-1.5"
                 >
-                  <UserCircle className="size-4 mr-1" />
+                  <UserCircle className="size-4" />
                   Personal Information
                 </TabsTrigger>
                 <TabsTrigger
-                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
                   value="credentials"
+                  className="flex items-center gap-1.5"
                 >
-                  <BadgeCheck className="size-4 mr-1" />
+                  <BadgeCheck className="size-4" />
                   Driver Credentials
                 </TabsTrigger>
                 <TabsTrigger
-                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
                   value="license"
+                  className="flex items-center gap-1.5"
                 >
-                  <IdCard className="size-4 mr-1" />
+                  <IdCard className="size-4" />
                   License Information
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="personal" className=" px-2 ">
+              <TabsContent value="personal" className="space-y-4 mt-0">
                 <div className="flex gap-4">
                   <div className="w-1/2">
                     <UserInfoCard driverData={driverData} />
@@ -218,7 +216,7 @@ const DriverDetails = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="license" className="px-2">
+              <TabsContent value="license" className="space-y-4 mt-0">
                 <LicenseInformationCard
                   hasDriverInfo={hasDriverInfo}
                   driverInfoData={driverInfoData}
@@ -227,7 +225,7 @@ const DriverDetails = () => {
                 />
               </TabsContent>
 
-              <TabsContent value="credentials" className="px-2">
+              <TabsContent value="credentials" className="space-y-4 mt-0">
                 <div className="flex gap-4">
                   <div className="w-1/2">
                     <DriverBasicInformationCard />
@@ -389,22 +387,7 @@ const DriverDetails = () => {
             value="finance"
             className="space-y-4 px-4 pb-4 h-full mt-2"
           >
-            <div className="flex gap-4 h-fit">
-              {/* Left Column */}
-              <div className="w-1/2 flex flex-col gap-4">
-                <PayeeInformationCard />
-                <QuickCashCard />
-              </div>
-
-              {/* Right Column */}
-              <div className="w-1/2 flex flex-col gap-4">
-                <BankInformationCard />
-                <FeeManagementCard />
-              </div>
-            </div>
-
-            {/* Deduction Types - Full Width */}
-            <DeductionTypesCard />
+            <PayeeInformationCard />
           </TabsContent>
 
           <TabsContent
@@ -414,14 +397,14 @@ const DriverDetails = () => {
             <div className="border rounded-sm bg-card">
               <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <FaComments className="size-4" />
+                  <MessageSquare className="size-4" />
                   Comments
                 </h3>
                 <Button
                   size="sm"
                   className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
                 >
-                  <FaPlus className="size-3" />
+                  <Plus className="size-3" />
                   Add Comment
                 </Button>
               </div>
@@ -446,14 +429,14 @@ const DriverDetails = () => {
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                <FaUser className="size-3 text-primary" />
+                                <User className="size-3 text-primary" />
                               </div>
                               <div>
                                 <p className="font-semibold text-xs text-foreground">
                                   {comment.enteredBy}
                                 </p>
                                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                                  <FaClock className="size-2" />
+                                  <Clock className="size-2" />
                                   {comment.dateTime}
                                 </div>
                               </div>
@@ -474,7 +457,7 @@ const DriverDetails = () => {
 
                           {comment.attachment && (
                             <div className="flex items-center gap-1.5 p-1.5 bg-muted/50 rounded-md w-fit">
-                              <FaPaperclip className="size-2.5 text-muted-foreground" />
+                              <Paperclip className="size-2.5 text-muted-foreground" />
                               <span className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
                                 {comment.attachment}
                               </span>
@@ -493,12 +476,17 @@ const DriverDetails = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="safety" className="space-y-4 px-4 pb-4 h-full mt-2">
+          <TabsContent
+            value="safety"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
+          >
             <SafetyComplianceTab />
-            <OperationTab />
           </TabsContent>
 
-          <TabsContent value="operation" className="space-y-4 px-4 pb-4 h-full mt-2">
+          <TabsContent
+            value="operation"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
+          >
             <OperationTab />
           </TabsContent>
 

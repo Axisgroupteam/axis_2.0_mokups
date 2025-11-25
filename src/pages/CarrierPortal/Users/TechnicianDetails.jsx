@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FaUser, FaDollarSign, FaChartLine, FaHistory } from "react-icons/fa";
-import { UserCircle, BadgeCheck } from "lucide-react";
+import {
+  User,
+  DollarSign,
+  BarChart3,
+  History,
+  UserCircle,
+  BadgeCheck,
+} from "lucide-react";
 import UserInfoCard from "./TechnicianDetails/UserInfoCard";
 import TechnicianDetailsCard from "./TechnicianDetails/TechnicianDetailsCard";
 import EmploymentInformationCard from "./TechnicianDetails/EmploymentInformationCard";
 import PayeeInformationCard from "./DriverDetails/PayeeInformationCard";
-import BankInformationCard from "./DriverDetails/BankInformationCard";
-import QuickCashCard from "./DriverDetails/QuickCashCard";
-import FeeManagementCard from "./DriverDetails/FeeManagementCard";
-import DeductionTypesCard from "./DriverDetails/DeductionTypesCard";
 
 const TechnicianDetails = () => {
   const [searchParams] = useSearchParams();
@@ -51,48 +53,45 @@ const TechnicianDetails = () => {
         <div className="flex-shrink-0">
           <TabsList className="mb-0 rounded-none ">
             <TabsTrigger value="profile" className="h-full">
-              <FaUser className="size-4" />
+              <User className="size-4" />
               Profile
             </TabsTrigger>
             <TabsTrigger value="finance" className="h-full">
-              <FaDollarSign className="size-4" />
+              <DollarSign className="size-4" />
               Finance
             </TabsTrigger>
             <TabsTrigger value="metrics" className="h-full">
-              <FaChartLine className="size-4" />
+              <BarChart3 className="size-4" />
               Metrics
             </TabsTrigger>
             <TabsTrigger value="audit" className="h-full">
-              <FaHistory className="size-4" />
+              <History className="size-4" />
               Audit Log
             </TabsTrigger>
           </TabsList>
         </div>
 
         <div className="flex-1 overflow-auto -mt-1">
-          <TabsContent value="profile" className="space-y-2  h-full mt-0 px-2">
-            <Tabs
-              defaultValue="personal"
-              className="w-full border-none shadow-none"
-            >
-              <TabsList className="border-none shadow-none  bg-transparent h-auto px-2  gap-2 justify-start">
+          <TabsContent value="profile" className="space-y-2 h-full mt-1 px-4">
+            <Tabs defaultValue="personal" className="w-full mt-0">
+              <TabsList className="mb-1 h-14">
                 <TabsTrigger
-                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
                   value="personal"
+                  className="flex items-center gap-1.5"
                 >
-                  <UserCircle className="size-4 mr-1" />
+                  <UserCircle className="size-4" />
                   Personal Information
                 </TabsTrigger>
                 <TabsTrigger
-                  className="rounded-full bg-transparent data-[state=active]:bg-muted data-[state=active]:shadow-sm px-6 "
                   value="credentials"
+                  className="flex items-center gap-1.5"
                 >
-                  <BadgeCheck className="size-4 mr-1" />
+                  <BadgeCheck className="size-4" />
                   Technician Details
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="personal" className=" px-2 ">
+              <TabsContent value="personal" className="space-y-4 mt-0">
                 <div className="flex gap-4">
                   <div className="w-1/2">
                     <UserInfoCard technicianData={technicianData} />
@@ -100,7 +99,7 @@ const TechnicianDetails = () => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="credentials" className="px-2">
+              <TabsContent value="credentials" className="space-y-4 mt-0">
                 <div className="flex gap-4">
                   <div className="w-1/2">
                     <TechnicianDetailsCard />
@@ -123,22 +122,7 @@ const TechnicianDetails = () => {
             value="finance"
             className="space-y-4 px-4 pb-4 h-full mt-2"
           >
-            <div className="flex gap-4 h-fit">
-              {/* Left Column */}
-              <div className="w-1/2 flex flex-col gap-4">
-                <PayeeInformationCard />
-                <QuickCashCard />
-              </div>
-
-              {/* Right Column */}
-              <div className="w-1/2 flex flex-col gap-4">
-                <BankInformationCard />
-                <FeeManagementCard />
-              </div>
-            </div>
-
-            {/* Deduction Types - Full Width */}
-            <DeductionTypesCard />
+            <PayeeInformationCard />
           </TabsContent>
 
           <TabsContent value="audit" className="space-y-4 pb-4 h-full mt-2">

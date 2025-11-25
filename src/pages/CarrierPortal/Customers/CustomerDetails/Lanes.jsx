@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,25 +15,20 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlusIcon, MoreHorizontalIcon, Route, Search } from "lucide-react";
+import { PlusIcon, MoreHorizontalIcon, Search } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 const Lanes = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [formData, setFormData] = useState({
     templateRate: "",
     description: "",
@@ -48,6 +43,48 @@ const Lanes = () => {
     distance: "",
     po: "",
   });
+
+  // Filter configurations
+  const filterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "templateRateName",
+          label: "Template Name",
+          type: "input",
+          group: "Basic",
+          placeholder: "Search template...",
+        },
+        {
+          key: "customerRateMethod",
+          label: "Customer Rate Method",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Per Mile", label: "Per Mile" },
+            { value: "Flat Rate", label: "Flat Rate" },
+            { value: "Per Hour", label: "Per Hour" },
+          ],
+        },
+        {
+          key: "driverRateMethod",
+          label: "Driver Rate Method",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Per Mile", label: "Per Mile" },
+            { value: "Flat Rate", label: "Flat Rate" },
+            { value: "Per Hour", label: "Per Hour" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const handleFiltersChange = useCallback((newFilters) => {
+    setFilters(newFilters);
+  }, []);
 
   // Mock lanes data
   const lanes = [
@@ -123,6 +160,113 @@ const Lanes = () => {
     },
   ];
 
+  // Column definitions
+  const columns = [
+    {
+      id: "actions",
+      header: "Actions",
+      size: 80,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem>View Details</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+    },
+    {
+      accessorKey: "templateRateName",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Template Rate Name" />
+      ),
+      size: 160,
+    },
+    {
+      accessorKey: "miles",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Miles" />
+      ),
+      size: 80,
+    },
+    {
+      accessorKey: "customerRate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Customer Rate" />
+      ),
+      size: 120,
+      cell: ({ row }) => `$${row.getValue("customerRate").toFixed(2)}`,
+    },
+    {
+      accessorKey: "customerRateMethod",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Cust. Rate Method" />
+      ),
+      size: 130,
+    },
+    {
+      accessorKey: "driverRate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Driver Rate" />
+      ),
+      size: 110,
+      cell: ({ row }) => `$${row.getValue("driverRate").toFixed(2)}`,
+    },
+    {
+      accessorKey: "driverRateMethod",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Driver Rate Method" />
+      ),
+      size: 140,
+    },
+    {
+      accessorKey: "originRate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Origin Rate" />
+      ),
+      size: 100,
+      cell: ({ row }) => `$${row.getValue("originRate").toFixed(2)}`,
+    },
+    {
+      accessorKey: "originMethod",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Origin Method" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "destinyRate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Dest. Rate" />
+      ),
+      size: 100,
+      cell: ({ row }) => `$${row.getValue("destinyRate").toFixed(2)}`,
+    },
+    {
+      accessorKey: "destinationMethod",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Dest. Method" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "po",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="PO" />
+      ),
+      size: 100,
+    },
+  ];
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -171,12 +315,12 @@ const Lanes = () => {
   };
 
   return (
-    <div className="w-full border rounded-sm bg-card">
-      <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <Route className="size-4" />
-          Lanes
-        </h3>
+    <div className="border border-border rounded-lg p-4 bg-background">
+      <div className="flex items-center justify-between mb-3">
+        <SmartFilter
+          filterGroups={filterGroups}
+          onFiltersChange={handleFiltersChange}
+        />
         <Button
           size="sm"
           className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
@@ -186,107 +330,12 @@ const Lanes = () => {
           Add Lane
         </Button>
       </div>
-      <div className="p-4">
-        <div className="border rounded-md overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Actions
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Template Rate Name
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Miles
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Customer Rate
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Customer Rate Method
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Driver Rate
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Driver Rate Method
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Origin Rate
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Origin Method
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Destiny Rate
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Destination Method
-                </TableHead>
-                <TableHead className="text-xs font-semibold h-9 py-2">
-                  PO
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {lanes.map((lane) => (
-                <TableRow key={lane.id}>
-                  <TableCell className="text-xs border-r py-2.5">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontalIcon className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.templateRateName}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.miles}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    ${lane.customerRate.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.customerRateMethod}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    ${lane.driverRate.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.driverRateMethod}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    ${lane.originRate.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.originMethod}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    ${lane.destinyRate.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {lane.destinationMethod}
-                  </TableCell>
-                  <TableCell className="text-xs py-2.5">
-                    {lane.po}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <DataTable
+        columns={columns}
+        data={lanes}
+        showViewOptions={false}
+        pageSize={10}
+      />
 
       {/* Add Lane Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>

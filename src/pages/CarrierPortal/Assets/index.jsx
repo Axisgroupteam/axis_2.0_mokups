@@ -761,7 +761,7 @@ const Assets = () => {
             <DropdownMenuItem
               onClick={() =>
                 navigate(
-                  "/app/carrier-portal/master/assets/asset-details?tab=general"
+                  "/app/carrier-portal/master/assets/vehicle-details?tab=general"
                 )
               }
             >
@@ -770,7 +770,7 @@ const Assets = () => {
             <DropdownMenuItem
               onClick={() =>
                 navigate(
-                  "/app/carrier-portal/master/assets/asset-details?tab=equipment"
+                  "/app/carrier-portal/master/assets/vehicle-details?tab=equipment"
                 )
               }
             >
@@ -779,7 +779,7 @@ const Assets = () => {
             <DropdownMenuItem
               onClick={() =>
                 navigate(
-                  "/app/carrier-portal/master/assets/asset-details?tab=allocation"
+                  "/app/carrier-portal/master/assets/vehicle-details?tab=allocation"
                 )
               }
             >

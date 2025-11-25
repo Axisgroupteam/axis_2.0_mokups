@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,24 +8,19 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlusIcon, MoreHorizontalIcon, MapPin } from "lucide-react";
+import { PlusIcon, MoreHorizontalIcon } from "lucide-react";
 
 const PickupLocations = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [formData, setFormData] = useState({
     code: "",
     name: "",
@@ -34,6 +29,44 @@ const PickupLocations = () => {
     state: "",
     zipCode: "",
   });
+
+  // Filter configurations
+  const filterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "name",
+          label: "Name",
+          type: "input",
+          group: "Basic",
+          placeholder: "Search name...",
+        },
+        {
+          key: "city",
+          label: "City",
+          type: "input",
+          group: "Basic",
+          placeholder: "Search city...",
+        },
+        {
+          key: "state",
+          label: "State",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "NY", label: "NY" },
+            { value: "NJ", label: "NJ" },
+            { value: "CA", label: "CA" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const handleFiltersChange = useCallback((newFilters) => {
+    setFilters(newFilters);
+  }, []);
 
   // Mock pickup locations data
   const pickupLocations = [
@@ -84,6 +117,74 @@ const PickupLocations = () => {
     },
   ];
 
+  // Column definitions
+  const columns = [
+    {
+      id: "actions",
+      header: "Actions",
+      size: 80,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem>View Details</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+    },
+    {
+      accessorKey: "code",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Code" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
+      size: 180,
+    },
+    {
+      accessorKey: "address",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Address" />
+      ),
+      size: 200,
+    },
+    {
+      accessorKey: "city",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="City" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "state",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="State" />
+      ),
+      size: 80,
+    },
+    {
+      accessorKey: "zipCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Zip Code" />
+      ),
+      size: 100,
+    },
+  ];
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -115,12 +216,12 @@ const PickupLocations = () => {
   };
 
   return (
-    <div className="w-full border rounded-sm bg-card">
-      <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <MapPin className="size-4" />
-          Pickup Locations
-        </h3>
+    <div className="border border-border rounded-lg p-4 bg-background">
+      <div className="flex items-center justify-between mb-3">
+        <SmartFilter
+          filterGroups={filterGroups}
+          onFiltersChange={handleFiltersChange}
+        />
         <Button
           size="sm"
           className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
@@ -130,77 +231,12 @@ const PickupLocations = () => {
           Add Location
         </Button>
       </div>
-      <div className="p-4">
-        <div className="border rounded-md overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Actions
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Code
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Name
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  Address
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  City
-                </TableHead>
-                <TableHead className="text-xs font-semibold border-r h-9 py-2">
-                  State
-                </TableHead>
-                <TableHead className="text-xs font-semibold h-9 py-2">
-                  Zip Code
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {pickupLocations.map((location) => (
-                <TableRow key={location.id}>
-                  <TableCell className="text-xs border-r py-2.5">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontalIcon className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {location.code}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {location.name}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {location.address}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {location.city}
-                  </TableCell>
-                  <TableCell className="text-xs border-r py-2.5">
-                    {location.state}
-                  </TableCell>
-                  <TableCell className="text-xs py-2.5">
-                    {location.zipCode}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <DataTable
+        columns={columns}
+        data={pickupLocations}
+        showViewOptions={false}
+        pageSize={10}
+      />
 
       {/* Add Location Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>

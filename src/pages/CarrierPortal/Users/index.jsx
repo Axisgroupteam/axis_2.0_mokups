@@ -45,7 +45,6 @@ import {
   SettingsIcon,
   FuelIcon,
   FileTextIcon,
-  KeyIcon,
 } from "lucide-react";
 import { FaUser } from "react-icons/fa";
 import SmartFilter from "@/components/SmartFilter";
@@ -175,19 +174,15 @@ const Users = () => {
     const roleActions = {
       Administrator: [
         { label: "Profile", action: "profile", icon: UserIcon },
-        { label: "Permissions", action: "permissions", icon: KeyIcon },
       ],
       Manager: [
         { label: "Profile", action: "profile", icon: UserIcon },
-        { label: "Permissions", action: "permissions", icon: KeyIcon },
       ],
       Dispatcher: [
         { label: "Profile", action: "profile", icon: UserIcon },
-        { label: "Permissions", action: "permissions", icon: KeyIcon },
       ],
       Employee: [
         { label: "Profile", action: "profile", icon: UserIcon },
-        { label: "Permissions", action: "permissions", icon: KeyIcon },
       ],
       Driver: [
         { label: "Profile", action: "profile", icon: UserIcon },
@@ -244,7 +239,6 @@ const Users = () => {
     // Map action to tab value for Admin/Manager/Dispatcher/Employee roles
     const userTabMap = {
       "profile": "profile",
-      "permissions": "permissions",
     };
 
     // Determine which detail page to navigate to based on user roles
@@ -664,24 +658,6 @@ const Users = () => {
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
-            {/* Dispatcher Steps */}
-            {nextStepsData.roles.includes("Dispatcher") && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-sm text-gray-700">Dispatcher</h4>
-                <div
-                  className="p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    setIsNextStepsOpen(false);
-                    navigate("/app/carrier-portal/master/users/user-details?tab=permissions");
-                  }}
-                >
-                  <span className="text-sm font-medium">
-                    Provide permissions for that user
-                  </span>
-                </div>
-              </div>
-            )}
-
             {/* Driver Steps */}
             {nextStepsData.roles.includes("Driver") && (
               <div className="space-y-3">

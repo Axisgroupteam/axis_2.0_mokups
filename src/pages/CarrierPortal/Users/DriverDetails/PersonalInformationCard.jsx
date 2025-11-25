@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { FaUserCircle } from "react-icons/fa";
 import { User, Edit, Trash2 } from "lucide-react";
 import { MdEdit } from "react-icons/md";
@@ -25,13 +24,17 @@ const PersonalInformationCard = ({ driverData }) => {
             {/* Row 1: Phone Number, Birth Date, Gender */}
             <div className="grid grid-cols-3 divide-x divide-border">
               <div className="px-4 py-2.5">
-                <p className="text-xs text-muted-foreground mb-0.5">Phone Number</p>
+                <p className="text-xs text-muted-foreground mb-0.5">
+                  Phone Number
+                </p>
                 <p className="text-sm font-medium text-foreground">
                   {driverData.phoneNumber || "-"}
                 </p>
               </div>
               <div className="px-4 py-2.5">
-                <p className="text-xs text-muted-foreground mb-0.5">Birth Date</p>
+                <p className="text-xs text-muted-foreground mb-0.5">
+                  Birth Date
+                </p>
                 <p className="text-sm font-medium text-foreground">
                   {driverData.birthDate || "-"}
                 </p>
@@ -63,7 +66,9 @@ const PersonalInformationCard = ({ driverData }) => {
                 </p>
               </div>
               <div className="px-4 py-2.5">
-                <p className="text-xs text-muted-foreground mb-0.5">Spouse Name</p>
+                <p className="text-xs text-muted-foreground mb-0.5">
+                  Spouse Name
+                </p>
                 <p className="text-sm font-medium text-foreground">
                   {driverData.spouseName || "-"}
                 </p>
@@ -142,20 +147,6 @@ const PersonalInformationCard = ({ driverData }) => {
               {driverData.longitude || "-"}
             </p>
           </div>
-        </div>
-
-        {/* Temporary Password - Full Width */}
-        <div className="px-4 py-2.5">
-          <p className="text-xs text-muted-foreground mb-1">
-            Temporary Password
-          </p>
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 rounded-sm text-xs"
-          >
-            Regenerate Password
-          </Button>
         </div>
       </div>
     </div>

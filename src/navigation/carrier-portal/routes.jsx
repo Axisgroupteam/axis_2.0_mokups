@@ -117,9 +117,9 @@ export const carrierPortalRoutes = [
     label: "Assets",
   },
   {
-    path: "master/assets/asset-details",
+    path: "master/assets/vehicle-details",
     element: <AssetDetails />,
-    label: "Asset Details",
+    label: "Vehicle Details",
   },
   {
     path: "master/assets/trailer-details",

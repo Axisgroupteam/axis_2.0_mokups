@@ -1,32 +1,115 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  FaUser,
-  FaComments,
-  FaPaperclip,
-  FaClock,
-  FaPlus,
-  FaDollarSign,
-  FaEdit,
-  FaTrash,
-  FaFileInvoiceDollar,
-} from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
+  Landmark,
+  Receipt,
+  User,
+  MessageSquare,
+  Paperclip,
+  Clock,
+  Plus,
+  DollarSign,
+  Pencil,
+  Trash2,
+  FileText,
+} from "lucide-react";
 import PayeeProfileCard from "./PayeeDetails/PayeeProfileCard";
 
 const PayeeDetails = () => {
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "profile";
+  const [directDepositFilters, setDirectDepositFilters] = useState([]);
+  const [recurringDeductionsFilters, setRecurringDeductionsFilters] = useState(
+    []
+  );
+
+  // Filter configurations for Direct Deposit
+  const directDepositFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "type",
+          label: "Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Primary", label: "Primary" },
+            { value: "Secondary", label: "Secondary" },
+          ],
+        },
+        {
+          key: "bank",
+          label: "Bank",
+          type: "input",
+          group: "Basic",
+          placeholder: "Enter bank name...",
+        },
+        {
+          key: "active",
+          label: "Status",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "true", label: "Active" },
+            { value: "false", label: "Inactive" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  // Filter configurations for Recurring Deductions
+  const recurringDeductionsFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Active", label: "Active" },
+            { value: "Inactive", label: "Inactive" },
+          ],
+        },
+        {
+          key: "frequency",
+          label: "Frequency",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Weekly", label: "Weekly" },
+            { value: "Monthly", label: "Monthly" },
+            { value: "Bi-Weekly", label: "Bi-Weekly" },
+          ],
+        },
+        {
+          key: "deductionType",
+          label: "Deduction Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Fixed", label: "Fixed" },
+            { value: "Percentage", label: "Percentage" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const handleDirectDepositFiltersChange = useCallback((newFilters) => {
+    setDirectDepositFilters(newFilters);
+  }, []);
+
+  const handleRecurringDeductionsFiltersChange = useCallback((newFilters) => {
+    setRecurringDeductionsFilters(newFilters);
+  }, []);
 
   // Mock payee data
   const payeeData = {
@@ -70,6 +153,19 @@ const PayeeDetails = () => {
       lastDeposite: "2024-11-20",
       active: true,
     },
+    {
+      id: 3,
+      type: "Savings",
+      bank: "Wells Fargo",
+      accountNumber: "**** **** 9012",
+      amount: "$1,000.00",
+      method: "Fixed",
+      newAmount: "$1,200.00",
+      nextMethod: "Fixed",
+      firstDeposite: "2024-03-01",
+      lastDeposite: "2024-11-18",
+      active: false,
+    },
   ];
 
   // Mock recurring deductions data
@@ -112,6 +208,25 @@ const PayeeDetails = () => {
       stopDate: "2024-12-31",
       totalToDate: "$1,650.00",
     },
+    {
+      id: 3,
+      tractor: "TRC-103",
+      status: "Active",
+      deductionCode: "DED-003",
+      description: "Fuel Advance",
+      frequency: "Bi-Weekly",
+      lastDateTaken: "2024-11-10",
+      cycleCode: "CYC-03",
+      amount: "$500.00",
+      percent: "10%",
+      deductionType: "Fixed",
+      loanBalance: "$3,500.00",
+      originalAmount: "$6,000.00",
+      glAccount: "GL-5003",
+      startDate: "2024-02-01",
+      stopDate: "2024-12-31",
+      totalToDate: "$2,500.00",
+    },
   ];
 
   // Mock comments data
@@ -142,6 +257,218 @@ const PayeeDetails = () => {
     },
   ];
 
+  // Direct Deposit columns
+  const directDepositColumns = [
+    {
+      accessorKey: "type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "bank",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Bank" />
+      ),
+      size: 150,
+    },
+    {
+      accessorKey: "accountNumber",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Account Number" />
+      ),
+      size: 150,
+    },
+    {
+      accessorKey: "amount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Amount" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "method",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="M" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "newAmount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="New Amount" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "nextMethod",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="M" />
+      ),
+      size: 80,
+    },
+    {
+      accessorKey: "firstDeposite",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="First Deposit" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "lastDeposite",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Last Deposit" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "active",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Active" />
+      ),
+      size: 100,
+      cell: ({ row }) => {
+        const isActive = row.getValue("active");
+        return (
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+              isActive
+                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+            }`}
+          >
+            {isActive ? "Active" : "Inactive"}
+          </span>
+        );
+      },
+    },
+  ];
+
+  // Recurring Deductions columns
+  const recurringDeductionsColumns = [
+    {
+      accessorKey: "tractor",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Tractor" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
+      size: 100,
+      cell: ({ row }) => {
+        const status = row.getValue("status");
+        return (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+            {status}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "deductionCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Deduction Code" />
+      ),
+      size: 130,
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Description" />
+      ),
+      size: 150,
+    },
+    {
+      accessorKey: "frequency",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Frequency" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "lastDateTaken",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Last Date Taken" />
+      ),
+      size: 130,
+    },
+    {
+      accessorKey: "cycleCode",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Cycle Code" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "amount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Amount" />
+      ),
+      size: 100,
+    },
+    {
+      accessorKey: "percent",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Percent" />
+      ),
+      size: 80,
+    },
+    {
+      accessorKey: "deductionType",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Deduction Type" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "loanBalance",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Loan Balance" />
+      ),
+      size: 120,
+    },
+    {
+      accessorKey: "originalAmount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Original Amount" />
+      ),
+      size: 130,
+    },
+    {
+      accessorKey: "glAccount",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="GL Account" />
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "startDate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Start Date" />
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "stopDate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Stop Date" />
+      ),
+      size: 110,
+    },
+    {
+      accessorKey: "totalToDate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Total to Date" />
+      ),
+      size: 120,
+    },
+  ];
+
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
       <Tabs
@@ -151,19 +478,19 @@ const PayeeDetails = () => {
         <div className="flex-shrink-0">
           <TabsList className="mb-0 rounded-none ">
             <TabsTrigger value="profile" className="h-full">
-              <FaUser className="size-4" />
+              <User className="size-4" />
               Profile
             </TabsTrigger>
             <TabsTrigger value="finance" className="h-full">
-              <FaDollarSign className="size-4" />
+              <DollarSign className="size-4" />
               Finance
             </TabsTrigger>
             <TabsTrigger value="settlement" className="h-full">
-              <FaFileInvoiceDollar className="size-4" />
+              <FileText className="size-4" />
               Settlement Details
             </TabsTrigger>
             <TabsTrigger value="comments" className="h-full">
-              <FaComments className="size-4" />
+              <MessageSquare className="size-4" />
               Comments
             </TabsTrigger>
           </TabsList>
@@ -180,151 +507,82 @@ const PayeeDetails = () => {
             </div>
           </TabsContent>
 
-          <TabsContent
-            value="finance"
-            className="space-y-4 px-2 py-2 h-full mt-0"
-          >
-            {/* First Direct Deposit Section */}
-            <div className="border rounded-sm bg-card">
-              <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <FaDollarSign className="size-4" />
-                  Direct Deposite
-                </h3>
-                <Button
-                  size="sm"
-                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+          <TabsContent value="finance" className="space-y-4 px-4 h-full mt-0">
+            <Tabs defaultValue="direct-deposit" className="w-full mt-1">
+              <TabsList className="mb-1 h-14">
+                <TabsTrigger
+                  value="direct-deposit"
+                  className="flex items-center gap-1.5"
                 >
-                  <FaPlus className="size-3" />
-                  Add Direct Deposite
-                </Button>
-              </div>
-              <div className="p-4">
-                {directDeposits.length > 0 ? (
-                  <div className="border rounded-md overflow-hidden">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Type</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Bank</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Account Number</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Amount</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">M</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">New amount</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">M</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">First Deposite</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Last Deposite</TableHead>
-                          <TableHead className="text-xs font-semibold h-9 py-2">Active</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {directDeposits.map((deposit) => (
-                          <TableRow key={deposit.id}>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.type}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.bank}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.accountNumber}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.amount}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.method}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.newAmount}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.nextMethod}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.firstDeposite}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deposit.lastDeposite}</TableCell>
-                            <TableCell className="text-xs py-2.5">
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                deposit.active
-                                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                                  : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                              }`}>
-                                {deposit.active ? "Active" : "Inactive"}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No direct deposits added yet
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Recurring Deductions Section */}
-            <div className="border rounded-sm bg-card">
-              <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <FaDollarSign className="size-4" />
+                  <Landmark className="size-4" />
+                  Direct Deposit
+                </TabsTrigger>
+                <TabsTrigger
+                  value="recurring-deductions"
+                  className="flex items-center gap-1.5"
+                >
+                  <Receipt className="size-4" />
                   Recurring Deductions
-                </h3>
-                <Button
-                  size="sm"
-                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
-                >
-                  <FaPlus className="size-3" />
-                  Add Recurring Deduction
-                </Button>
-              </div>
-              <div className="p-4">
-                {recurringDeductions.length > 0 ? (
-                  <div className="border rounded-md overflow-hidden">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Tractor</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Status</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Deduction/Earning Code</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Description</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Frequency</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Last date taken</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Cycle code</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Amount</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Percent</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Deduction type</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Loan balance</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Original Amount</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">GL Account</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Start date</TableHead>
-                          <TableHead className="text-xs font-semibold border-r h-9 py-2">Stop date</TableHead>
-                          <TableHead className="text-xs font-semibold h-9 py-2">Total to date</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {recurringDeductions.map((deduction) => (
-                          <TableRow key={deduction.id}>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.tractor}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                {deduction.status}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.deductionCode}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.description}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.frequency}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.lastDateTaken}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.cycleCode}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.amount}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.percent}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.deductionType}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.loanBalance}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.originalAmount}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.glAccount}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.startDate}</TableCell>
-                            <TableCell className="text-xs border-r py-2.5">{deduction.stopDate}</TableCell>
-                            <TableCell className="text-xs py-2.5">{deduction.totalToDate}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="direct-deposit" className="space-y-4 mt-0">
+                {/* Direct Deposit Section */}
+                <div className="border border-border rounded-lg overflow-hidden bg-background">
+                  <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                    <SmartFilter
+                      filterGroups={directDepositFilterGroups}
+                      onFiltersChange={handleDirectDepositFiltersChange}
+                    />
+                    <Button
+                      size="sm"
+                      className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+                    >
+                      <Plus className="size-3" />
+                      Add Direct Deposit
+                    </Button>
                   </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No recurring deductions added yet
-                  </p>
-                )}
-              </div>
-            </div>
+                  <div className="p-4">
+                    <DataTable
+                      columns={directDepositColumns}
+                      data={directDeposits}
+                      showViewOptions={false}
+                      pageSize={10}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent
+                value="recurring-deductions"
+                className="space-y-4 mt-0"
+              >
+                {/* Recurring Deductions Section */}
+                <div className="border border-border rounded-lg overflow-hidden bg-background">
+                  <div className="flex items-center justify-between px-4 py-2 border-b border-border">
+                    <SmartFilter
+                      filterGroups={recurringDeductionsFilterGroups}
+                      onFiltersChange={handleRecurringDeductionsFiltersChange}
+                    />
+                    <Button
+                      size="sm"
+                      className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+                    >
+                      <Plus className="size-3" />
+                      Add Recurring Deduction
+                    </Button>
+                  </div>
+                  <div className="p-4">
+                    <DataTable
+                      columns={recurringDeductionsColumns}
+                      data={recurringDeductions}
+                      showViewOptions={false}
+                      pageSize={10}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           <TabsContent
@@ -337,59 +595,109 @@ const PayeeDetails = () => {
                 {/* General Card */}
                 <div className="border rounded-sm bg-card">
                   <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">General</h3>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      General
+                    </h3>
                     <button className="text-slate-500 hover:text-foreground transition-colors">
-                      <MdEdit className="size-4" />
+                      <Pencil className="size-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-border">
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Payee type</p>
-                        <p className="text-sm font-medium text-foreground">Individual</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Payee type
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          Individual
+                        </p>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Pay Frequency</p>
-                        <p className="text-sm font-medium text-foreground">Weekly</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Pay Frequency
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          Weekly
+                        </p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">W-9 on file</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          W-9 on file
+                        </p>
                         <div className="flex items-center gap-2">
                           <div className="flex items-center justify-center w-4 h-4 border-2 border-green-500 bg-green-500 rounded">
-                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M5 13l4 4L19 7"
+                              />
                             </svg>
                           </div>
-                          <span className="text-sm font-medium text-foreground">Yes</span>
+                          <span className="text-sm font-medium text-foreground">
+                            Yes
+                          </span>
                         </div>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Expense account</p>
-                        <p className="text-sm font-medium text-foreground">EXP-5001</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Expense account
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          EXP-5001
+                        </p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Payroll PIN</p>
-                        <p className="text-sm font-medium text-foreground">PIN-12345</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Payroll PIN
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          PIN-12345
+                        </p>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Print</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Print
+                        </p>
                         <div className="flex items-center gap-2">
                           <div className="flex items-center justify-center w-4 h-4 border-2 border-green-500 bg-green-500 rounded">
-                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M5 13l4 4L19 7"
+                              />
                             </svg>
                           </div>
-                          <span className="text-sm font-medium text-foreground">Enabled</span>
+                          <span className="text-sm font-medium text-foreground">
+                            Enabled
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Box</p>
-                      <p className="text-sm font-medium text-foreground">Box 123</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Box
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        Box 123
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -397,20 +705,30 @@ const PayeeDetails = () => {
                 {/* Rates Card */}
                 <div className="border rounded-sm bg-card">
                   <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">Rates</h3>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Rates
+                    </h3>
                     <button className="text-slate-500 hover:text-foreground transition-colors">
-                      <MdEdit className="size-4" />
+                      <Pencil className="size-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-border">
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Pay method</p>
-                        <p className="text-sm font-medium text-foreground">Direct Deposit</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Pay method
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          Direct Deposit
+                        </p>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Loaded pay rate</p>
-                        <p className="text-sm font-medium text-foreground">$25.50/hr</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Loaded pay rate
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          $25.50/hr
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -422,30 +740,48 @@ const PayeeDetails = () => {
                 {/* Year to date (YTD Wages) Card */}
                 <div className="border rounded-sm bg-card">
                   <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">Year to date (YTD Wages)</h3>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Year to date (YTD Wages)
+                    </h3>
                     <button className="text-slate-500 hover:text-foreground transition-colors">
-                      <MdEdit className="size-4" />
+                      <Pencil className="size-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-border">
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Gross</p>
-                        <p className="text-sm font-medium text-foreground">$45,000.00</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Gross
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          $45,000.00
+                        </p>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Gross non-taxable</p>
-                        <p className="text-sm font-medium text-foreground">$2,500.00</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Gross non-taxable
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          $2,500.00
+                        </p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">YTD Distance</p>
-                        <p className="text-sm font-medium text-foreground">25,000 mi</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          YTD Distance
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          25,000 mi
+                        </p>
                       </div>
                       <div className="px-4 py-2.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">PTD Distance</p>
-                        <p className="text-sm font-medium text-foreground">2,500 mi</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          PTD Distance
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          2,500 mi
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -454,23 +790,37 @@ const PayeeDetails = () => {
                 {/* Allocation Card */}
                 <div className="border rounded-sm bg-card">
                   <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">Allocation</h3>
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Allocation
+                    </h3>
                     <button className="text-slate-500 hover:text-foreground transition-colors">
-                      <MdEdit className="size-4" />
+                      <Pencil className="size-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-border">
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Allocation code</p>
-                      <p className="text-sm font-medium text-foreground">ALLOC-001</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Allocation code
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        ALLOC-001
+                      </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Description</p>
-                      <p className="text-sm font-medium text-foreground">Standard Allocation</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Description
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        Standard Allocation
+                      </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Effective date</p>
-                      <p className="text-sm font-medium text-foreground">2024-01-01</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Effective date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        2024-01-01
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -485,14 +835,14 @@ const PayeeDetails = () => {
             <div className="border rounded-sm bg-card">
               <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <FaComments className="size-4" />
+                  <MessageSquare className="size-4" />
                   Comments
                 </h3>
                 <Button
                   size="sm"
                   className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
                 >
-                  <FaPlus className="size-3" />
+                  <Plus className="size-3" />
                   Add Comment
                 </Button>
               </div>
@@ -517,14 +867,14 @@ const PayeeDetails = () => {
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                <FaUser className="size-3 text-primary" />
+                                <User className="size-3 text-primary" />
                               </div>
                               <div>
                                 <p className="font-semibold text-xs text-foreground">
                                   {comment.enteredBy}
                                 </p>
                                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                                  <FaClock className="size-2" />
+                                  <Clock className="size-2" />
                                   {comment.dateTime}
                                 </div>
                               </div>
@@ -545,7 +895,7 @@ const PayeeDetails = () => {
 
                           {comment.attachment && (
                             <div className="flex items-center gap-1.5 p-1.5 bg-muted/50 rounded-md w-fit">
-                              <FaPaperclip className="size-2.5 text-muted-foreground" />
+                              <Paperclip className="size-2.5 text-muted-foreground" />
                               <span className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
                                 {comment.attachment}
                               </span>
