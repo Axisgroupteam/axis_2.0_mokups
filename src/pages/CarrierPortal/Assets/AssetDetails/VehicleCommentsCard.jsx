@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Plus, User, Clock, Paperclip } from "lucide-react";
 
-const TrailerCommentsCard = ({ commentsData }) => {
+const VehicleCommentsCard = ({ commentsData }) => {
   const typeColors = {
     Maintenance: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
     Repair: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
@@ -82,4 +82,4 @@ const TrailerCommentsCard = ({ commentsData }) => {
   );
 };
 
-export default TrailerCommentsCard;
+export default VehicleCommentsCard;

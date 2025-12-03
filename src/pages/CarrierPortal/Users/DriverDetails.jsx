@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -129,6 +131,144 @@ const DriverDetails = () => {
       type: "Positive",
       attachment: "certificate.pdf",
       comment: "Received commendation from client for excellent service.",
+    },
+  ];
+
+  // Audit log data
+  const auditLogData = [
+    {
+      id: 1,
+      action: "License information updated",
+      type: "Update",
+      oldValue: "Class B CDL",
+      newValue: "Class A CDL",
+      actionBy: "John Smith",
+      timestamp: "Jan 28, 2024 14:35:22",
+    },
+    {
+      id: 2,
+      action: "Safety compliance document uploaded",
+      type: "Upload",
+      oldValue: "-",
+      newValue: "medical_cert.pdf",
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 26, 2024 09:12:45",
+    },
+    {
+      id: 3,
+      action: "Payee information updated",
+      type: "Update",
+      oldValue: "Bank of America ****1234",
+      newValue: "Chase ****5678",
+      actionBy: "John Smith",
+      timestamp: "Jan 24, 2024 20:22:34",
+    },
+    {
+      id: 4,
+      action: "Driver status changed",
+      type: "Status",
+      oldValue: "Inactive",
+      newValue: "Active",
+      actionBy: "Mike Davis",
+      timestamp: "Jan 20, 2024 11:45:18",
+    },
+    {
+      id: 5,
+      action: "Phone number updated",
+      type: "Update",
+      oldValue: "+1 (555) 000-0000",
+      newValue: "+1 (555) 123-4567",
+      actionBy: "John Smith",
+      timestamp: "Jan 18, 2024 16:30:00",
+    },
+    {
+      id: 6,
+      action: "Employment information added",
+      type: "Create",
+      oldValue: "-",
+      newValue: "Mega Trucking Inc.",
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 15, 2024 10:15:33",
+    },
+    {
+      id: 7,
+      action: "Driver credentials verified",
+      type: "Verify",
+      oldValue: "Unverified",
+      newValue: "Verified",
+      actionBy: "Admin System",
+      timestamp: "Jan 12, 2024 08:00:00",
+    },
+    {
+      id: 8,
+      action: "Driver created",
+      type: "Create",
+      oldValue: "-",
+      newValue: "John Smith",
+      actionBy: "John Smith",
+      timestamp: "Jan 10, 2024 09:30:15",
+    },
+  ];
+
+  const getTypeBadgeColor = (type) => {
+    const colors = {
+      Create: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Update: "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+      Upload: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Status: "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Verify: "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+    };
+    return colors[type] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+  };
+
+  const auditLogColumns = [
+    {
+      accessorKey: "action",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Operation" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type" />
+      ),
+      cell: ({ row }) => {
+        const type = row.getValue("type");
+        return (
+          <Badge className={getTypeBadgeColor(type)}>{type}</Badge>
+        );
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: "oldValue",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Old Value" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "newValue",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="New Value" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "actionBy",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Modified By" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "timestamp",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Timestamp" />
+      ),
+      enableSorting: true,
     },
   ];
 
@@ -494,10 +634,15 @@ const DriverDetails = () => {
             <FuelTab />
           </TabsContent>
 
-          <TabsContent value="audit" className="space-y-4 pb-4 h-full mt-2">
-            <div className="border rounded-lg p-6 bg-gray-50">
-              <p className="text-gray-500">Audit Log content coming soon...</p>
-            </div>
+          <TabsContent
+            value="audit"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
+          >
+            <DataTable
+              columns={auditLogColumns}
+              data={auditLogData}
+              showViewOptions={false}
+            />
           </TabsContent>
         </div>
       </Tabs>

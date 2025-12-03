@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  SearchIcon,
   BadgeCheckIcon,
   ShieldAlertIcon,
   GraduationCapIcon,
@@ -12,16 +11,12 @@ import TrainingCard from "./SafetyCompliance/TrainingCard";
 import SafetyManagementCard from "./SafetyCompliance/SafetyManagementCard";
 import DriverPSPCard from "./SafetyCompliance/DriverPSPCard";
 import BasicScoresCard from "./SafetyCompliance/BasicScoresCard";
-import EmploymentVerificationCard from "./SafetyCompliance/EmploymentVerificationCard";
 import AdditionalSafetyFieldsCard from "./SafetyCompliance/AdditionalSafetyFieldsCard";
 import OrientationCard from "./SafetyCompliance/OrientationCard";
-import InsuranceCard from "./SafetyCompliance/InsuranceCard";
 import AccidentRecordCard from "./SafetyCompliance/AccidentRecordCard";
-import ExternalLinksCard from "./SafetyCompliance/ExternalLinksCard";
-import IdentifierSearchCard from "./SafetyCompliance/IdentifierSearchCard";
 
 const SafetyComplianceTab = () => {
-  const [activeSubTab, setActiveSubTab] = useState("overview");
+  const [activeSubTab, setActiveSubTab] = useState("qualifications");
 
   return (
     <Tabs
@@ -30,10 +25,6 @@ const SafetyComplianceTab = () => {
       className="w-full -mt-1 rounded-sm -ml-1"
     >
       <TabsList className="mb-1 h-14 rounded-sm ">
-        <TabsTrigger value="overview" className="flex items-center gap-1.5">
-          <SearchIcon className="size-4" />
-          Overview
-        </TabsTrigger>
         <TabsTrigger
           value="qualifications"
           className="flex items-center gap-1.5"
@@ -54,19 +45,6 @@ const SafetyComplianceTab = () => {
         </TabsTrigger>
       </TabsList>
 
-      {/* Overview Sub-Tab */}
-      <TabsContent value="overview" className="space-y-4 mt-0">
-        <div className="flex gap-4 h-fit">
-          <div className="w-1/2 flex flex-col gap-4">
-            <IdentifierSearchCard />
-            <ExternalLinksCard />
-          </div>
-          <div className="w-1/2">
-            <InsuranceCard />
-          </div>
-        </div>
-      </TabsContent>
-
       {/* Qualifications Sub-Tab */}
       <TabsContent value="qualifications" className="space-y-4 mt-0">
         <div className="flex gap-4 h-fit">
@@ -74,10 +52,9 @@ const SafetyComplianceTab = () => {
             <DriverEndorsementsCard />
           </div>
           <div className="w-1/2">
-            <EmploymentVerificationCard />
+            <AdditionalSafetyFieldsCard />
           </div>
         </div>
-        <AdditionalSafetyFieldsCard />
       </TabsContent>
 
       {/* Safety Records Sub-Tab */}

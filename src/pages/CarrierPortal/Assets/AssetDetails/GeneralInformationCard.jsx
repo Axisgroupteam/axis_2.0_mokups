@@ -1,23 +1,13 @@
-import { Badge } from "@/components/ui/badge";
 import { MdEdit } from "react-icons/md";
-import { TruckIcon } from "lucide-react";
+import { TruckIcon, FileText, Image } from "lucide-react";
 
 const GeneralInformationCard = ({ assetData }) => {
-  const getSafetyStatusBadgeColor = (status) => {
-    const colors = {
-      Pass: "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50",
-      Fail: "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
-      Pending: "bg-yellow-500/10 hover:bg-yellow-500/30 text-yellow-700 dark:text-yellow-400 border border-yellow-500/50",
-    };
-    return colors[status] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
-  };
-
   return (
     <div className="w-full border rounded-sm bg-card flex flex-col">
       <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
           <TruckIcon className="size-4" />
-          Asset Information
+          Vehicle Information
         </h3>
         <div className="flex items-center gap-2">
           <button className="text-slate-500 hover:text-foreground transition-colors">
@@ -26,44 +16,28 @@ const GeneralInformationCard = ({ assetData }) => {
         </div>
       </div>
       <div className="divide-y divide-border">
-        {/* Vehicle Number and Service Status */}
+        {/* Vehicle Name and VIN/SN */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Vehicle Number</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Vehicle Name</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.vehicleNumber || "-"}
+              {assetData.vehicleName || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Service Status</p>
-            <Badge className="bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50">
-              {assetData.serviceStatus || "-"}
-            </Badge>
-          </div>
-        </div>
-
-        {/* In Service Date and Out Service Date */}
-        <div className="grid grid-cols-2 divide-x divide-border">
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">In Service Date</p>
+            <p className="text-xs text-muted-foreground mb-0.5">VIN/SN</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.inServiceDate || "-"}
-            </p>
-          </div>
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Out Service Date</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.outServiceDate || "-"}
+              {assetData.vinSn || "-"}
             </p>
           </div>
         </div>
 
-        {/* Make and Year */}
+        {/* License Plate and Year */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Make</p>
+            <p className="text-xs text-muted-foreground mb-0.5">License Plate</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.make || "-"}
+              {assetData.licensePlate || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
@@ -74,7 +48,39 @@ const GeneralInformationCard = ({ assetData }) => {
           </div>
         </div>
 
-        {/* Type and Fleet */}
+        {/* Model and Make */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Model</p>
+            <p className="text-sm font-medium text-foreground">
+              {assetData.model || "-"}
+            </p>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Make</p>
+            <p className="text-sm font-medium text-foreground">
+              {assetData.make || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Fleet Type and Group */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Fleet Type</p>
+            <p className="text-sm font-medium text-foreground">
+              {assetData.fleetType || "-"}
+            </p>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Group</p>
+            <p className="text-sm font-medium text-foreground">
+              {assetData.group || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Type and Ownership */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
             <p className="text-xs text-muted-foreground mb-0.5">Type</p>
@@ -83,99 +89,69 @@ const GeneralInformationCard = ({ assetData }) => {
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Fleet</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Ownership</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.fleet || "-"}
+              {assetData.ownership || "-"}
             </p>
           </div>
         </div>
 
-        {/* Payee Option and Owner */}
+        {/* Body Type and Body Subtype */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Payee Option</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Body Type</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.payeeOption || "-"}
+              {assetData.bodyType || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Owner</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Body Subtype</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.owner || "-"}
+              {assetData.bodySubtype || "-"}
             </p>
           </div>
         </div>
 
-        {/* Assigned Driver and Home Terminal */}
+        {/* Color and MSRP */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Assigned Driver</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Color</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.assignedDriver || "-"}
+              {assetData.color || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Home Terminal</p>
+            <p className="text-xs text-muted-foreground mb-0.5">MSRP</p>
             <p className="text-sm font-medium text-foreground">
-              {assetData.homeTerminal || "-"}
+              {assetData.msrp || "-"}
             </p>
           </div>
         </div>
 
-        {/* Date Assigned and Assigned By */}
+        {/* Registration Documents and Vehicle Images */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Date Assigned</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.dateAssigned || "-"}
-            </p>
+            <p className="text-xs text-muted-foreground mb-0.5">Registration Documents</p>
+            {assetData.registrationDocuments ? (
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <FileText className="size-4" />
+                <span className="hover:underline cursor-pointer">{assetData.registrationDocuments}</span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-foreground">-</p>
+            )}
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Assigned By</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.assignedBy || "-"}
-            </p>
+            <p className="text-xs text-muted-foreground mb-0.5">Vehicle Images</p>
+            {assetData.vehicleImages ? (
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Image className="size-4" />
+                <span className="hover:underline cursor-pointer">{assetData.vehicleImages}</span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-foreground">-</p>
+            )}
           </div>
-        </div>
-
-        {/* Dispatcher and Serial Number */}
-        <div className="grid grid-cols-2 divide-x divide-border">
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Dispatcher</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.dispatcher || "-"}
-            </p>
-          </div>
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Serial Number</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.serialNumber || "-"}
-            </p>
-          </div>
-        </div>
-
-        {/* Safety Status and Driver */}
-        <div className="grid grid-cols-2 divide-x divide-border">
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Safety Status</p>
-            <Badge className={getSafetyStatusBadgeColor(assetData.safetyStatus)}>
-              {assetData.safetyStatus || "-"}
-            </Badge>
-          </div>
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Driver</p>
-            <p className="text-sm font-medium text-foreground">
-              {assetData.driver || "-"}
-            </p>
-          </div>
-        </div>
-
-        {/* Trailer */}
-        <div className="px-4 py-2.5">
-          <p className="text-xs text-muted-foreground mb-0.5">Trailer</p>
-          <p className="text-sm font-medium text-foreground">
-            {assetData.trailer || "-"}
-          </p>
         </div>
       </div>
     </div>

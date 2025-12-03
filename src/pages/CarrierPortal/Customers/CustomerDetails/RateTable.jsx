@@ -48,7 +48,7 @@ const RateTable = () => {
     },
     {
       id: 2,
-      tableName: "Standard Rates 2024",
+      tableName: "Standard Rates 2025",
       min: 51,
       max: 100,
       customerRate: 200.0,
@@ -251,7 +251,10 @@ const RateTable = () => {
             {/* Table Name and Import Table */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="tableName" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="tableName"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Table Name <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -259,13 +262,18 @@ const RateTable = () => {
                   type="text"
                   placeholder="Enter Table Name"
                   value={formData.tableName}
-                  onChange={(e) => handleInputChange("tableName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("tableName", e.target.value)
+                  }
                   className="h-10"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="importFile" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="importFile"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Import Table
                 </Label>
                 <div className="flex items-center gap-2">
@@ -273,7 +281,9 @@ const RateTable = () => {
                     type="button"
                     variant="outline"
                     className="h-10"
-                    onClick={() => document.getElementById("importFile").click()}
+                    onClick={() =>
+                      document.getElementById("importFile").click()
+                    }
                   >
                     Choose File
                   </Button>
@@ -286,7 +296,9 @@ const RateTable = () => {
                     }
                   />
                   <span className="text-sm text-muted-foreground">
-                    {formData.importFile ? formData.importFile.name : "No file chosen"}
+                    {formData.importFile
+                      ? formData.importFile.name
+                      : "No file chosen"}
                   </span>
                 </div>
               </div>
@@ -295,7 +307,10 @@ const RateTable = () => {
             {/* Table Rows */}
             <div className="space-y-3">
               {tableRows.map((row) => (
-                <div key={row.id} className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-3">
+                <div
+                  key={row.id}
+                  className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-3"
+                >
                   <div className="space-y-1">
                     <Label className="text-xs text-gray-700">Min</Label>
                     <Input
@@ -319,7 +334,9 @@ const RateTable = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs text-gray-700">Customer Rate</Label>
+                    <Label className="text-xs text-gray-700">
+                      Customer Rate
+                    </Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                         $
@@ -328,7 +345,11 @@ const RateTable = () => {
                         type="number"
                         value={row.customerRate}
                         onChange={(e) =>
-                          handleTableRowChange(row.id, "customerRate", e.target.value)
+                          handleTableRowChange(
+                            row.id,
+                            "customerRate",
+                            e.target.value
+                          )
                         }
                         className="h-10 pl-7"
                       />
@@ -344,7 +365,11 @@ const RateTable = () => {
                         type="number"
                         value={row.driverRate}
                         onChange={(e) =>
-                          handleTableRowChange(row.id, "driverRate", e.target.value)
+                          handleTableRowChange(
+                            row.id,
+                            "driverRate",
+                            e.target.value
+                          )
                         }
                         className="h-10 pl-7"
                       />

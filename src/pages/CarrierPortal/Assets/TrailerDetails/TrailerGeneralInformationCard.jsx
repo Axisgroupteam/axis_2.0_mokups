@@ -1,17 +1,8 @@
-import { Badge } from "@/components/ui/badge";
 import { MdEdit } from "react-icons/md";
 import { FaTrailer } from "react-icons/fa";
+import { FileText, Image } from "lucide-react";
 
 const TrailerGeneralInformationCard = ({ trailerData }) => {
-  const getSafetyStatusBadgeColor = (status) => {
-    const colors = {
-      Pass: "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50",
-      Fail: "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
-      Pending: "bg-yellow-500/10 hover:bg-yellow-500/30 text-yellow-700 dark:text-yellow-400 border border-yellow-500/50",
-    };
-    return colors[status] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
-  };
-
   return (
     <div className="w-full border rounded-sm bg-card flex flex-col">
       <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
@@ -26,44 +17,44 @@ const TrailerGeneralInformationCard = ({ trailerData }) => {
         </div>
       </div>
       <div className="divide-y divide-border">
-        {/* Trailer Number and Service Status */}
+        {/* Trailer Name and VIN/SN */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Trailer Number</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Trailer Name</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.trailerNumber || "-"}
+              {trailerData.trailerName || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Service Status</p>
-            <Badge className="bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50">
-              {trailerData.serviceStatus || "-"}
-            </Badge>
-          </div>
-        </div>
-
-        {/* In Service Date and Out Service Date */}
-        <div className="grid grid-cols-2 divide-x divide-border">
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">In Service Date</p>
+            <p className="text-xs text-muted-foreground mb-0.5">VIN/SN</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.inServiceDate || "-"}
-            </p>
-          </div>
-          <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Out Service Date</p>
-            <p className="text-sm font-medium text-foreground">
-              {trailerData.outServiceDate || "-"}
+              {trailerData.vinSn || "-"}
             </p>
           </div>
         </div>
 
-        {/* Type and Make */}
+        {/* License Plate and Year */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Type</p>
+            <p className="text-xs text-muted-foreground mb-0.5">License Plate</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.type || "-"}
+              {trailerData.licensePlate || "-"}
+            </p>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Year</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.year || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Model and Make */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Model</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.model || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
@@ -74,35 +65,93 @@ const TrailerGeneralInformationCard = ({ trailerData }) => {
           </div>
         </div>
 
-        {/* Year and Serial Number */}
+        {/* Fleet Type and Group */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Year</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Fleet Type</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.year || "-"}
+              {trailerData.fleetType || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Serial Number</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Group</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.serialNumber || "-"}
+              {trailerData.group || "-"}
             </p>
           </div>
         </div>
 
-        {/* Fleet and Safety Status */}
+        {/* Type and Ownership */}
         <div className="grid grid-cols-2 divide-x divide-border">
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Fleet</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Type</p>
             <p className="text-sm font-medium text-foreground">
-              {trailerData.fleet || "-"}
+              {trailerData.type || "-"}
             </p>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-xs text-muted-foreground mb-0.5">Safety Status</p>
-            <Badge className={getSafetyStatusBadgeColor(trailerData.safetyStatus)}>
-              {trailerData.safetyStatus || "-"}
-            </Badge>
+            <p className="text-xs text-muted-foreground mb-0.5">Ownership</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.ownership || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Body Type and Body Subtype */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Body Type</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.bodyType || "-"}
+            </p>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Body Subtype</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.bodySubtype || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Color and MSRP */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Color</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.color || "-"}
+            </p>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">MSRP</p>
+            <p className="text-sm font-medium text-foreground">
+              {trailerData.msrp || "-"}
+            </p>
+          </div>
+        </div>
+
+        {/* Registration Documents and Trailer Images */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Registration Documents</p>
+            {trailerData.registrationDocuments ? (
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <FileText className="size-4" />
+                <span className="hover:underline cursor-pointer">{trailerData.registrationDocuments}</span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-foreground">-</p>
+            )}
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Trailer Images</p>
+            {trailerData.trailerImages ? (
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Image className="size-4" />
+                <span className="hover:underline cursor-pointer">{trailerData.trailerImages}</span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-foreground">-</p>
+            )}
           </div>
         </div>
       </div>

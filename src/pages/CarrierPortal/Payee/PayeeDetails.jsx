@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
 import SmartFilter from "@/components/SmartFilter";
 import {
   Landmark,
@@ -16,6 +17,7 @@ import {
   Pencil,
   Trash2,
   FileText,
+  History,
 } from "lucide-react";
 import PayeeProfileCard from "./PayeeDetails/PayeeProfileCard";
 
@@ -257,6 +259,144 @@ const PayeeDetails = () => {
     },
   ];
 
+  // Audit log data
+  const auditLogData = [
+    {
+      id: 1,
+      action: "Direct deposit account added",
+      type: "Create",
+      oldValue: "-",
+      newValue: "Chase Bank ****1234",
+      actionBy: "John Smith",
+      timestamp: "Jan 28, 2024 14:35:22",
+    },
+    {
+      id: 2,
+      action: "Payment processed",
+      type: "Update",
+      oldValue: "Pending",
+      newValue: "$5,000.00 - Completed",
+      actionBy: "System",
+      timestamp: "Jan 26, 2024 09:12:45",
+    },
+    {
+      id: 3,
+      action: "Recurring deduction modified",
+      type: "Update",
+      oldValue: "$200.00/week",
+      newValue: "$250.00/week",
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 24, 2024 20:22:34",
+    },
+    {
+      id: 4,
+      action: "Payee status changed",
+      type: "Status",
+      oldValue: "Pending",
+      newValue: "Active",
+      actionBy: "Mike Davis",
+      timestamp: "Jan 20, 2024 11:45:18",
+    },
+    {
+      id: 5,
+      action: "W-9 document uploaded",
+      type: "Upload",
+      oldValue: "-",
+      newValue: "w9_2024.pdf",
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 18, 2024 16:30:00",
+    },
+    {
+      id: 6,
+      action: "Bank details verified",
+      type: "Verify",
+      oldValue: "Unverified",
+      newValue: "Verified",
+      actionBy: "Admin System",
+      timestamp: "Jan 15, 2024 10:15:33",
+    },
+    {
+      id: 7,
+      action: "Pay frequency updated",
+      type: "Update",
+      oldValue: "Monthly",
+      newValue: "Weekly",
+      actionBy: "John Smith",
+      timestamp: "Jan 12, 2024 08:00:00",
+    },
+    {
+      id: 8,
+      action: "Payee created",
+      type: "Create",
+      oldValue: "-",
+      newValue: "John Smith - PAY-001",
+      actionBy: "John Smith",
+      timestamp: "Jan 10, 2024 09:30:15",
+    },
+  ];
+
+  const getAuditTypeBadgeColor = (type) => {
+    const colors = {
+      Create: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Update: "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+      Upload: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Status: "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Verify: "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+    };
+    return colors[type] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+  };
+
+  const auditLogColumns = [
+    {
+      accessorKey: "action",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Operation" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "type",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type" />
+      ),
+      cell: ({ row }) => {
+        const type = row.getValue("type");
+        return (
+          <Badge className={getAuditTypeBadgeColor(type)}>{type}</Badge>
+        );
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: "oldValue",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Old Value" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "newValue",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="New Value" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "actionBy",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Modified By" />
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "timestamp",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Timestamp" />
+      ),
+      enableSorting: true,
+    },
+  ];
+
   // Direct Deposit columns
   const directDepositColumns = [
     {
@@ -492,6 +632,10 @@ const PayeeDetails = () => {
             <TabsTrigger value="comments" className="h-full">
               <MessageSquare className="size-4" />
               Comments
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="h-full">
+              <History className="size-4" />
+              Audit Log
             </TabsTrigger>
           </TabsList>
         </div>
@@ -912,6 +1056,17 @@ const PayeeDetails = () => {
                 )}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent
+            value="audit"
+            className="space-y-2 px-2 py-2 h-full mt-0"
+          >
+            <DataTable
+              columns={auditLogColumns}
+              data={auditLogData}
+              showViewOptions={false}
+            />
           </TabsContent>
         </div>
       </Tabs>

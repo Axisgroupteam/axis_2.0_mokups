@@ -41,13 +41,19 @@ import {
   MapPinIcon,
   BoxIcon,
   WalletIcon,
+  ClipboardCheckIcon,
+  UserPlusIcon,
+  Building2,
+  ListIcon,
+  ReceiptIcon,
+  ShoppingBagIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "orders" | "master" | null
+  const [openMenu, setOpenMenu] = useState(null); // "orders" | "master" | "onboarding" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -114,17 +120,49 @@ const CarrierPortalSidebar = () => {
       href: "/app/carrier-portal/master/location",
       icon: MapPinIcon,
     },
+    {
+      label: "Categories",
+      href: "/app/carrier-portal/master/categories",
+      icon: ListIcon,
+    },
+    {
+      label: "Additional Charges",
+      href: "/app/carrier-portal/master/additional-charges",
+      icon: ReceiptIcon,
+    },
+    {
+      label: "Product Sales",
+      href: "/app/carrier-portal/master/product-sales",
+      icon: ShoppingBagIcon,
+    },
+  ];
+
+  // Onboarding sub-menu items
+  const onboardingSubItems = [
+    {
+      label: "Driver",
+      href: "/app/carrier-portal/onboarding/driver",
+      icon: UserPlusIcon,
+    },
+    {
+      label: "Carrier",
+      href: "/app/carrier-portal/onboarding/carrier",
+      icon: Building2,
+    },
   ];
 
   // Automatically open the correct collapsible menu based on current URL
   useEffect(() => {
     const isOrdersPath = ordersSubItems.some((item) => pathname === item.href);
     const isMasterPath = masterSubItems.some((item) => pathname === item.href);
+    const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
 
     if (isOrdersPath) {
       setOpenMenu("orders");
     } else if (isMasterPath) {
       setOpenMenu("master");
+    } else if (isOnboardingPath) {
+      setOpenMenu("onboarding");
     } else {
       setOpenMenu(null);
     }
@@ -276,6 +314,67 @@ const CarrierPortalSidebar = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {masterSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Onboarding with Sub-menu */}
+              <Collapsible
+                open={openMenu === "onboarding"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "onboarding" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        onboardingSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={onboardingSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <ClipboardCheckIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Onboarding
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "onboarding" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {onboardingSubItems.map((subItem) => {
                         const isActive = pathname === subItem.href;
                         const IconComponent = subItem.icon;
                         return (

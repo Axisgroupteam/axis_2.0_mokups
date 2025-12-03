@@ -8,8 +8,16 @@ import AssetDetails from "@/pages/CarrierPortal/Assets/AssetDetails";
 import TrailerDetails from "@/pages/CarrierPortal/Assets/TrailerDetails";
 import Shippers from "@/pages/CarrierPortal/Shippers";
 import CustomerDetails from "@/pages/CarrierPortal/Customers/CustomerDetails";
+import RateTableDetails from "@/pages/CarrierPortal/Customers/CustomerDetails/RateTableDetails";
 import Payee from "@/pages/CarrierPortal/Payee";
 import PayeeDetails from "@/pages/CarrierPortal/Payee/PayeeDetails";
+import Location from "@/pages/CarrierPortal/Location";
+import LocationDetails from "@/pages/CarrierPortal/Location/LocationDetails";
+import Rate from "@/pages/CarrierPortal/Rate";
+import RateDetails from "@/pages/CarrierPortal/Rate/RateDetails";
+import DriverOnboarding from "@/pages/CarrierPortal/Onboarding/DriverOnboarding";
+import CarrierOnboarding from "@/pages/CarrierPortal/Onboarding/CarrierOnboarding";
+import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 
 export const carrierPortalRoutes = [
   {
@@ -84,6 +92,11 @@ export const carrierPortalRoutes = [
     label: "Customer Details",
   },
   {
+    path: "master/customers/customer-details/rate-table-details",
+    element: <RateTableDetails />,
+    label: "Rate Table Details",
+  },
+  {
     path: "master/payee",
     element: <Payee />,
     label: "Payee",
@@ -95,21 +108,48 @@ export const carrierPortalRoutes = [
   },
   {
     path: "master/rates",
-    element: (
-      <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Rates</h1>
-      </div>
-    ),
+    element: <Rate />,
     label: "Rates",
   },
   {
+    path: "master/rates/rate-details",
+    element: <RateDetails />,
+    label: "Rate Details",
+  },
+  {
     path: "master/location",
+    element: <Location />,
+    label: "Location",
+  },
+  {
+    path: "master/location/location-details",
+    element: <LocationDetails />,
+    label: "Location Details",
+  },
+  {
+    path: "master/categories",
+    element: <CategoriesAndOptions />,
+    label: "Categories",
+  },
+  {
+    path: "master/additional-charges",
     element: (
       <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Location</h1>
+        <h1 className="text-3xl font-bold">Additional Charges</h1>
+        <p className="text-muted-foreground mt-2">Coming soon...</p>
       </div>
     ),
-    label: "Location",
+    label: "Additional Charges",
+  },
+  {
+    path: "master/product-sales",
+    element: (
+      <div className="p-8 bg-background h-full">
+        <h1 className="text-3xl font-bold">Product Sales</h1>
+        <p className="text-muted-foreground mt-2">Coming soon...</p>
+      </div>
+    ),
+    label: "Product Sales",
   },
   {
     path: "master/assets",
@@ -125,5 +165,15 @@ export const carrierPortalRoutes = [
     path: "master/assets/trailer-details",
     element: <TrailerDetails />,
     label: "Trailer Details",
+  },
+  {
+    path: "onboarding/driver",
+    element: <DriverOnboarding />,
+    label: "Driver Onboarding",
+  },
+  {
+    path: "onboarding/carrier",
+    element: <CarrierOnboarding />,
+    label: "Carrier Onboarding",
   },
 ];

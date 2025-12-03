@@ -175,7 +175,6 @@ const Lanes = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem>View Details</DropdownMenuItem>
               <DropdownMenuItem>Edit</DropdownMenuItem>
               <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
             </DropdownMenuContent>
@@ -391,7 +390,7 @@ const Lanes = () => {
                   value={formData.originMethod}
                   onValueChange={(value) => handleInputChange("originMethod", value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-10 w-full">
                     <SelectValue placeholder="Location Code" />
                   </SelectTrigger>
                   <SelectContent>
@@ -409,7 +408,7 @@ const Lanes = () => {
                   value={formData.destinationMethod}
                   onValueChange={(value) => handleInputChange("destinationMethod", value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-10 w-full">
                     <SelectValue placeholder="Location Code" />
                   </SelectTrigger>
                   <SelectContent>
@@ -468,7 +467,7 @@ const Lanes = () => {
                   value={formData.customerRateMethod}
                   onValueChange={(value) => handleInputChange("customerRateMethod", value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-10 w-full">
                     <SelectValue placeholder="Please select one" />
                   </SelectTrigger>
                   <SelectContent>
@@ -486,7 +485,7 @@ const Lanes = () => {
                   value={formData.driverRateMethod}
                   onValueChange={(value) => handleInputChange("driverRateMethod", value)}
                 >
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-10 w-full">
                     <SelectValue placeholder="Please select one" />
                   </SelectTrigger>
                   <SelectContent>

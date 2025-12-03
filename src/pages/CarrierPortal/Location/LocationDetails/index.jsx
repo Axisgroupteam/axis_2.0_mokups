@@ -2,26 +2,27 @@ import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
-import { FaUser } from "react-icons/fa";
-import { History, MessageSquare } from "lucide-react";
-import UserInfoCard from "./DriverDetails/UserInfoCard";
-import UserCommentsCard from "./UserDetails/UserCommentsCard";
+import { MapPin, History, MessageSquare } from "lucide-react";
+import LocationProfileCard from "./LocationProfileCard";
+import LocationCommentsCard from "./LocationCommentsCard";
 
-const UserDetails = () => {
+const LocationDetails = () => {
   const [searchParams] = useSearchParams();
-  const activeTab = searchParams.get("tab") || "profile";
+  const activeTab = searchParams.get("tab") || "details";
 
-  // Mock user data
-  const userData = {
-    firstName: "John",
-    middleName: "Michael",
-    lastName: "Smith",
-    email: "john.smith@company.com",
-    role: "Administrator",
-    address: "456 Oak Avenue",
-    city: "Los Angeles",
-    state: "CA",
-    zipcode: "90001",
+  // Mock location data
+  const locationData = {
+    code: "LOC-001",
+    name: "Main Warehouse",
+    contact: "John Smith",
+    phone: "(555) 123-4567",
+    email: "john.smith@warehouse.com",
+    address: "123 Industrial Blvd",
+    city: "New York",
+    state: "NY",
+    zipCode: "10001",
+    latitude: "40.7128",
+    longitude: "-74.0060",
   };
 
   // Mock comments data
@@ -29,34 +30,34 @@ const UserDetails = () => {
     {
       id: 1,
       dateTime: "2024-01-15 10:30 AM",
-      enteredBy: "David Anderson",
-      type: "Performance",
-      attachment: "review_q4.pdf",
-      comment: "Excellent performance this quarter. Consistently met all deadlines and exceeded expectations.",
+      enteredBy: "James Wilson",
+      type: "Operations",
+      attachment: "site_inspection.pdf",
+      comment: "Completed quarterly site inspection. All facilities in good condition.",
     },
     {
       id: 2,
       dateTime: "2024-02-20 02:15 PM",
       enteredBy: "Sarah Mitchell",
-      type: "Training",
+      type: "Access",
       attachment: null,
-      comment: "Completed advanced system administration training course.",
+      comment: "Updated gate access codes. New codes distributed to authorized personnel.",
     },
     {
       id: 3,
       dateTime: "2024-03-10 09:45 AM",
-      enteredBy: "James Wilson",
+      enteredBy: "Michael Thompson",
       type: "General",
       attachment: null,
-      comment: "Updated access permissions for new project assignment.",
+      comment: "Changed primary contact to John Smith per management request.",
     },
     {
       id: 4,
       dateTime: "2024-03-25 11:00 AM",
       enteredBy: "Emily Roberts",
       type: "Positive",
-      attachment: "commendation.pdf",
-      comment: "Received commendation for outstanding customer support resolution.",
+      attachment: "safety_cert.pdf",
+      comment: "Location passed safety certification. Certificate valid until March 2025.",
     },
   ];
 
@@ -64,34 +65,52 @@ const UserDetails = () => {
   const auditLogData = [
     {
       id: 1,
-      action: "Password changed",
+      action: "Contact information updated",
       type: "Update",
-      oldValue: "********",
-      newValue: "********",
-      actionBy: "John Smith",
+      oldValue: "Mike Johnson",
+      newValue: "John Smith",
+      actionBy: "James Wilson",
       timestamp: "Jan 28, 2024 14:35:22",
     },
     {
       id: 2,
-      action: "Role changed",
-      type: "Status",
-      oldValue: "Manager",
-      newValue: "Administrator",
-      actionBy: "David Anderson",
-      timestamp: "Jan 24, 2024 20:22:34",
+      action: "GPS coordinates updated",
+      type: "Update",
+      oldValue: "40.7100, -74.0050",
+      newValue: "40.7128, -74.0060",
+      actionBy: "Emily Roberts",
+      timestamp: "Jan 26, 2024 09:12:45",
     },
     {
       id: 3,
-      action: "Email updated",
+      action: "Address changed",
       type: "Update",
-      oldValue: "john.s@company.com",
-      newValue: "john.smith@company.com",
-      actionBy: "John Smith",
-      timestamp: "Jan 20, 2024 11:45:18",
+      oldValue: "100 Commerce St",
+      newValue: "123 Industrial Blvd",
+      actionBy: "Michael Thompson",
+      timestamp: "Jan 24, 2024 20:22:34",
     },
     {
       id: 4,
-      action: "Email verified",
+      action: "Location status changed",
+      type: "Status",
+      oldValue: "Pending",
+      newValue: "Active",
+      actionBy: "Sarah Mitchell",
+      timestamp: "Jan 20, 2024 11:45:18",
+    },
+    {
+      id: 5,
+      action: "Location documents uploaded",
+      type: "Upload",
+      oldValue: "-",
+      newValue: "site_map.pdf",
+      actionBy: "Emily Roberts",
+      timestamp: "Jan 18, 2024 16:30:00",
+    },
+    {
+      id: 6,
+      action: "Location verified",
       type: "Verify",
       oldValue: "Unverified",
       newValue: "Verified",
@@ -99,13 +118,13 @@ const UserDetails = () => {
       timestamp: "Jan 15, 2024 10:15:33",
     },
     {
-      id: 5,
-      action: "User created",
+      id: 7,
+      action: "Location created",
       type: "Create",
       oldValue: "-",
-      newValue: "John Smith",
+      newValue: "LOC-001 - Main Warehouse",
       actionBy: "James Wilson",
-      timestamp: "Jan 15, 2024 09:30:15",
+      timestamp: "Jan 10, 2024 09:30:15",
     },
   ];
 
@@ -175,13 +194,13 @@ const UserDetails = () => {
     <div className="flex flex-col h-full bg-background overflow-hidden">
       <Tabs
         defaultValue={activeTab}
-        className="w-full h-full flex flex-col overflow-hidden "
+        className="w-full h-full flex flex-col overflow-hidden"
       >
         <div className="flex-shrink-0">
-          <TabsList className="mb-0 rounded-none ">
-            <TabsTrigger value="profile" className="h-full">
-              <FaUser className="size-4" />
-              Profile
+          <TabsList className="mb-0 rounded-none">
+            <TabsTrigger value="details" className="h-full">
+              <MapPin className="size-4" />
+              Details
             </TabsTrigger>
             <TabsTrigger value="comments" className="h-full">
               <MessageSquare className="size-4" />
@@ -195,17 +214,21 @@ const UserDetails = () => {
         </div>
 
         <div className="flex-1 overflow-auto -mt-1">
-          <TabsContent value="profile" className="space-y-4 px-4 pb-4 h-full mt-2">
-            <div className="w-1/2">
-              <UserInfoCard driverData={userData} />
+          <TabsContent
+            value="details"
+            className="space-y-4 px-2 py-2 h-full mt-0"
+          >
+            <div className="flex gap-4 h-fit">
+              {/* Location Profile Card */}
+              <LocationProfileCard locationData={locationData} />
             </div>
           </TabsContent>
 
-          <TabsContent value="comments" className="space-y-4 px-4 pb-4 h-full mt-2">
-            <UserCommentsCard commentsData={commentsData} />
+          <TabsContent value="comments" className="space-y-2 px-2 py-2 h-full mt-0">
+            <LocationCommentsCard commentsData={commentsData} />
           </TabsContent>
 
-          <TabsContent value="audit" className="space-y-4 px-4 pb-4 h-full mt-2">
+          <TabsContent value="audit" className="space-y-2 px-2 py-2 h-full mt-0">
             <DataTable
               columns={auditLogColumns}
               data={auditLogData}
@@ -218,4 +241,4 @@ const UserDetails = () => {
   );
 };
 
-export default UserDetails;
+export default LocationDetails;

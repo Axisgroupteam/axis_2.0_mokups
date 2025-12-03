@@ -33,7 +33,7 @@ export const useBreadcrumbs = () => {
           breadcrumbs.push({
             label: detailPageLabels[previousSegment],
             path: currentPath,
-            isLinkable: true,
+            isLinkable: false,
           });
         }
         previousSegment = segment;

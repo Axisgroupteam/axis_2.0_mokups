@@ -27,6 +27,9 @@ export const breadcrumbLabels = {
   assets: "Assets",
   rates: "Rates",
   location: "Location",
+  customers: "Customers",
+  "customer-details": "Customer Details",
+  "rate-table-details": "Rate Table Details",
 
   // Common
   details: "Details",

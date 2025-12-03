@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
@@ -8,6 +8,19 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
 import SmartFilter from "@/components/SmartFilter";
 import {
@@ -16,19 +29,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlusIcon, MoreHorizontalIcon } from "lucide-react";
+import { PlusIcon, MoreHorizontalIcon, ChevronsUpDownIcon, CheckIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const PickupLocations = () => {
+  const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [filters, setFilters] = useState([]);
-  const [formData, setFormData] = useState({
-    code: "",
-    name: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  });
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [locationPopoverOpen, setLocationPopoverOpen] = useState(false);
+
+  // Available locations to select from (master list)
+  const availableLocations = [
+    { id: 101, code: "LOC-101", name: "Downtown Warehouse", address: "100 Main St", city: "Manhattan", state: "NY", zipCode: "10001" },
+    { id: 102, code: "LOC-102", name: "Harbor Terminal", address: "200 Port Ave", city: "Jersey City", state: "NJ", zipCode: "07302" },
+    { id: 103, code: "LOC-103", name: "Airport Cargo Hub", address: "300 Airport Rd", city: "Newark", state: "NJ", zipCode: "07114" },
+    { id: 104, code: "LOC-104", name: "Industrial Park East", address: "400 Industrial Blvd", city: "Edison", state: "NJ", zipCode: "08817" },
+    { id: 105, code: "LOC-105", name: "Midtown Distribution", address: "500 5th Ave", city: "New York", state: "NY", zipCode: "10018" },
+    { id: 106, code: "LOC-106", name: "Suburban Depot", address: "600 Commerce Dr", city: "Paramus", state: "NJ", zipCode: "07652" },
+    { id: 107, code: "LOC-107", name: "Riverside Facility", address: "700 River Rd", city: "Hoboken", state: "NJ", zipCode: "07030" },
+    { id: 108, code: "LOC-108", name: "Gateway Center", address: "800 Gateway Blvd", city: "Newark", state: "NJ", zipCode: "07102" },
+    { id: 109, code: "LOC-109", name: "Metro Storage", address: "900 Metro Pkwy", city: "Secaucus", state: "NJ", zipCode: "07094" },
+    { id: 110, code: "LOC-110", name: "Express Terminal", address: "1000 Express Way", city: "Elizabeth", state: "NJ", zipCode: "07201" },
+  ];
 
   // Filter configurations
   const filterGroups = [
@@ -132,8 +155,13 @@ const PickupLocations = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem>View Details</DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate("/app/carrier-portal/master/location/location-details")
+                }
+              >
+                View Details
+              </DropdownMenuItem>
               <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -185,34 +213,18 @@ const PickupLocations = () => {
     },
   ];
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setIsSheetOpen(false);
-    setFormData({
-      code: "",
-      name: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-    });
+    if (selectedLocation) {
+      console.log("Location added:", selectedLocation);
+      setIsSheetOpen(false);
+      setSelectedLocation(null);
+    }
   };
 
   const handleCancel = () => {
     setIsSheetOpen(false);
-    setFormData({
-      code: "",
-      name: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-    });
+    setSelectedLocation(null);
   };
 
   return (
@@ -242,111 +254,83 @@ const PickupLocations = () => {
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader className="pb-4 border-b px-6">
-            <div className="flex items-center gap-3">
-              <div>
-                <SheetTitle className="text-xl font-bold text-gray-900">
-                  Add Pickup Location
-                </SheetTitle>
-              </div>
-            </div>
+            <SheetTitle className="text-xl font-bold text-foreground">
+              Add Pickup Location
+            </SheetTitle>
           </SheetHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-5 mt-2 mb-2 px-6">
-            {/* Code */}
+          <form onSubmit={handleSubmit} className="space-y-5 mt-4 px-6">
+            {/* Location Select with Search */}
             <div className="space-y-2">
-              <Label htmlFor="code" className="text-sm font-medium text-gray-700">
-                Code <span className="text-red-500">*</span>
+              <Label className="text-sm font-medium text-foreground">
+                Select Location <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="code"
-                type="text"
-                placeholder="PU-001"
-                value={formData.code}
-                onChange={(e) => handleInputChange("code", e.target.value)}
-                className="h-10"
-                required
-              />
+              <Popover open={locationPopoverOpen} onOpenChange={setLocationPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={locationPopoverOpen}
+                    className="w-full h-10 justify-between font-normal"
+                  >
+                    {selectedLocation
+                      ? `${selectedLocation.name} - ${selectedLocation.city}, ${selectedLocation.state}`
+                      : "Search and select location..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[400px] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search location..." />
+                    <CommandList>
+                      <CommandEmpty>No location found.</CommandEmpty>
+                      <CommandGroup>
+                        {availableLocations.map((location) => (
+                          <CommandItem
+                            key={location.id}
+                            value={`${location.name} ${location.city} ${location.state} ${location.code}`}
+                            onSelect={() => {
+                              setSelectedLocation(location);
+                              setLocationPopoverOpen(false);
+                            }}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedLocation?.id === location.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            <div className="flex flex-col">
+                              <span className="font-medium">{location.name}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {location.address}, {location.city}, {location.state} {location.zipCode}
+                              </span>
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
-            {/* Name */}
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                Name <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Main Warehouse"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            {/* Address */}
-            <div className="space-y-2">
-              <Label htmlFor="address" className="text-sm font-medium text-gray-700">
-                Address <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="address"
-                type="text"
-                placeholder="123 Industrial Blvd"
-                value={formData.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            {/* City */}
-            <div className="space-y-2">
-              <Label htmlFor="city" className="text-sm font-medium text-gray-700">
-                City <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="city"
-                type="text"
-                placeholder="New York"
-                value={formData.city}
-                onChange={(e) => handleInputChange("city", e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            {/* State */}
-            <div className="space-y-2">
-              <Label htmlFor="state" className="text-sm font-medium text-gray-700">
-                State <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="state"
-                type="text"
-                placeholder="NY"
-                value={formData.state}
-                onChange={(e) => handleInputChange("state", e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
-
-            {/* Zip Code */}
-            <div className="space-y-2">
-              <Label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
-                Zip Code <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="zipCode"
-                type="text"
-                placeholder="10001"
-                value={formData.zipCode}
-                onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                className="h-10"
-                required
-              />
-            </div>
+            {/* Selected Location Details Preview */}
+            {selectedLocation && (
+              <div className="p-4 border border-border rounded-lg bg-muted/50">
+                <p className="text-sm font-medium text-foreground mb-2">Selected Location Details</p>
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <p><span className="font-medium text-foreground">Code:</span> {selectedLocation.code}</p>
+                  <p><span className="font-medium text-foreground">Name:</span> {selectedLocation.name}</p>
+                  <p><span className="font-medium text-foreground">Address:</span> {selectedLocation.address}</p>
+                  <p><span className="font-medium text-foreground">City:</span> {selectedLocation.city}</p>
+                  <p><span className="font-medium text-foreground">State:</span> {selectedLocation.state}</p>
+                  <p><span className="font-medium text-foreground">Zip Code:</span> {selectedLocation.zipCode}</p>
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-6 border-t px-6 -mx-6 mt-8">
@@ -360,6 +344,7 @@ const PickupLocations = () => {
               </Button>
               <Button
                 type="submit"
+                disabled={!selectedLocation}
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
               >
                 Add Location

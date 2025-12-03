@@ -48,18 +48,33 @@ const Payee = () => {
     paymentMethod: "",
   });
 
-  // Mock payee data
+  // Mock payee data - 25 records
   const payees = [
-    { id: 1, name: "John Smith", code: "PAY-001", address: "123 Main St, New York, NY", paymentMethod: "Bank Transfer" },
-    { id: 2, name: "Sarah Johnson", code: "PAY-002", address: "456 Oak Ave, Los Angeles, CA", paymentMethod: "Direct Deposit" },
-    { id: 3, name: "Michael Brown", code: "PAY-003", address: "789 Pine Rd, Chicago, IL", paymentMethod: "Check" },
-    { id: 4, name: "Emily Davis", code: "PAY-004", address: "321 Elm St, Houston, TX", paymentMethod: "Bank Transfer" },
-    { id: 5, name: "David Wilson", code: "PAY-005", address: "654 Maple Dr, Phoenix, AZ", paymentMethod: "Direct Deposit" },
-    { id: 6, name: "Jessica Martinez", code: "PAY-006", address: "987 Cedar Ln, Philadelphia, PA", paymentMethod: "Bank Transfer" },
-    { id: 7, name: "Robert Taylor", code: "PAY-007", address: "147 Birch Blvd, San Antonio, TX", paymentMethod: "Check" },
-    { id: 8, name: "Amanda Anderson", code: "PAY-008", address: "258 Walnut St, San Diego, CA", paymentMethod: "Direct Deposit" },
-    { id: 9, name: "James Thomas", code: "PAY-009", address: "369 Cherry Ave, Dallas, TX", paymentMethod: "Bank Transfer" },
-    { id: 10, name: "Jennifer Garcia", code: "PAY-010", address: "741 Spruce Rd, San Jose, CA", paymentMethod: "Direct Deposit" },
+    { id: 1, name: "John Smith", legalName: "John Smith LLC", code: "PAY-001", address: "123 Main St, New York, NY", paymentMethod: "Bank Transfer" },
+    { id: 2, name: "Sarah Johnson", legalName: "Sarah Johnson Enterprises", code: "PAY-002", address: "456 Oak Ave, Los Angeles, CA", paymentMethod: "Direct Deposit" },
+    { id: 3, name: "Michael Brown", legalName: "Brown Transportation Inc.", code: "PAY-003", address: "789 Pine Rd, Chicago, IL", paymentMethod: "Check" },
+    { id: 4, name: "Emily Davis", legalName: "Davis Logistics LLC", code: "PAY-004", address: "321 Elm St, Houston, TX", paymentMethod: "Bank Transfer" },
+    { id: 5, name: "David Wilson", legalName: "Wilson Freight Services", code: "PAY-005", address: "654 Maple Dr, Phoenix, AZ", paymentMethod: "Direct Deposit" },
+    { id: 6, name: "Jessica Martinez", legalName: "Martinez Trucking Co.", code: "PAY-006", address: "987 Cedar Ln, Philadelphia, PA", paymentMethod: "Bank Transfer" },
+    { id: 7, name: "Robert Taylor", legalName: "Taylor Hauling Inc.", code: "PAY-007", address: "147 Birch Blvd, San Antonio, TX", paymentMethod: "Check" },
+    { id: 8, name: "Amanda Anderson", legalName: "Anderson Carriers LLC", code: "PAY-008", address: "258 Walnut St, San Diego, CA", paymentMethod: "Direct Deposit" },
+    { id: 9, name: "James Thomas", legalName: "Thomas Express Inc.", code: "PAY-009", address: "369 Cherry Ave, Dallas, TX", paymentMethod: "Bank Transfer" },
+    { id: 10, name: "Jennifer Garcia", legalName: "Garcia Transport LLC", code: "PAY-010", address: "741 Spruce Rd, San Jose, CA", paymentMethod: "Direct Deposit" },
+    { id: 11, name: "William Lee", legalName: "Lee Haulers Inc.", code: "PAY-011", address: "852 Oakwood Dr, Austin, TX", paymentMethod: "Check" },
+    { id: 12, name: "Lisa White", legalName: "White Logistics Group", code: "PAY-012", address: "963 Pinewood Ave, Jacksonville, FL", paymentMethod: "Bank Transfer" },
+    { id: 13, name: "Christopher Harris", legalName: "Harris Freight Solutions", code: "PAY-013", address: "174 Elmwood Ct, Columbus, OH", paymentMethod: "Direct Deposit" },
+    { id: 14, name: "Patricia Clark", legalName: "Clark Transport Services", code: "PAY-014", address: "285 Maplewood Ln, Fort Worth, TX", paymentMethod: "Bank Transfer" },
+    { id: 15, name: "Daniel Lewis", legalName: "Lewis Trucking LLC", code: "PAY-015", address: "396 Cedarwood Blvd, Charlotte, NC", paymentMethod: "Check" },
+    { id: 16, name: "Nancy Walker", legalName: "Walker Express Co.", code: "PAY-016", address: "507 Birchwood St, Indianapolis, IN", paymentMethod: "Direct Deposit" },
+    { id: 17, name: "Mark Robinson", legalName: "Robinson Carriers Inc.", code: "PAY-017", address: "618 Willowbrook Rd, San Francisco, CA", paymentMethod: "Bank Transfer" },
+    { id: 18, name: "Karen Hall", legalName: "Hall Delivery Services", code: "PAY-018", address: "729 Redwood Ave, Seattle, WA", paymentMethod: "Direct Deposit" },
+    { id: 19, name: "Steven Young", legalName: "Young Freight LLC", code: "PAY-019", address: "840 Aspen Dr, Denver, CO", paymentMethod: "Check" },
+    { id: 20, name: "Betty King", legalName: "King Logistics Inc.", code: "PAY-020", address: "951 Sycamore Ln, Washington, DC", paymentMethod: "Bank Transfer" },
+    { id: 21, name: "Edward Wright", legalName: "Wright Hauling Co.", code: "PAY-021", address: "162 Chestnut St, Boston, MA", paymentMethod: "Direct Deposit" },
+    { id: 22, name: "Dorothy Scott", legalName: "Scott Transport Group", code: "PAY-022", address: "273 Hickory Ave, Nashville, TN", paymentMethod: "Bank Transfer" },
+    { id: 23, name: "Frank Green", legalName: "Green Express LLC", code: "PAY-023", address: "384 Magnolia Blvd, Detroit, MI", paymentMethod: "Check" },
+    { id: 24, name: "Margaret Adams", legalName: "Adams Freight Services", code: "PAY-024", address: "495 Cypress Rd, Portland, OR", paymentMethod: "Direct Deposit" },
+    { id: 25, name: "George Baker", legalName: "Baker Trucking Inc.", code: "PAY-025", address: "606 Palm Dr, Las Vegas, NV", paymentMethod: "Bank Transfer" },
   ];
 
   const getRoleBadgeColor = (role) => {
@@ -230,6 +245,14 @@ const Payee = () => {
       accessorKey: "name",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Name" />
+      ),
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "legalName",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Legal Name" />
       ),
       enableSorting: true,
       enableHiding: true,

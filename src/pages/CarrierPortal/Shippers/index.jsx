@@ -933,7 +933,7 @@ const Shippers = () => {
                   handleInputChange("billingType", value)
                 }
               >
-                <SelectTrigger className="h-10">
+                <SelectTrigger className="h-10 w-full">
                   <SelectValue placeholder="Select billing type" />
                 </SelectTrigger>
                 <SelectContent>

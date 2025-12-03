@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Plus, User, Clock, Paperclip } from "lucide-react";
 
-const TrailerCommentsCard = ({ commentsData }) => {
+const UserCommentsCard = ({ commentsData }) => {
   const typeColors = {
-    Maintenance: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-    Repair: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+    Performance: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+    Training: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
     General: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
     Warning: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
     Positive: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
@@ -82,4 +82,4 @@ const TrailerCommentsCard = ({ commentsData }) => {
   );
 };
 
-export default TrailerCommentsCard;
+export default UserCommentsCard;
