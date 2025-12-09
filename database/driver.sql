@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS drivers (
 
     -- USER INFORMATION (Profile > Personal Information > User Information)
     "roleId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- Role from lookups
-    "userAddressId" INT REFERENCES user_addresses(id) ON DELETE SET NULL,  -- Address from user_addresses
+    -- Note: Address fields are in users table
 
     -- PERSONAL INFORMATION (Profile > Personal Information > Personal Information)
     "phoneNumber" VARCHAR(20),
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS drivers (
     "ethnicityId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- Ethnicity from lookups
     
     "preferredLanguageId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- Preferred language from lookups
-    -- Note: Languages (multi-select) stored in user_languages table (linked via users.id)
+    -- Note: Languages (JSONB) stored in users table e.g., [1, 2, 3] for English, Spanish, French
     "emergencyContact" VARCHAR(20),
     "spouseName" VARCHAR(255),
     "socialSecurity" VARCHAR(20),  -- Encrypted/masked SSN
@@ -39,6 +39,15 @@ CREATE TABLE IF NOT EXISTS drivers (
     "pto" INT DEFAULT 0,  -- Paid time off in days
     "axisAppStatusId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- 'active', 'inactive'
 
+    -- LICENSE INFORMATION (Profile > License Information)
+    "licenseNumber" VARCHAR(50),
+    "licenseCategoryId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- e.g., 'Class A CDL', 'Class B CDL', 'Class C CDL'
+    "licenseState" VARCHAR(50),
+    "licenseEffectiveDate" DATE,
+    "licenseExpireDate" DATE,
+    "ssnOrFedId" VARCHAR(50),  -- SSN or Federal ID
+    "licenseDocumentUrl" TEXT,  -- S3 URL for license image/document
+
     -- AUDIT
     "createdAt" TIMESTAMP DEFAULT NOW() NOT NULL,
     "createdBy" INT DEFAULT NULL REFERENCES users(id) ON DELETE SET NULL,
@@ -54,3 +63,4 @@ CREATE INDEX IF NOT EXISTS idx_drivers_user_id ON drivers("userId");
 CREATE INDEX IF NOT EXISTS idx_drivers_tenant_id ON drivers("tenantId");
 CREATE INDEX IF NOT EXISTS idx_drivers_driver_code ON drivers("driverCode");
 CREATE INDEX IF NOT EXISTS idx_drivers_status ON drivers("statusId");
+CREATE INDEX IF NOT EXISTS idx_drivers_license_expire ON drivers("licenseExpireDate");

@@ -1,25 +1,33 @@
 -- =============================================
--- USER_ADDRESS TABLE
--- Stores multiple addresses per user
--- e.g., home address, mailing address, work address
+-- PAYEES TABLE
+-- Payee/Payment recipient information
 -- =============================================
 
-CREATE TABLE IF NOT EXISTS user_addresses (
+CREATE TABLE IF NOT EXISTS payees (
     id SERIAL PRIMARY KEY,
-
-    "userId" INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     "tenantId" INT DEFAULT NULL REFERENCES tenants(id) ON DELETE SET NULL,
-    
-    "addressType" VARCHAR(50) DEFAULT 'home',  -- 'home', 'mailing', 'work', 'billing'
+
+    -- Payee Profile
+    "name" VARCHAR(255) NOT NULL,
+    "legalName" VARCHAR(255),
+    "code" VARCHAR(50) UNIQUE,
+    "settlement" BOOLEAN DEFAULT FALSE,
+
+    -- Address
     "address" VARCHAR(255),
-    "address2" VARCHAR(255),  -- Apartment, Suite, Unit, etc.
     "city" VARCHAR(100),
     "state" VARCHAR(50),
-    "zipcode" VARCHAR(20),
+    "zipCode" VARCHAR(20),
     "country" VARCHAR(100) DEFAULT 'USA',
-    "latitude" DECIMAL(10, 8),
-    "longitude" DECIMAL(11, 8),
-    "isPrimary" BOOLEAN DEFAULT FALSE,  -- Primary address flag
+
+    -- Contact
+    "phoneNumber" VARCHAR(20),
+    "email" VARCHAR(255),
+
+    -- Payment
+    "paymentMethodId" INT REFERENCES lookups(id) ON DELETE SET NULL,  -- 'Check', 'ACH', 'Wire'
+
+    -- Status
     "isActive" BOOLEAN DEFAULT TRUE,
 
     -- Audit
@@ -33,6 +41,6 @@ CREATE TABLE IF NOT EXISTS user_addresses (
 );
 
 -- Indexes
-CREATE INDEX IF NOT EXISTS idx_user_addresses_user_id ON user_addresses("userId");
-CREATE INDEX IF NOT EXISTS idx_user_addresses_tenant_id ON user_addresses("tenantId");
-CREATE INDEX IF NOT EXISTS idx_user_addresses_type ON user_addresses("addressType");
+CREATE INDEX IF NOT EXISTS idx_payees_tenant_id ON payees("tenantId");
+CREATE INDEX IF NOT EXISTS idx_payees_code ON payees("code");
+CREATE INDEX IF NOT EXISTS idx_payees_name ON payees("name");

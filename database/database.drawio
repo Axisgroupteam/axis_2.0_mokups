@@ -1,0 +1,222 @@
+<mxfile host="app.diagrams.net" modified="2024-01-01T00:00:00.000Z" agent="Mozilla/5.0" version="22.1.0" type="device">
+  <diagram id="er-diagram" name="ER Diagram">
+    <mxGraphModel dx="2000" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== CORE SYSTEM ==================== -->
+        <mxCell id="header1" value="CORE SYSTEM" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- TENANTS -->
+        <mxCell id="tenants" value="tenants" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="tenants_fields" value="id (PK)&#xa;name&#xa;code&#xa;email&#xa;phoneNumber&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;timeZone&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="tenants">
+          <mxGeometry y="26" width="200" height="294" as="geometry" />
+        </mxCell>
+
+        <!-- USERS -->
+        <mxCell id="users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="60" width="200" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="users_fields" value="id (PK)&#xa;tenantId (FK)&#xa;firstName&#xa;middleName&#xa;lastName&#xa;birthDate&#xa;gender&#xa;profilePictureBucketKey&#xa;imgUrl&#xa;isActive&#xa;languages (JSONB)&#xa;authEmail&#xa;emailVerifiedAt&#xa;authMobileNumber&#xa;mobileNumberVerifiedAt&#xa;hashPassword&#xa;passwordUpdatedAt&#xa;authType&#xa;otpCode&#xa;otpExpiresAt&#xa;googleId&#xa;googleProviderData&#xa;outlookId&#xa;outlookProviderData&#xa;appleId&#xa;appleProviderData&#xa;lastLoginAt&#xa;address&#xa;address2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;latitude&#xa;longitude&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="users">
+          <mxGeometry y="26" width="200" height="534" as="geometry" />
+        </mxCell>
+
+        <!-- USER_ROLES_XREF -->
+        <mxCell id="user_roles_xref" value="user_roles_xref" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="480" y="60" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="user_roles_xref_fields" value="id (PK)&#xa;userId (FK)&#xa;roleId (FK)&#xa;tenantId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="user_roles_xref">
+          <mxGeometry y="26" width="200" height="214" as="geometry" />
+        </mxCell>
+
+        <!-- LOOKUP_TYPES -->
+        <mxCell id="lookup_types" value="lookup_types" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="700" y="60" width="200" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="lookup_types_fields" value="id (PK)&#xa;code&#xa;name&#xa;description&#xa;isSystem&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="lookup_types">
+          <mxGeometry y="26" width="200" height="254" as="geometry" />
+        </mxCell>
+
+        <!-- LOOKUPS -->
+        <mxCell id="lookups" value="lookups" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="920" y="60" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="lookups_fields" value="id (PK)&#xa;lookupTypeId (FK)&#xa;code&#xa;name&#xa;description&#xa;sortOrder&#xa;isDefault&#xa;isSystem&#xa;isActive&#xa;metadata (JSONB)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="lookups">
+          <mxGeometry y="26" width="200" height="294" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== USERS & PERSONNEL ==================== -->
+        <mxCell id="header2" value="USERS &amp; PERSONNEL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="660" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- DRIVERS -->
+        <mxCell id="drivers" value="drivers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="200" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="drivers_fields" value="id (PK)&#xa;userId (FK)&#xa;tenantId (FK)&#xa;roleId (FK)&#xa;phoneNumber&#xa;raceId (FK)&#xa;ethnicityId (FK)&#xa;preferredLanguageId (FK)&#xa;emergencyContact&#xa;spouseName&#xa;socialSecurity&#xa;driverCode&#xa;driverTypeId (FK)&#xa;statusId (FK)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;truckNumber&#xa;dotLoggingRequired&#xa;pto&#xa;axisAppStatusId (FK)&#xa;licenseNumber&#xa;licenseCategoryId (FK)&#xa;licenseState&#xa;licenseEffectiveDate&#xa;licenseExpireDate&#xa;ssnOrFedId&#xa;licenseDocumentUrl&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="drivers">
+          <mxGeometry y="26" width="200" height="534" as="geometry" />
+        </mxCell>
+
+        <!-- TECHNICIANS -->
+        <mxCell id="technicians" value="technicians" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="700" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="technicians_fields" value="id (PK)&#xa;userId (FK)&#xa;tenantId (FK)&#xa;jobTitleId (FK)&#xa;qualificationId (FK)&#xa;statusId (FK)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="technicians">
+          <mxGeometry y="26" width="200" height="294" as="geometry" />
+        </mxCell>
+
+        <!-- EMPLOYEES -->
+        <mxCell id="employees" value="employees" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="480" y="700" width="200" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="employees_fields" value="id (PK)&#xa;userId (FK)&#xa;tenantId (FK)&#xa;employeeCode&#xa;departmentId (FK)&#xa;positionId (FK)&#xa;statusId (FK)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="employees">
+          <mxGeometry y="26" width="200" height="314" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== CUSTOMERS & ASSETS ==================== -->
+        <mxCell id="header3" value="CUSTOMERS &amp; ASSETS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="20" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- CUSTOMERS -->
+        <mxCell id="customers" value="customers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="60" width="200" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="customers_fields" value="id (PK)&#xa;tenantId (FK)&#xa;name&#xa;code&#xa;email&#xa;phone&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;customerRegionId (FK)&#xa;billingTypeId (FK)&#xa;milesMeterSystemId (FK)&#xa;fleetTypeId (FK)&#xa;milesCalcTypeId (FK)&#xa;autoEmailExport&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="customers">
+          <mxGeometry y="26" width="200" height="434" as="geometry" />
+        </mxCell>
+
+        <!-- VEHICLES -->
+        <mxCell id="vehicles" value="vehicles" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="60" width="200" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="vehicles_fields" value="id (PK)&#xa;tenantId (FK)&#xa;vehicleName&#xa;vinSn&#xa;licensePlate&#xa;year&#xa;model&#xa;make&#xa;fleetTypeId (FK)&#xa;groupId (FK)&#xa;typeId (FK)&#xa;ownershipId (FK)&#xa;bodyTypeId (FK)&#xa;bodySubtypeId (FK)&#xa;color&#xa;msrp&#xa;registrationDocumentUrl&#xa;vehicleImagesUrl&#xa;statusId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="vehicles">
+          <mxGeometry y="26" width="200" height="454" as="geometry" />
+        </mxCell>
+
+        <!-- TRAILERS -->
+        <mxCell id="trailers" value="trailers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="60" width="200" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="trailers_fields" value="id (PK)&#xa;tenantId (FK)&#xa;trailerName&#xa;vinSn&#xa;licensePlate&#xa;year&#xa;model&#xa;make&#xa;fleetTypeId (FK)&#xa;groupId (FK)&#xa;typeId (FK)&#xa;ownershipId (FK)&#xa;bodyTypeId (FK)&#xa;bodySubtypeId (FK)&#xa;color&#xa;msrp&#xa;registrationDocumentUrl&#xa;trailerImagesUrl&#xa;statusId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="trailers">
+          <mxGeometry y="26" width="200" height="454" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== RATES & ROUTES ==================== -->
+        <mxCell id="header4" value="RATES &amp; ROUTES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="560" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- RATES -->
+        <mxCell id="rates" value="rates" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="600" width="200" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="rates_fields" value="id (PK)&#xa;tenantId (FK)&#xa;rateName&#xa;customerId (FK)&#xa;description&#xa;originMethodId (FK)&#xa;destinationMethodId (FK)&#xa;originLocationId (FK)&#xa;destinationLocationId (FK)&#xa;customerRateMethodId (FK)&#xa;driverRateMethodId (FK)&#xa;customerRate&#xa;driverRate&#xa;distance&#xa;po&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="rates">
+          <mxGeometry y="26" width="200" height="414" as="geometry" />
+        </mxCell>
+
+        <!-- LANES -->
+        <mxCell id="lanes" value="lanes" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="600" width="200" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="lanes_fields" value="id (PK)&#xa;tenantId (FK)&#xa;laneName&#xa;laneCode&#xa;customerId (FK)&#xa;originLocationId (FK)&#xa;originCity&#xa;originState&#xa;originZipCode&#xa;destinationLocationId (FK)&#xa;destinationCity&#xa;destinationState&#xa;destinationZipCode&#xa;distance&#xa;estimatedTime&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="lanes">
+          <mxGeometry y="26" width="200" height="414" as="geometry" />
+        </mxCell>
+
+        <!-- LOCATIONS -->
+        <mxCell id="locations" value="locations" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="600" width="200" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="locations_fields" value="id (PK)&#xa;tenantId (FK)&#xa;code&#xa;name&#xa;contact&#xa;phone&#xa;email&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;latitude&#xa;longitude&#xa;locationTypeId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="locations">
+          <mxGeometry y="26" width="200" height="394" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== OPERATIONS ==================== -->
+        <mxCell id="header5" value="OPERATIONS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="20" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ORDERS -->
+        <mxCell id="orders" value="orders" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="60" width="200" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="orders_fields" value="id (PK)&#xa;tenantId (FK)&#xa;orderNumber&#xa;orderTypeId (FK)&#xa;customerId (FK)&#xa;driverId (FK)&#xa;vehicleId (FK)&#xa;trailerId (FK)&#xa;originLocationId (FK)&#xa;destinationLocationId (FK)&#xa;rateId (FK)&#xa;laneId (FK)&#xa;pickupDate&#xa;deliveryDate&#xa;actualPickupDate&#xa;actualDeliveryDate&#xa;customerRate&#xa;driverRate&#xa;distance&#xa;statusId (FK)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="orders">
+          <mxGeometry y="26" width="200" height="494" as="geometry" />
+        </mxCell>
+
+        <!-- PAYEES -->
+        <mxCell id="payees" value="payees" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="2060" y="60" width="200" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="payees_fields" value="id (PK)&#xa;tenantId (FK)&#xa;name&#xa;legalName&#xa;code&#xa;settlement&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;phoneNumber&#xa;email&#xa;paymentMethodId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="payees">
+          <mxGeometry y="26" width="200" height="394" as="geometry" />
+        </mxCell>
+
+        <!-- CARRIERS -->
+        <mxCell id="carriers" value="carriers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="2280" y="60" width="200" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="carriers_fields" value="id (PK)&#xa;tenantId (FK)&#xa;name&#xa;code&#xa;mcNumber&#xa;dotNumber&#xa;email&#xa;phone&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;statusId (FK)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="carriers">
+          <mxGeometry y="26" width="200" height="394" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== DOCUMENTS & CONFIG ==================== -->
+        <mxCell id="header6" value="DOCUMENTS &amp; CONFIG" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="600" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- DOCUMENTS -->
+        <mxCell id="documents" value="documents" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="640" width="200" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="documents_fields" value="id (PK)&#xa;tenantId (FK)&#xa;documentName&#xa;documentTypeId (FK)&#xa;description&#xa;fileUrl&#xa;fileName&#xa;fileType&#xa;fileSize&#xa;entityType&#xa;entityId&#xa;expirationDate&#xa;isExpired&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="documents">
+          <mxGeometry y="26" width="200" height="394" as="geometry" />
+        </mxCell>
+
+        <!-- ADDITIONAL_CHARGES -->
+        <mxCell id="additional_charges" value="additional_charges" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="2060" y="640" width="200" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="additional_charges_fields" value="id (PK)&#xa;tenantId (FK)&#xa;name&#xa;code&#xa;description&#xa;chargeTypeId (FK)&#xa;amount&#xa;isPercentage&#xa;percentage&#xa;applyToCustomer&#xa;applyToDriver&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="additional_charges">
+          <mxGeometry y="26" width="200" height="354" as="geometry" />
+        </mxCell>
+
+        <!-- PRODUCT_SALES -->
+        <mxCell id="product_sales" value="product_sales" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="2280" y="640" width="200" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="product_sales_fields" value="id (PK)&#xa;tenantId (FK)&#xa;productName&#xa;productCode&#xa;description&#xa;categoryId (FK)&#xa;unitPrice&#xa;quantity&#xa;totalAmount&#xa;customerId (FK)&#xa;orderId (FK)&#xa;saleDate&#xa;statusId (FK)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="product_sales">
+          <mxGeometry y="26" width="200" height="374" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== FINANCE ==================== -->
+        <mxCell id="header7" value="FINANCE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="20" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- INVOICES -->
+        <mxCell id="invoices" value="invoices" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="60" width="200" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="invoices_fields" value="id (PK)&#xa;tenantId (FK)&#xa;invoiceNumber&#xa;invoiceDate&#xa;dueDate&#xa;customerId (FK)&#xa;orderId (FK)&#xa;subtotal&#xa;taxAmount&#xa;totalAmount&#xa;paidAmount&#xa;balanceDue&#xa;notes&#xa;terms&#xa;statusId (FK)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="invoices">
+          <mxGeometry y="26" width="200" height="414" as="geometry" />
+        </mxCell>
+
+        <!-- PAYMENTS -->
+        <mxCell id="payments" value="payments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="2740" y="60" width="200" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="payments_fields" value="id (PK)&#xa;tenantId (FK)&#xa;paymentNumber&#xa;paymentDate&#xa;amount&#xa;paymentMethodId (FK)&#xa;customerId (FK)&#xa;invoiceId (FK)&#xa;payeeId (FK)&#xa;referenceNumber&#xa;notes&#xa;statusId (FK)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="payments">
+          <mxGeometry y="26" width="200" height="374" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
