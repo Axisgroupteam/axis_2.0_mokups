@@ -1,9 +1,13 @@
 <mxfile host="65bd71144e">
     <diagram id="database-schemas" name="Database Schemas">
-        <mxGraphModel dx="1762" dy="1198" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="2800" math="0" shadow="0">
+        <mxGraphModel dx="1762" dy="4200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="5000" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
+
+                <!-- ========================================== -->
+                <!-- SIMPLE OVERVIEW SECTION (TOP) -->
+                <!-- ========================================== -->
 
                 <!-- MAIN SCHEMA SECTION -->
                 <mxCell id="header_main_schema" value="MAIN SCHEMA" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontStyle=1;fontSize=16;fontColor=#333333;" parent="1" vertex="1">
@@ -35,12 +39,16 @@
                     <mxGeometry x="200" y="150" width="140" height="30" as="geometry"/>
                 </mxCell>
 
-                <mxCell id="main_platform_user_rates_xref" value="platform_user_rates_xref" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;" parent="1" vertex="1">
+                <mxCell id="main_platform_user_roles_xref" value="platform_user_roles_xref" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;" parent="1" vertex="1">
                     <mxGeometry x="360" y="150" width="180" height="30" as="geometry"/>
                 </mxCell>
 
                 <mxCell id="main_user_auth" value="user_auth" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;" parent="1" vertex="1">
                     <mxGeometry x="560" y="150" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="main_audit_log" value="audit_log" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="200" width="140" height="30" as="geometry"/>
                 </mxCell>
 
                 <!-- TENANT SCHEMA SECTION -->
@@ -72,8 +80,8 @@
                     <mxGeometry x="960" y="160" width="160" height="30" as="geometry"/>
                 </mxCell>
 
-                <mxCell id="tenant_rate_details" value="rate_details" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="1140" y="160" width="140" height="30" as="geometry"/>
+                <mxCell id="tenant_rate_details" value="shipper_mileage_rate_details" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="160" width="200" height="30" as="geometry"/>
                 </mxCell>
 
                 <mxCell id="tenant_locations" value="locations" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
@@ -81,7 +89,382 @@
                 </mxCell>
 
                 <mxCell id="tenant_payee" value="payee" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="960" y="210" width="140" height="30" as="geometry"/>
+                    <mxGeometry x="1120" y="210" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_roles_permissions" value="roles_permissions" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="260" width="160" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_user_config" value="user_config" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="260" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_loads" value="loads" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="260" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_commodity" value="commodity" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="310" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_lane" value="lane" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="310" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_audit_log" value="audit_log" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="310" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="tenant_comments" value="comments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="360" width="140" height="30" as="geometry"/>
+                </mxCell>
+
+                <!-- ========================================== -->
+                <!-- DETAILED ER DIAGRAM SECTION (BELOW) -->
+                <!-- ========================================== -->
+
+                <mxCell id="divider" value="" style="line;strokeWidth=2;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=#999999;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="520" width="1340" height="10" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="detail_header" value="DETAILED ER DIAGRAM" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=18;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="540" width="300" height="40" as="geometry"/>
+                </mxCell>
+
+                <!-- ========================================== -->
+                <!-- MAIN SCHEMA DETAILED TABLES -->
+                <!-- ========================================== -->
+
+                <mxCell id="detail_header_main" value="MAIN SCHEMA" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontStyle=1;fontSize=14;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="600" width="150" height="30" as="geometry"/>
+                </mxCell>
+
+                <!-- lookup_types detailed -->
+                <mxCell id="detail_lookup_types" value="lookup_types" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="650" width="200" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_lookup_types_fields" value="id (PK)&#xa;code&#xa;name&#xa;description&#xa;isSystem&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_lookup_types" vertex="1">
+                    <mxGeometry y="26" width="200" height="254" as="geometry"/>
+                </mxCell>
+
+                <!-- lookups detailed -->
+                <mxCell id="detail_lookups" value="lookups" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="650" width="220" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_lookups_fields" value="id (PK)&#xa;lookupTypeId (FK - lookup_types)&#xa;code&#xa;name&#xa;description&#xa;sortOrder&#xa;isDefault&#xa;isSystem&#xa;isActive&#xa;metadata (JSONB)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_lookups" vertex="1">
+                    <mxGeometry y="26" width="220" height="314" as="geometry"/>
+                </mxCell>
+
+                <!-- tenants detailed -->
+                <mxCell id="detail_tenants" value="tenants" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="650" width="220" height="760" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenants_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;name&#xa;legalName&#xa;code&#xa;email&#xa;phoneNumber&#xa;faxNumber&#xa;website&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Company Identifiers --&lt;/b&gt;&lt;/font&gt;&#xa;mcNumber&#xa;dotNumber&#xa;scacCode&#xa;taxId&#xa;dunsNumber&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;latitude&#xa;longitude&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Settings --&lt;/b&gt;&lt;/font&gt;&#xa;timeZone&#xa;dateFormat&#xa;currencyCode&#xa;distanceUnit&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;statusId (FK - lookups)&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_tenants" vertex="1">
+                    <mxGeometry y="26" width="220" height="734" as="geometry"/>
+                </mxCell>
+
+                <!-- shippers detailed -->
+                <mxCell id="detail_shippers" value="shippers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="650" width="220" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_shippers_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;name&#xa;code&#xa;email&#xa;phone&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Settings --&lt;/b&gt;&lt;/font&gt;&#xa;shipperRegionId (FK - lookups)&#xa;billingTypeId (FK - lookups)&#xa;milesMeterSystemId (FK - lookups)&#xa;fleetTypeId (FK - lookups)&#xa;milesCalcTypeId (FK - lookups)&#xa;autoEmailExport&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_shippers" vertex="1">
+                    <mxGeometry y="26" width="220" height="494" as="geometry"/>
+                </mxCell>
+
+                <!-- carriers detailed -->
+                <mxCell id="detail_carriers" value="carriers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="650" width="220" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_carriers_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;name&#xa;legalName&#xa;code&#xa;email&#xa;phoneNumber&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Company Identifiers --&lt;/b&gt;&lt;/font&gt;&#xa;mcNumber&#xa;dotNumber&#xa;scacCode&#xa;taxId&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;statusId (FK - lookups)&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_carriers" vertex="1">
+                    <mxGeometry y="26" width="220" height="494" as="geometry"/>
+                </mxCell>
+
+                <!-- platform_users detailed -->
+                <mxCell id="detail_platform_users" value="platform_users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="1220" y="650" width="200" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_platform_users_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;firstName&#xa;lastName&#xa;email&#xa;phoneNumber&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Role --&lt;/b&gt;&lt;/font&gt;&#xa;roleId (FK - lookups)&#xa;departmentId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Auth --&lt;/b&gt;&lt;/font&gt;&#xa;authUserId (FK - user_auth)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;statusId (FK - lookups)&#xa;isActive&#xa;lastLoginAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_platform_users" vertex="1">
+                    <mxGeometry y="26" width="200" height="374" as="geometry"/>
+                </mxCell>
+
+                <!-- platform_user_roles_xref detailed -->
+                <mxCell id="detail_platform_user_roles_xref" value="platform_user_roles_xref" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="1020" width="200" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_platform_user_roles_xref_fields" value="id (PK)&#xa;platformUserId (FK - platform_users)&#xa;roleId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Role Permissions --&lt;/b&gt;&lt;/font&gt;&#xa;shipperId (FK - shippers)&#xa;carrierId (FK - carriers)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_platform_user_roles_xref" vertex="1">
+                    <mxGeometry y="26" width="200" height="274" as="geometry"/>
+                </mxCell>
+
+                <!-- audit_log detailed (MAIN) -->
+                <mxCell id="detail_audit_log_main" value="audit_log" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="1020" width="200" height="380" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_audit_log_main_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Entity Reference --&lt;/b&gt;&lt;/font&gt;&#xa;entityType&#xa;entityId&#xa;entityName&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Action Details --&lt;/b&gt;&lt;/font&gt;&#xa;action&#xa;description&#xa;oldValue (JSONB)&#xa;newValue (JSONB)&#xa;changedFields (JSONB)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- User Info --&lt;/b&gt;&lt;/font&gt;&#xa;performedBy (FK - platform_users)&#xa;performedAt&#xa;ipAddress&#xa;userAgent&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Context --&lt;/b&gt;&lt;/font&gt;&#xa;module&#xa;requestId&#xa;metadata (JSONB)" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_audit_log_main" vertex="1">
+                    <mxGeometry y="26" width="200" height="354" as="geometry"/>
+                </mxCell>
+
+                <!-- user_auth detailed -->
+                <mxCell id="detail_user_auth" value="user_auth" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1430" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_user_auth_fields" value="id (PK)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Credentials --&lt;/b&gt;&lt;/font&gt;&#xa;email&#xa;hashPassword&#xa;passwordUpdatedAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Verification --&lt;/b&gt;&lt;/font&gt;&#xa;emailVerifiedAt&#xa;mobileNumber&#xa;mobileNumberVerifiedAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- OAuth --&lt;/b&gt;&lt;/font&gt;&#xa;authType&#xa;googleId&#xa;googleProviderData&#xa;outlookId&#xa;outlookProviderData&#xa;appleId&#xa;appleProviderData&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- OTP --&lt;/b&gt;&lt;/font&gt;&#xa;otpCode&#xa;otpExpiresAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;updatedAt" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_user_auth" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+
+                <!-- ========================================== -->
+                <!-- TENANT SCHEMA DETAILED TABLES -->
+                <!-- ========================================== -->
+
+                <mxCell id="detail_header_tenant" value="TENANT SCHEMA" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontStyle=1;fontSize=14;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1850" width="150" height="30" as="geometry"/>
+                </mxCell>
+
+                <!-- tenant_lookup_types detailed -->
+                <mxCell id="detail_tenant_lookup_types" value="tenant_lookup_types" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="1900" width="200" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookup_types_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;code&#xa;name&#xa;description&#xa;isSystem&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_tenant_lookup_types" vertex="1">
+                    <mxGeometry y="26" width="200" height="294" as="geometry"/>
+                </mxCell>
+
+                <!-- tenant_lookups detailed -->
+                <mxCell id="detail_tenant_lookups" value="tenant_lookups" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="1900" width="220" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookups_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;lookupTypeId (FK - tenant_lookup_types)&#xa;code&#xa;name&#xa;description&#xa;sortOrder&#xa;isDefault&#xa;isSystem&#xa;isActive&#xa;metadata (JSONB)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_tenant_lookups" vertex="1">
+                    <mxGeometry y="26" width="220" height="334" as="geometry"/>
+                </mxCell>
+
+                <!-- users detailed -->
+                <mxCell id="detail_users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="1900" width="200" height="680" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_users_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;firstName&#xa;middleName&#xa;lastName&#xa;birthDate&#xa;gender&#xa;profilePictureBucketKey&#xa;imgUrl&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Auth --&lt;/b&gt;&lt;/font&gt;&#xa;authEmail&#xa;emailVerifiedAt&#xa;authMobileNumber&#xa;mobileNumberVerifiedAt&#xa;hashPassword&#xa;passwordUpdatedAt&#xa;authType&#xa;otpCode&#xa;otpExpiresAt&#xa;googleId&#xa;outlookId&#xa;appleId&#xa;lastLoginAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;address&#xa;address2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;latitude&#xa;longitude&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;languages (JSONB)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_users" vertex="1">
+                    <mxGeometry y="26" width="200" height="654" as="geometry"/>
+                </mxCell>
+
+                <!-- vehicle_trailer detailed -->
+                <mxCell id="detail_vehicle_trailer" value="vehicle_trailer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="1900" width="200" height="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_vehicle_trailer_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;name&#xa;vinSn&#xa;licensePlate&#xa;year&#xa;model&#xa;make&#xa;color&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Type --&lt;/b&gt;&lt;/font&gt;&#xa;assetTypeId (FK - lookups)&#xa;fleetTypeId (FK - lookups)&#xa;groupId (FK - lookups)&#xa;ownershipId (FK - lookups)&#xa;bodyTypeId (FK - lookups)&#xa;bodySubtypeId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Documents --&lt;/b&gt;&lt;/font&gt;&#xa;registrationDocumentUrl&#xa;imagesUrl&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;statusId (FK - lookups)&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_vehicle_trailer" vertex="1">
+                    <mxGeometry y="26" width="200" height="514" as="geometry"/>
+                </mxCell>
+
+                <!-- shipper_mileage_rate detailed -->
+                <mxCell id="detail_shipper_mileage_rate" value="shipper_mileage_rate" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="2270" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_shipper_mileage_rate_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;shipperId (FK - shippers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Rate Information --&lt;/b&gt;&lt;/font&gt;&#xa;rateName&#xa;rateTypeId (FK - lookups)&#xa;mileageFrom&#xa;mileageTo&#xa;ratePerMile&#xa;flatRate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Validity --&lt;/b&gt;&lt;/font&gt;&#xa;effectiveDate&#xa;expirationDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_shipper_mileage_rate" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+
+                <!-- shipper_mileage_rate_details detailed -->
+                <mxCell id="detail_shipper_mileage_rate_details" value="shipper_mileage_rate_details" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="2270" width="220" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_shipper_mileage_rate_details_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Rate Reference --&lt;/b&gt;&lt;/font&gt;&#xa;rateName&#xa;shipperId (FK - shippers)&#xa;description&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Location --&lt;/b&gt;&lt;/font&gt;&#xa;originMethodId (FK - lookups)&#xa;destinationMethodId (FK - lookups)&#xa;originLocationId (FK - locations)&#xa;destinationLocationId (FK - locations)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Rate Values --&lt;/b&gt;&lt;/font&gt;&#xa;shipperRateMethodId (FK - lookups)&#xa;driverRateMethodId (FK - lookups)&#xa;shipperRate&#xa;driverRate&#xa;distance&#xa;po&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_shipper_mileage_rate_details" vertex="1">
+                    <mxGeometry y="26" width="220" height="474" as="geometry"/>
+                </mxCell>
+
+                <!-- locations detailed -->
+                <mxCell id="detail_locations" value="locations" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="2300" width="200" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_locations_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;code&#xa;name&#xa;contact&#xa;phone&#xa;email&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;latitude&#xa;longitude&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Type --&lt;/b&gt;&lt;/font&gt;&#xa;locationTypeId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_locations" vertex="1">
+                    <mxGeometry y="26" width="200" height="414" as="geometry"/>
+                </mxCell>
+
+                <!-- payee detailed -->
+                <mxCell id="detail_payee" value="payee" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="2610" width="200" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_payee_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;name&#xa;legalName&#xa;code&#xa;settlement&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Address --&lt;/b&gt;&lt;/font&gt;&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Contact --&lt;/b&gt;&lt;/font&gt;&#xa;phoneNumber&#xa;email&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Payment --&lt;/b&gt;&lt;/font&gt;&#xa;paymentMethodId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_payee" vertex="1">
+                    <mxGeometry y="26" width="200" height="374" as="geometry"/>
+                </mxCell>
+
+                <!-- roles_permissions detailed -->
+                <mxCell id="detail_roles_permissions" value="roles_permissions" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="2610" width="200" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_roles_permissions_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Role Info --&lt;/b&gt;&lt;/font&gt;&#xa;roleId (FK - tenant_lookups)&#xa;roleName&#xa;roleCode&#xa;description&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Permissions --&lt;/b&gt;&lt;/font&gt;&#xa;permissionKey&#xa;canView&#xa;canCreate&#xa;canEdit&#xa;canDelete&#xa;canApprove&#xa;canExport&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_roles_permissions" vertex="1">
+                    <mxGeometry y="26" width="200" height="374" as="geometry"/>
+                </mxCell>
+
+                <!-- user_config detailed -->
+                <mxCell id="detail_user_config" value="user_config" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="2610" width="200" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_user_config_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;userId (FK - users)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Configuration --&lt;/b&gt;&lt;/font&gt;&#xa;configKey&#xa;configValue&#xa;configTypeId (FK - tenant_lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Preferences --&lt;/b&gt;&lt;/font&gt;&#xa;theme&#xa;language&#xa;timezone&#xa;dateFormat&#xa;notifications (JSONB)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_user_config" vertex="1">
+                    <mxGeometry y="26" width="200" height="374" as="geometry"/>
+                </mxCell>
+
+                <!-- comments detailed -->
+                <mxCell id="detail_comments" value="comments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="3050" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_comments_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Entity Reference --&lt;/b&gt;&lt;/font&gt;&#xa;entityType&#xa;entityId&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Comment Content --&lt;/b&gt;&lt;/font&gt;&#xa;commentText&#xa;parentCommentId (FK - comments)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Visibility --&lt;/b&gt;&lt;/font&gt;&#xa;isInternal&#xa;isPinned&#xa;visibilityId (FK - tenant_lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;isEdited&#xa;editedAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy (FK - users)&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_comments" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+
+                <!-- audit_log detailed (TENANT) -->
+                <mxCell id="detail_audit_log_tenant" value="audit_log" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="3050" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_audit_log_tenant_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Entity Reference --&lt;/b&gt;&lt;/font&gt;&#xa;entityType&#xa;entityId&#xa;entityName&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Action Details --&lt;/b&gt;&lt;/font&gt;&#xa;action&#xa;description&#xa;oldValue (JSONB)&#xa;newValue (JSONB)&#xa;changedFields (JSONB)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- User Info --&lt;/b&gt;&lt;/font&gt;&#xa;performedBy (FK - users)&#xa;performedAt&#xa;ipAddress&#xa;userAgent&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Context --&lt;/b&gt;&lt;/font&gt;&#xa;module&#xa;requestId&#xa;metadata (JSONB)" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_audit_log_tenant" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+
+                <!-- lane detailed -->
+                <mxCell id="detail_lane" value="lane" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="540" y="3050" width="220" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_lane_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Lane Information --&lt;/b&gt;&lt;/font&gt;&#xa;laneCode&#xa;laneName&#xa;description&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Origin --&lt;/b&gt;&lt;/font&gt;&#xa;originLocationId (FK - locations)&#xa;originCity&#xa;originState&#xa;originZipCode&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Destination --&lt;/b&gt;&lt;/font&gt;&#xa;destinationLocationId (FK - locations)&#xa;destinationCity&#xa;destinationState&#xa;destinationZipCode&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Distance/Rate --&lt;/b&gt;&lt;/font&gt;&#xa;distance&#xa;transitTime&#xa;baseRate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_lane" vertex="1">
+                    <mxGeometry y="26" width="220" height="434" as="geometry"/>
+                </mxCell>
+
+                <!-- commodity detailed -->
+                <mxCell id="detail_commodity" value="commodity" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="3050" width="220" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_commodity_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Information --&lt;/b&gt;&lt;/font&gt;&#xa;code&#xa;name&#xa;description&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Classification --&lt;/b&gt;&lt;/font&gt;&#xa;commodityTypeId (FK - tenant_lookups)&#xa;hazmatClassId (FK - tenant_lookups)&#xa;freightClassId (FK - tenant_lookups)&#xa;nmfcCode&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Properties --&lt;/b&gt;&lt;/font&gt;&#xa;isHazmat&#xa;requiresTemperatureControl&#xa;minTemperature&#xa;maxTemperature&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_commodity" vertex="1">
+                    <mxGeometry y="26" width="220" height="394" as="geometry"/>
+                </mxCell>
+
+                <!-- loads detailed -->
+                <mxCell id="detail_loads" value="loads" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="3050" width="240" height="900" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_loads_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;loadNumber&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Customer/Shipper --&lt;/b&gt;&lt;/font&gt;&#xa;shipperId (FK - shippers)&#xa;customerRate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Origin --&lt;/b&gt;&lt;/font&gt;&#xa;originLocationId (FK - locations)&#xa;originContact&#xa;originPhone&#xa;pickupAppointmentTime&#xa;pickupWindowStart&#xa;pickupWindowEnd&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Destination --&lt;/b&gt;&lt;/font&gt;&#xa;destinationLocationId (FK - locations)&#xa;destinationContact&#xa;destinationPhone&#xa;deliveryAppointmentTime&#xa;deliveryDeadline&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Freight Details --&lt;/b&gt;&lt;/font&gt;&#xa;commodity&#xa;weight&#xa;pieceCount&#xa;dimensions&#xa;equipmentTypeId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Assignment --&lt;/b&gt;&lt;/font&gt;&#xa;driverId (FK - users)&#xa;vehicleId (FK - vehicle_trailer)&#xa;trailerId (FK - vehicle_trailer)&#xa;carrierId (FK - carriers)&#xa;houseRate&#xa;carrierRate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Execution --&lt;/b&gt;&lt;/font&gt;&#xa;actualPickupDate&#xa;actualDeliveryDate&#xa;podCapturedAt&#xa;podDocumentUrl&#xa;bolDocumentUrl&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;statusId (FK - lookups)&#xa;releaseReason&#xa;mtDecisionAt&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_loads" vertex="1">
+                    <mxGeometry y="26" width="240" height="874" as="geometry"/>
+                </mxCell>
+
+                <!-- ========================================== -->
+                <!-- RELATIONSHIPS -->
+                <!-- ========================================== -->
+
+                <!-- MAIN SCHEMA relationships -->
+                <mxCell id="rel_lookup_types_lookups" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="detail_lookup_types" target="detail_lookups" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_lookups_tenants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;dashed=1;" parent="1" source="detail_lookups" target="detail_tenants" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_lookups_shippers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;dashed=1;" parent="1" source="detail_lookups" target="detail_shippers" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_lookups_carriers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;dashed=1;" parent="1" source="detail_lookups" target="detail_carriers" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_lookups_platform_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;dashed=1;" parent="1" source="detail_lookups" target="detail_platform_users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_user_auth_platform_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="detail_user_auth" target="detail_platform_users" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="140" y="1170"/>
+                            <mxPoint x="1320" y="1170"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_platform_users_roles_xref" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="detail_platform_users" target="detail_platform_user_roles_xref" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1320" y="870"/>
+                            <mxPoint x="480" y="870"/>
+                            <mxPoint x="480" y="970"/>
+                            <mxPoint x="360" y="970"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <!-- TENANT SCHEMA relationships -->
+                <mxCell id="rel_tenants_tenant_lookup_types" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenants" target="detail_tenant_lookup_types" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="1250"/>
+                            <mxPoint x="510" y="1250"/>
+                            <mxPoint x="510" y="1640"/>
+                            <mxPoint x="360" y="1640"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_tenant_lookup_types_lookups" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenant_lookup_types" target="detail_tenant_lookups" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <mxCell id="rel_tenants_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenants" target="detail_users" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="1250"/>
+                            <mxPoint x="520" y="1250"/>
+                            <mxPoint x="520" y="1640"/>
+                            <mxPoint x="820" y="1640"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_tenants_vehicle_trailer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenants" target="detail_vehicle_trailer" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="1250"/>
+                            <mxPoint x="530" y="1250"/>
+                            <mxPoint x="530" y="1640"/>
+                            <mxPoint x="1040" y="1640"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_shippers_mileage_rate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_shippers" target="detail_shipper_mileage_rate" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="850" y="990"/>
+                            <mxPoint x="700" y="990"/>
+                            <mxPoint x="700" y="2280"/>
+                            <mxPoint x="140" y="2280"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_shippers_rate_details" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_shippers" target="detail_shipper_mileage_rate_details" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="850" y="1010"/>
+                            <mxPoint x="690" y="1010"/>
+                            <mxPoint x="690" y="2290"/>
+                            <mxPoint x="370" y="2290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_tenants_locations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenants" target="detail_locations" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="1250"/>
+                            <mxPoint x="550" y="1250"/>
+                            <mxPoint x="550" y="2040"/>
+                            <mxPoint x="600" y="2040"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+
+                <mxCell id="rel_tenants_payee" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenants" target="detail_payee" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="1250"/>
+                            <mxPoint x="560" y="1250"/>
+                            <mxPoint x="560" y="2610"/>
+                            <mxPoint x="820" y="2610"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
 
             </root>
