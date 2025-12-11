@@ -121,10 +121,10 @@
                 <mxCell id="header4" value="RATES &amp; ROUTES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
                     <mxGeometry x="1260" y="580" width="200" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="shipper_mileage_rates" value="shipper_mileage_rates" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                <mxCell id="rates" value="rates" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
                     <mxGeometry x="1260" y="620" width="250" height="460" as="geometry"/>
                 </mxCell>
-                <mxCell id="shipper_mileage_rates_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;rateName&#xa;shipperId (FK - shippers)&#xa;description&#xa;originMethodId (FK - lookups)&#xa;destinationMethodId (FK - lookups)&#xa;originLocationId (FK - locations)&#xa;destinationLocationId (FK - locations)&#xa;shipperRateMethodId (FK - lookups)&#xa;driverRateMethodId (FK - lookups)&#xa;shipperRate&#xa;driverRate&#xa;distance&#xa;po&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="shipper_mileage_rates" vertex="1">
+                <mxCell id="rates_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;rateName&#xa;shipperId (FK - shippers)&#xa;description&#xa;originMethodId (FK - lookups)&#xa;destinationMethodId (FK - lookups)&#xa;originLocationId (FK - locations)&#xa;destinationLocationId (FK - locations)&#xa;shipperRateMethodId (FK - lookups)&#xa;driverRateMethodId (FK - lookups)&#xa;shipperRate&#xa;driverRate&#xa;distance&#xa;po&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="rates" vertex="1">
                     <mxGeometry y="26" width="250" height="434" as="geometry"/>
                 </mxCell>
                 <mxCell id="lanes" value="lanes" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
@@ -214,7 +214,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="rel_shippers_rates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="shippers" target="shipper_mileage_rates" edge="1">
+                <mxCell id="rel_shippers_rates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="shippers" target="rates" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="rel_shippers_lanes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="shippers" target="lanes" edge="1">
