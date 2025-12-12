@@ -1,0 +1,257 @@
+
+Load Lifecycle
+Operations Manual
+From Customer Order to Driver Payout
+AXIS 2.0 Platform
+Version 1.0
+November 2025
+Mega Trucking LLC / Olympian Industries
+ LLC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Complete Operational Flow Guide
+8 Phases | 24 Steps | Order → Intake → Assignment → Execution → Settlement
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 
+Overview
+This document provides a detailed, step-by-step walkthrough of how a load flows through the AXIS platform—from the moment a customer calls with freight to the final driver payout. Understanding this complete lifecycle is essential for all team members.
+The Dual-Entity Model: Mega Logistics (ML) operates as the brokerage/3PL, handling customer relationships and sales. Mega Trucking (MT) operates as the asset carrier with 400+ trucks. The "First Right of Refusal" model ensures MT assets get first opportunity on every load before external carriers are engaged.
+Quick Reference: 8 Phases
+Phase	Name	Summary
+1	Order Capture	Customer contact → Order entry → Validation → Load ID
+2	First Right of Refusal	Capacity analysis → Safety gate → MT decision (accept/release)
+3	Brokerage Coverage	(If MT releases) Carrier search → Tender → Confirmation
+4	Load Execution	Pickup → In-transit tracking → Delivery → POD capture
+5	Billing Cascade	Customer invoice → Carrier/MT payable created
+6	Driver Settlement	(MT loads only) Pay calculation → Statement → Payout
+7	Cash Application	Customer payment → Match to invoice → AP release
+8	Intercompany Reconciliation	ML ↔ MT settlement → Books reconciled
+ 
+Phase 1: Order Capture
+Owner: Inside Sales / Customer Service (Jesus Fernandez's Team)
+Step 1: Customer Contact
+Customer calls or emails with freight need. This contact hits the Inside Sales/Customer Service team. The customer may be an existing account with a rate card, or a new customer requiring spot pricing.
+•	Inbound calls routed to Customer Service queue
+•	Emails parsed and categorized by AI
+•	Customer Portal orders auto-created as DRAFT
+Step 2: Order Entry
+Inside Sales enters the load details into AXIS. Required information includes:
+•	Origin: Full address, contact name, phone, pickup appointment time
+•	Destination: Full address, contact name, phone, delivery appointment time
+•	Dates/Times: Pickup window, delivery deadline, any appointment requirements
+•	Freight Details: Commodity, weight, dimensions, piece count
+•	Equipment: Type required (flatbed, pneumatic, walking floor, etc.)
+•	Special Requirements: Tarps, chains, permits, hazmat, team drivers
+Step 3: Order Intake Agent Validates
+The AI-powered Order Intake Agent automatically performs validations:
+Validation	Action if Failed
+Customer Active Status	Block order, alert sales manager
+Credit Limit Check	Block if over limit, route to credit review
+Rate Card Lookup	Auto-populate pricing; if no rate card, flag for spot quote
+Equipment Availability	Check if equipment type exists in fleet
+Required Fields Complete	Highlight missing fields, prevent submission
+Step 4: Load Created
+Upon successful validation:
+1.	Load ID Generated: Format ML-YYYY-NNNNNN (e.g., ML-2025-001234)
+2.	Status: DRAFT → CONFIRMED
+3.	Customer Rate Locked: From rate card or spot quote
+4.	Load Visible: Now appears in Operations queue
+ 
+Phase 2: First Right of Refusal
+Owner: MT Dispatch (Tommy Simpson's Team)
+This is where the ML/MT magic happens. Every confirmed load goes through First Right of Refusal before any external carrier is engaged. This maximizes MT asset utilization and margin.
+Step 5: Capacity Optimizer Analyzes
+The AI-powered Capacity Optimizer Agent examines MT's entire fleet:
+•	Driver Location: Where is each driver right now? Who's closest to pickup?
+•	HOS Status: Does the driver have enough hours for this trip?
+•	Equipment Match: Is the right trailer type available and in position?
+•	Deadhead Calculation: How many empty miles to reach pickup?
+•	Profitability Score: Is this load profitable for MT at the house rate?
+•	Next Load Positioning: Does delivery location set driver up well?
+Step 6: Safety Sentinel Gates
+CRITICAL: Before ANY driver can be recommended, Safety Sentinel validates their compliance status:
+HARD BLOCKS	Override?	If Invalid
+CDL Valid & Not Expired	NO	Driver excluded
+Medical Card Valid	NO	Driver excluded
+HOS Available for Trip	NO	Driver excluded
+No Drug Test Violations	NO	Driver excluded
+Equipment Inspection Current	NO	Equipment excluded
+Soft Blocks (Manager Override with Documentation):
+•	Random Drug Test Current (24-hour grace period)
+•	Annual MVR on File (7-day grace period)
+Step 7: Load Offered to MT Dispatch
+The load is now presented to MT Dispatch with ranked driver recommendations:
+1.	Status Changes: CONFIRMED → MT-OFFERED
+2.	Dispatch Board: Load appears with AI-ranked driver recommendations
+3.	Timer Starts: 30 minutes for next-day loads, 15 minutes for same-day
+Step 8: MT Decision Point
+OPTION A — MT ACCEPTS:
+•	Dispatcher selects driver from recommendations (or assigns manually)
+•	Status: MT-OFFERED → MT-ACCEPTED → MT-DISPATCHED
+•	Driver receives push notification on mobile app
+•	House Rate Locked: This is what ML will pay MT for this load
+•	→ Proceeds to Phase 4: Load Execution
+OPTION B — MT RELEASES:
+•	Dispatcher clicks "Release to Brokerage"
+•	Reason Code Required: No capacity, equipment mismatch, timing conflict, etc.
+•	Status: MT-OFFERED → MT-RELEASED → BROKERAGE-QUEUE
+•	→ Proceeds to Phase 3: Brokerage Coverage
+OPTION C — TIMEOUT:
+•	Timer expires (30 min next-day / 15 min same-day)
+•	System automatically releases to brokerage
+•	Status: MT-OFFERED → MT-RELEASED (AUTO) → BROKERAGE-QUEUE
+•	Alert sent to dispatch manager
+ 
+Phase 3: Brokerage Coverage
+Owner: Brokerage Team (Andrew Swicegood)
+This phase only occurs if MT releases the load. The brokerage team now finds an external carrier to cover the freight.
+Step 9: Carrier Matching
+The brokerage team (or Carrier Matching Agent) searches for external coverage:
+1.	Carrier Database Search: Find carriers with lane history, capacity, and good performance
+2.	Compliance Verification: Insurance current? Authority active? Safety score acceptable?
+3.	Rate Negotiation: Discuss rate with carrier (must maintain ML margin)
+4.	Tender Load: Send load details to carrier
+5.	Status: BROKERAGE-QUEUE → EXT-TENDERED
+Step 10: Carrier Accepts
+•	Carrier confirms availability and rate
+•	Rate Confirmation sent and signed
+•	Status: EXT-TENDERED → EXT-ACCEPTED
+•	Carrier Rate Locked: This is what ML will pay the external carrier
+•	→ Proceeds to Phase 4: Load Execution
+If No Coverage Found:
+•	Status: COVERAGE-FAILED
+•	Escalate to management
+•	Contact customer for options (reschedule, cancel)
+ 
+Phase 4: Load Execution
+Owner: Driver (MT) or External Carrier
+Step 11: Pickup
+1.	Driver Arrival: Geofence triggers automatic check-in notification
+2.	Loading: Freight loaded onto trailer
+3.	BOL Signed: Driver signs Bill of Lading
+4.	Photo Capture: Driver photographs load, seals, any damage
+5.	Departure Confirmed: Driver marks "Picked Up" in app
+6.	Status: MT-DISPATCHED or EXT-ACCEPTED → IN-TRANSIT
+Step 12: In-Transit Visibility
+The Visibility Agent monitors progress throughout transit:
+•	GPS Tracking: Updates every 5 minutes (MT drivers via ELD, carriers via integration or macro)
+•	ETA Calculation: Dynamic updates based on real-time location and traffic
+•	Geofence Alerts: Automatic notifications at key milestones
+•	Check Calls: Automated or manual status updates logged
+•	Customer Portal: Customer can track shipment in real-time
+Step 13: Delivery
+•	Arrival: Geofence triggers arrival notification
+•	Unloading: Freight unloaded at consignee
+•	Delivery Receipt: Consignee signs confirming receipt
+Step 14: POD Capture
+THIS IS THE CRITICAL TRIGGER POINT — POD capture initiates the entire billing cascade.
+•	Driver photographs signed POD via mobile app
+•	Photos uploaded to load record
+•	AI verifies signature present
+•	Status: IN-TRANSIT → DELIVERED
+•	→ Immediately proceeds to Phase 5: Billing Cascade
+ 
+Phase 5: Billing Cascade
+Owner: Finance Team (Lisa Clark)
+POD capture is the trigger. Within minutes, AXIS automatically generates the financial documents.
+Step 15: Customer Invoice Generated
+1.	Auto-Generation: Invoice created within minutes of POD capture
+2.	Invoice Contents: Load details, customer rate, accessorials, reference numbers
+3.	Attachments: POD, BOL, any other supporting documents
+4.	Status: DELIVERED → INVOICED
+5.	QuickBooks Sync: Invoice auto-syncs, AR posted
+6.	Customer Delivery: Invoice emailed and available in Customer Portal
+Step 16: Carrier/MT Payable Created
+If MT Covered the Load:
+•	ML creates payable to MT at the house rate
+•	This is an intercompany transaction (ML owes MT)
+•	Example: Customer rate $2,500, House rate $2,100 → ML margin $400 (16%)
+If External Carrier Covered:
+•	ML creates payable to external carrier at agreed rate
+•	Payment terms per carrier agreement (typically NET 30)
+•	Example: Customer rate $2,500, Carrier rate $2,000 → ML margin $500 (20%)
+ 
+Phase 6: Driver Settlement
+Owner: MT Operations / Finance
+This phase only applies to loads covered by MT drivers. External carrier loads skip directly to Phase 7.
+Step 17: Load Hits Settlement Queue
+Once POD is captured, the load automatically enters the driver settlement calculation queue. Loads are batched by week (typically Monday-Sunday).
+Step 18: Driver Pay Calculated
+Based on the driver's compensation agreement:
+Pay Type	Calculation	Example
+Percentage	X% of line haul revenue	27% × $2,100 = $567
+Per Mile	$X per loaded mile	$0.55 × 850 mi = $467.50
+Flat Rate	Fixed amount per load	$500 per load
+Additional Pay Items:
+•	Accessorials: Detention, lumper, TONU, layover
+•	Bonuses: Safety bonus, fuel bonus, referral bonus
+•	Reimbursements: Tolls, scales, permits (with receipts)
+Deductions:
+•	Advances: Cash advances, fuel advances
+•	Deductions: Insurance, escrow, lease payments, ELD fees
+•	Chargebacks: Damage claims, compliance fines
+Step 19: Settlement Statement Generated
+1.	Settlement Period: Weekly (typically Friday for prior week's loads)
+2.	Statement Contents: Every load with miles, rate, gross pay
+3.	Deductions Itemized: Each deduction listed separately
+4.	Net Pay Calculated: Gross - Deductions = Net
+5.	Driver Access: Settlement visible in mobile app before payday
+Step 20: Driver Paid
+•	Settlement approved by operations manager
+•	Payment processed (direct deposit or fuel card load)
+•	Driver sees deposit hit their account
+•	Settlement marked complete in AXIS
+ 
+Phase 7: Cash Application
+Owner: Finance Team (Lisa Clark)
+Step 21: Customer Pays Invoice
+1.	Customer sends payment (check, ACH, wire)
+2.	Payment hits ML bank account
+3.	Bank feed imports transaction to QuickBooks
+Step 22: Cash Applied in AXIS
+•	Finance team matches payment to open invoices
+•	AI assists with ambiguous payments (multiple invoices, partial payments)
+•	Status: INVOICED → SETTLED
+•	AR closed out in QuickBooks
+Step 23: Carrier/MT Paid
+Once customer payment is received, AP is released for payment:
+•	External Carriers: Paid per agreed terms (typically NET 30)
+•	MT (Intercompany): Accumulated and settled weekly
+ 
+Phase 8: Intercompany Reconciliation
+Owner: Finance Team (Lisa Clark)
+Step 24: ML ↔ MT Settlement
+For all loads MT covered during the settlement period:
+1.	Calculate Total: Sum of all house rates owed from ML to MT
+2.	Single Payment: One intercompany transfer processed
+3.	Both Books Updated: ML records payment out, MT records payment in
+4.	Reconciled: QuickBooks entries posted on both entities
+ 
+Money Flow Summary
+Example: MT-Covered Load
+Customer Pays	ML Receives	ML Pays MT	MT Pays Driver
+$2,500	$2,500	$2,100	$567
+Customer Rate	Full Amount	House Rate	27% of House
+Margin Distribution:
+ML Keeps: $400 (16% margin)	MT Keeps: $1,533 (covers truck costs + profit)
+Example: Brokered Load
+Customer Pays	ML Receives	ML Pays Carrier
+$2,500	$2,500	$2,000
+ML Keeps: $500 (20% margin)
+ 
+Status Machine Reference
+Status	What's Happening	Who's Working It
+DRAFT	Order being entered	Inside Sales
+CONFIRMED	Validated, entering First Right	System
+MT-OFFERED	Waiting for dispatch decision	MT Dispatch
+MT-ACCEPTED	MT will cover with asset driver	MT Dispatch
+MT-DISPATCHED	Driver assigned and notified	Driver
+MT-RELEASED	Sent to brokerage (reason required)	Brokerage
+BROKERAGE-QUEUE	Finding external carrier	Brokerage
+EXT-TENDERED	Offered to external carrier	Carrier
+EXT-ACCEPTED	Carrier confirmed	Carrier
+IN-TRANSIT	Moving freight	Driver/Carrier
+DELIVERED	POD captured	System
+INVOICED	Bill sent to customer	Finance
+SETTLED	All payments complete	Finance
+COVERAGE-FAILED	No carrier found - escalate	Management
+— End of Document —

@@ -27,7 +27,6 @@ import ThemeLogo from "@/components/theme-logo";
 import UserButton from "@/layouts/auth/user-button";
 import {
   LayoutDashboardIcon,
-  BarChart3Icon,
   ShoppingCartIcon,
   DatabaseIcon,
   ChevronRightIcon,
@@ -47,13 +46,24 @@ import {
   ListIcon,
   ReceiptIcon,
   ShoppingBagIcon,
+  BadgeDollarSignIcon,
+  PhoneIncomingIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  HandshakeIcon,
+  InboxIcon,
+  SearchIcon,
+  SendIcon,
+  CheckCircle2Icon,
+  AlertTriangleIcon,
+  ClipboardListIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "orders" | "master" | "onboarding" | null
+  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "master" | "onboarding" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -63,6 +73,7 @@ const CarrierPortalSidebar = () => {
       href: "/app/carrier-portal/metrics",
     },
   ];
+
 
   // Orders sub-menu items
   const ordersSubItems = [
@@ -85,6 +96,20 @@ const CarrierPortalSidebar = () => {
       label: "Precast",
       href: "/app/carrier-portal/orders/precast",
       icon: Building2Icon,
+    },
+  ];
+
+  // Brokerage sub-menu items (Brokerage Coverage - Andrew Swicegood's Team)
+  const brokerageSubItems = [
+    {
+      label: "Load Board",
+      href: "/app/carrier-portal/brokerage/queue",
+      icon: InboxIcon,
+    },
+    {
+      label: "Billing",
+      href: "/app/carrier-portal/brokerage/billing",
+      icon: ReceiptIcon,
     },
   ];
 
@@ -126,6 +151,11 @@ const CarrierPortalSidebar = () => {
       icon: ListIcon,
     },
     {
+      label: "Business Unit",
+      href: "/app/carrier-portal/master/business-unit",
+      icon: Building2Icon,
+    },
+    {
       label: "Additional Charges",
       href: "/app/carrier-portal/master/additional-charges",
       icon: ReceiptIcon,
@@ -154,11 +184,14 @@ const CarrierPortalSidebar = () => {
   // Automatically open the correct collapsible menu based on current URL
   useEffect(() => {
     const isOrdersPath = ordersSubItems.some((item) => pathname === item.href);
+    const isBrokeragePath = brokerageSubItems.some((item) => pathname === item.href);
     const isMasterPath = masterSubItems.some((item) => pathname === item.href);
     const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
 
     if (isOrdersPath) {
       setOpenMenu("orders");
+    } else if (isBrokeragePath) {
+      setOpenMenu("brokerage");
     } else if (isMasterPath) {
       setOpenMenu("master");
     } else if (isOnboardingPath) {
@@ -220,6 +253,25 @@ const CarrierPortalSidebar = () => {
                 );
               })}
 
+              {/* Load Request (Order Capture) */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  className={cn(
+                    "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                    pathname === "/app/carrier-portal/sales/orders" && "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                  )}
+                  isActive={pathname === "/app/carrier-portal/sales/orders"}
+                >
+                  <Link to="/app/carrier-portal/sales/orders" onClick={handleLinkClick}>
+                    <BadgeDollarSignIcon className="size-5" />
+                    <span className="text-md font-medium tracking-tight">
+                      Load Requests
+                    </span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
               {/* Orders with Sub-menu */}
               <Collapsible
                 open={openMenu === "orders"}
@@ -269,6 +321,67 @@ const CarrierPortalSidebar = () => {
                               <Link to={subItem.href} onClick={handleLinkClick}>
                                 {IconComponent && (
                                   <IconComponent className="size-4 " />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Brokerage with Sub-menu (Brokerage Coverage) */}
+              <Collapsible
+                open={openMenu === "brokerage"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "brokerage" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        brokerageSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={brokerageSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <HandshakeIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Brokerage
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "brokerage" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {brokerageSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
                                 )}
                                 <span>{subItem.label}</span>
                               </Link>

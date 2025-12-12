@@ -1,0 +1,373 @@
+<mxfile host="65bd71144e">
+    <diagram id="er-diagram" name="ER Diagram">
+        <mxGraphModel dx="1762" dy="1198" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="2800" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="header1" value="CORE SYSTEM" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="tenants" value="tenants" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="60" width="220" height="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="tenants_fields" value="id (PK)&#xa;-- Basic Information --&#xa;name&#xa;legalName&#xa;code&#xa;email&#xa;phoneNumber&#xa;faxNumber&#xa;website&#xa;-- Company Identifiers --&#xa;mcNumber&#xa;dotNumber&#xa;scacCode&#xa;taxId&#xa;dunsNumber&#xa;-- Address --&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;latitude&#xa;longitude&#xa;-- Branding --&#xa;logoUrl&#xa;primaryColor&#xa;secondaryColor&#xa;-- Settings --&#xa;timeZone&#xa;dateFormat&#xa;currencyCode&#xa;distanceUnit&#xa;-- Business Details --&#xa;businessTypeId (FK - lookups)&#xa;carrierTypeId (FK - lookups)&#xa;fleetSize&#xa;yearEstablished&#xa;-- Insurance --&#xa;insuranceCompany&#xa;insurancePolicyNumber&#xa;insuranceExpirationDate&#xa;liabilityCoverage&#xa;cargoCoverage&#xa;-- Primary Contact --&#xa;primaryContactName&#xa;primaryContactEmail&#xa;primaryContactPhone&#xa;primaryContactTitle&#xa;-- Billing Contact --&#xa;billingContactName&#xa;billingContactEmail&#xa;billingContactPhone&#xa;-- Status --&#xa;statusId (FK - lookups)&#xa;isActive&#xa;activatedAt&#xa;deactivatedAt&#xa;deactivationReason&#xa;-- Subscription --&#xa;subscriptionPlanId (FK - lookups)&#xa;subscriptionStartDate&#xa;subscriptionEndDate&#xa;-- Audit --&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Helvetica;fontSize=12;" parent="tenants" vertex="1">
+                    <mxGeometry y="26" width="220" height="754" as="geometry"/>
+                </mxCell>
+                <mxCell id="users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="60" width="200" height="560" as="geometry"/>
+                </mxCell>
+                <mxCell id="users_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;firstName&#xa;middleName&#xa;lastName&#xa;birthDate&#xa;gender&#xa;profilePictureBucketKey&#xa;imgUrl&#xa;isActive&#xa;languages (JSONB)&#xa;authEmail&#xa;emailVerifiedAt&#xa;authMobileNumber&#xa;mobileNumberVerifiedAt&#xa;hashPassword&#xa;passwordUpdatedAt&#xa;authType&#xa;otpCode&#xa;otpExpiresAt&#xa;googleId&#xa;googleProviderData&#xa;outlookId&#xa;outlookProviderData&#xa;appleId&#xa;appleProviderData&#xa;lastLoginAt&#xa;address&#xa;address2&#xa;city&#xa;state&#xa;zipcode&#xa;country&#xa;latitude&#xa;longitude&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="users" vertex="1">
+                    <mxGeometry y="26" width="200" height="534" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_roles_xref" value="user_roles_xref" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="60" width="200" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_roles_xref_fields" value="id (PK)&#xa;userId (FK - users)&#xa;roleId (FK - lookups)&#xa;tenantId (FK - tenants)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="user_roles_xref" vertex="1">
+                    <mxGeometry y="26" width="200" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="lookup_types" value="lookup_types" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="60" width="200" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="lookup_types_fields" value="id (PK)&#xa;code&#xa;name&#xa;description&#xa;isSystem&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="lookup_types" vertex="1">
+                    <mxGeometry y="26" width="200" height="254" as="geometry"/>
+                </mxCell>
+                <mxCell id="lookups" value="lookups" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="60" width="220" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="lookups_fields" value="id (PK)&#xa;lookupTypeId (FK - lookup_types)&#xa;code&#xa;name&#xa;description&#xa;sortOrder&#xa;isDefault&#xa;isSystem&#xa;isActive&#xa;metadata (JSONB)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="lookups" vertex="1">
+                    <mxGeometry y="26" width="220" height="294" as="geometry"/>
+                </mxCell>
+                <mxCell id="header2" value="USERS &amp; PERSONNEL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="860" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="drivers" value="drivers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="900" width="230" height="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="drivers_fields" value="id (PK)&#xa;userId (FK - users)&#xa;tenantId (FK - tenants)&#xa;roleId (FK - lookups)&#xa;phoneNumber&#xa;raceId (FK - lookups)&#xa;ethnicityId (FK - lookups)&#xa;preferredLanguageId (FK - lookups)&#xa;emergencyContact&#xa;spouseName&#xa;socialSecurity&#xa;driverCode&#xa;driverTypeId (FK - lookups)&#xa;statusId (FK - lookups)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;truckNumber&#xa;dotLoggingRequired&#xa;pto&#xa;axisAppStatusId (FK - lookups)&#xa;licenseNumber&#xa;licenseCategoryId (FK - lookups)&#xa;licenseState&#xa;licenseEffectiveDate&#xa;licenseExpireDate&#xa;ssnOrFedId&#xa;licenseDocumentUrl&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="drivers" vertex="1">
+                    <mxGeometry y="26" width="230" height="554" as="geometry"/>
+                </mxCell>
+                <mxCell id="technicians" value="technicians" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="900" width="200" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="technicians_fields" value="id (PK)&#xa;userId (FK - users)&#xa;tenantId (FK - tenants)&#xa;jobTitleId (FK - lookups)&#xa;qualificationId (FK - lookups)&#xa;statusId (FK - lookups)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="technicians" vertex="1">
+                    <mxGeometry y="26" width="200" height="314" as="geometry"/>
+                </mxCell>
+                <mxCell id="employees" value="employees" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="900" width="200" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="employees_fields" value="id (PK)&#xa;userId (FK - users)&#xa;tenantId (FK - tenants)&#xa;employeeCode&#xa;departmentId (FK - lookups)&#xa;positionId (FK - lookups)&#xa;statusId (FK - lookups)&#xa;reasonForInactive&#xa;hireDate&#xa;terminationDate&#xa;eligibleForRehire&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="employees" vertex="1">
+                    <mxGeometry y="26" width="200" height="334" as="geometry"/>
+                </mxCell>
+                <mxCell id="header_safety" value="DRIVER SAFETY COMPLIANCE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="860" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_safety_compliance" value="driver_safety_compliance" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="900" width="260" height="680" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_safety_compliance_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;driverId (FK - drivers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Training --&lt;/b&gt;&lt;/font&gt;&#xa;lastTrainingDate&#xa;nextTrainingDate&#xa;specificTraining&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Orientation --&lt;/b&gt;&lt;/font&gt;&#xa;orientationDate&#xa;orientationHost&#xa;orientationLocation&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Safety Management --&lt;/b&gt;&lt;/font&gt;&#xa;safetyRegionId (FK - lookups)&#xa;safetyManagerId (FK - users)&#xa;safetySupervisorId (FK - users)&#xa;driverCurrentCSAPoints&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Driver PSP --&lt;/b&gt;&lt;/font&gt;&#xa;inspectionHistoryId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Additional Safety --&lt;/b&gt;&lt;/font&gt;&#xa;previousJobType&#xa;experience&#xa;roadTestEvaluation&#xa;safetyMeetingAttendance&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Logbook Management --&lt;/b&gt;&lt;/font&gt;&#xa;logbookProviderId (FK - lookups)&#xa;violationsStartDate&#xa;violationsEndDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Basic Scores (CSA) --&lt;/b&gt;&lt;/font&gt;&#xa;unsafeScore&#xa;fatiguedScore&#xa;controlledSubstanceScore&#xa;fitnessScore&#xa;vehicleScore&#xa;cargoScore&#xa;crashScore&#xa;basicScoresReportDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="driver_safety_compliance" vertex="1">
+                    <mxGeometry y="26" width="260" height="654" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_accident_records" value="driver_accident_records" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1010" y="900" width="230" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_accident_records_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;driverId (FK - drivers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Accident Details --&lt;/b&gt;&lt;/font&gt;&#xa;location&#xa;accidentDate&#xa;accidentTime&#xa;preventabilityId (FK - lookups)&#xa;weatherConditions&#xa;description&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Claim Information --&lt;/b&gt;&lt;/font&gt;&#xa;claimRequested&#xa;claimAmount&#xa;claimNumber&#xa;claimDate&#xa;claimAdjustor&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Documents --&lt;/b&gt;&lt;/font&gt;&#xa;picturesUrl&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="driver_accident_records" vertex="1">
+                    <mxGeometry y="26" width="230" height="474" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_endorsements" value="driver_endorsements" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1010" y="1420" width="230" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_endorsements_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;driverId (FK - drivers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Endorsement Info --&lt;/b&gt;&lt;/font&gt;&#xa;endorsementTypeId (FK - lookups)&#xa;issuedDate&#xa;expirationDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;isActive&#xa;statusId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Documents --&lt;/b&gt;&lt;/font&gt;&#xa;endorsementDocumentUrl&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="driver_endorsements" vertex="1">
+                    <mxGeometry y="26" width="230" height="374" as="geometry"/>
+                </mxCell>
+                <mxCell id="header_operation" value="DRIVER OPERATION" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="1410" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_operation" value="driver_operation" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="1450" width="260" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_operation_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;driverId (FK - drivers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Driver Assignments --&lt;/b&gt;&lt;/font&gt;&#xa;driverManagerId (FK - users)&#xa;fleetId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Availability (HOS) --&lt;/b&gt;&lt;/font&gt;&#xa;driveTimeAvailable&#xa;onDutyTimeAvailable&#xa;availabilityAsOfDate&#xa;dutyStatusId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Home Information --&lt;/b&gt;&lt;/font&gt;&#xa;homeTerminalId (FK - locations)&#xa;returnHomeDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="driver_operation" vertex="1">
+                    <mxGeometry y="26" width="260" height="454" as="geometry"/>
+                </mxCell>
+                <mxCell id="header_fuel" value="DRIVER FUEL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1500" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_fuel_cards" value="driver_fuel_cards" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e6d0de;strokeColor=#996185;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1540" width="250" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="driver_fuel_cards_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;driverId (FK - drivers)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Card Information --&lt;/b&gt;&lt;/font&gt;&#xa;cardProviderId (FK - lookups)&#xa;account&#xa;subaccount&#xa;cardNumber&#xa;cardNumberLast4&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Assignment --&lt;/b&gt;&lt;/font&gt;&#xa;tractorId (FK - vehicles)&#xa;cardPayeeId (FK - payees)&#xa;chargePayeeId (FK - payees)&#xa;expenseCode&#xa;assignTypeId (FK - lookups)&#xa;cardTypeId (FK - lookups)&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Status --&lt;/b&gt;&lt;/font&gt;&#xa;cardStatusId (FK - lookups)&#xa;isActive&#xa;activatedDate&#xa;deactivatedDate&#xa;&lt;font color=&quot;#1976D2&quot;&gt;&lt;b&gt;-- Audit --&lt;/b&gt;&lt;/font&gt;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="html=1;text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="driver_fuel_cards" vertex="1">
+                    <mxGeometry y="26" width="250" height="494" as="geometry"/>
+                </mxCell>
+                <mxCell id="header3" value="CUSTOMERS &amp; ASSETS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1260" y="20" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="customers" value="customers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1260" y="60" width="220" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="customers_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;name&#xa;code&#xa;email&#xa;phone&#xa;addressLine1&#xa;addressLine2&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;customerRegionId (FK - lookups)&#xa;billingTypeId (FK - lookups)&#xa;milesMeterSystemId (FK - lookups)&#xa;fleetTypeId (FK - lookups)&#xa;milesCalcTypeId (FK - lookups)&#xa;autoEmailExport&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="customers" vertex="1">
+                    <mxGeometry y="26" width="220" height="454" as="geometry"/>
+                </mxCell>
+                <mxCell id="vehicles" value="vehicles" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1500" y="60" width="200" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="vehicles_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;vehicleName&#xa;vinSn&#xa;licensePlate&#xa;year&#xa;model&#xa;make&#xa;fleetTypeId (FK - lookups)&#xa;groupId (FK - lookups)&#xa;typeId (FK - lookups)&#xa;ownershipId (FK - lookups)&#xa;bodyTypeId (FK - lookups)&#xa;bodySubtypeId (FK - lookups)&#xa;color&#xa;msrp&#xa;registrationDocumentUrl&#xa;vehicleImagesUrl&#xa;statusId (FK - lookups)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="vehicles" vertex="1">
+                    <mxGeometry y="26" width="200" height="474" as="geometry"/>
+                </mxCell>
+                <mxCell id="trailers" value="trailers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="1720" y="60" width="200" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="trailers_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;trailerName&#xa;vinSn&#xa;licensePlate&#xa;year&#xa;model&#xa;make&#xa;fleetTypeId (FK - lookups)&#xa;groupId (FK - lookups)&#xa;typeId (FK - lookups)&#xa;ownershipId (FK - lookups)&#xa;bodyTypeId (FK - lookups)&#xa;bodySubtypeId (FK - lookups)&#xa;color&#xa;msrp&#xa;registrationDocumentUrl&#xa;trailerImagesUrl&#xa;statusId (FK - lookups)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="trailers" vertex="1">
+                    <mxGeometry y="26" width="200" height="474" as="geometry"/>
+                </mxCell>
+                <mxCell id="header4" value="RATES &amp; ROUTES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1260" y="580" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="rates" value="rates" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="1260" y="620" width="250" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="rates_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;rateName&#xa;customerId (FK - customers)&#xa;description&#xa;originMethodId (FK - lookups)&#xa;destinationMethodId (FK - lookups)&#xa;originLocationId (FK - locations)&#xa;destinationLocationId (FK - locations)&#xa;customerRateMethodId (FK - lookups)&#xa;driverRateMethodId (FK - lookups)&#xa;customerRate&#xa;driverRate&#xa;distance&#xa;po&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="rates" vertex="1">
+                    <mxGeometry y="26" width="250" height="434" as="geometry"/>
+                </mxCell>
+                <mxCell id="lanes" value="lanes" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="1530" y="620" width="230" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="lanes_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;laneName&#xa;laneCode&#xa;customerId (FK - customers)&#xa;originLocationId (FK - locations)&#xa;originCity&#xa;originState&#xa;originZipCode&#xa;destinationLocationId (FK - locations)&#xa;destinationCity&#xa;destinationState&#xa;destinationZipCode&#xa;distance&#xa;estimatedTime&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="lanes" vertex="1">
+                    <mxGeometry y="26" width="230" height="434" as="geometry"/>
+                </mxCell>
+                <mxCell id="locations" value="locations" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="1780" y="620" width="220" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="locations_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;code&#xa;name&#xa;contact&#xa;phone&#xa;email&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;latitude&#xa;longitude&#xa;locationTypeId (FK - lookups)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="locations" vertex="1">
+                    <mxGeometry y="26" width="220" height="414" as="geometry"/>
+                </mxCell>
+                <mxCell id="header5" value="OPERATIONS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="2040" y="20" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="orders" value="orders" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="2040" y="60" width="230" height="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="orders_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;orderNumber&#xa;orderTypeId (FK - lookups)&#xa;customerId (FK - customers)&#xa;driverId (FK - drivers)&#xa;vehicleId (FK - vehicles)&#xa;trailerId (FK - trailers)&#xa;originLocationId (FK - locations)&#xa;destinationLocationId (FK - locations)&#xa;rateId (FK - rates)&#xa;laneId (FK - lanes)&#xa;pickupDate&#xa;deliveryDate&#xa;actualPickupDate&#xa;actualDeliveryDate&#xa;customerRate&#xa;driverRate&#xa;distance&#xa;statusId (FK - lookups)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="orders" vertex="1">
+                    <mxGeometry y="26" width="230" height="514" as="geometry"/>
+                </mxCell>
+                <mxCell id="payees" value="payees" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="2290" y="60" width="200" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="payees_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;name&#xa;legalName&#xa;code&#xa;settlement&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;phoneNumber&#xa;email&#xa;paymentMethodId (FK - lookups)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="payees" vertex="1">
+                    <mxGeometry y="26" width="200" height="414" as="geometry"/>
+                </mxCell>
+                <mxCell id="carriers" value="carriers" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="2510" y="60" width="200" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="carriers_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;name&#xa;code&#xa;mcNumber&#xa;dotNumber&#xa;email&#xa;phone&#xa;address&#xa;city&#xa;state&#xa;zipCode&#xa;country&#xa;statusId (FK - lookups)&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="carriers" vertex="1">
+                    <mxGeometry y="26" width="200" height="414" as="geometry"/>
+                </mxCell>
+                <mxCell id="header6" value="DOCUMENTS &amp; CONFIG" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="2040" y="620" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="documents" value="documents" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="2040" y="660" width="200" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="documents_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;documentName&#xa;documentTypeId (FK - lookups)&#xa;description&#xa;fileUrl&#xa;fileName&#xa;fileType&#xa;fileSize&#xa;entityType&#xa;entityId&#xa;expirationDate&#xa;isExpired&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="documents" vertex="1">
+                    <mxGeometry y="26" width="200" height="414" as="geometry"/>
+                </mxCell>
+                <mxCell id="additional_charges" value="additional_charges" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="2260" y="660" width="200" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="additional_charges_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;name&#xa;code&#xa;description&#xa;chargeTypeId (FK - lookups)&#xa;amount&#xa;isPercentage&#xa;percentage&#xa;applyToCustomer&#xa;applyToDriver&#xa;isActive&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="additional_charges" vertex="1">
+                    <mxGeometry y="26" width="200" height="374" as="geometry"/>
+                </mxCell>
+                <mxCell id="product_sales" value="product_sales" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="2480" y="660" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="product_sales_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;productName&#xa;productCode&#xa;description&#xa;categoryId (FK - lookups)&#xa;unitPrice&#xa;quantity&#xa;totalAmount&#xa;customerId (FK - customers)&#xa;orderId (FK - orders)&#xa;saleDate&#xa;statusId (FK - lookups)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="product_sales" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+                <mxCell id="header7" value="FINANCE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="2740" y="20" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="invoices" value="invoices" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="2740" y="60" width="200" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="invoices_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;invoiceNumber&#xa;invoiceDate&#xa;dueDate&#xa;customerId (FK - customers)&#xa;orderId (FK - orders)&#xa;subtotal&#xa;taxAmount&#xa;totalAmount&#xa;paidAmount&#xa;balanceDue&#xa;notes&#xa;terms&#xa;statusId (FK - lookups)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="invoices" vertex="1">
+                    <mxGeometry y="26" width="200" height="434" as="geometry"/>
+                </mxCell>
+                <mxCell id="payments" value="payments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="2960" y="60" width="200" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="payments_fields" value="id (PK)&#xa;tenantId (FK - tenants)&#xa;paymentNumber&#xa;paymentDate&#xa;amount&#xa;paymentMethodId (FK - lookups)&#xa;customerId (FK - customers)&#xa;invoiceId (FK - invoices)&#xa;payeeId (FK - payees)&#xa;referenceNumber&#xa;notes&#xa;statusId (FK - lookups)&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="payments" vertex="1">
+                    <mxGeometry y="26" width="200" height="394" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_tenants_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="tenants" target="users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_users_roles" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="users" target="user_roles_xref" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_lookup_types_lookups" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;" parent="1" source="lookup_types" target="lookups" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_lookups_roles" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;dashed=1;" parent="1" source="lookups" target="user_roles_xref" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_users_drivers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="users" target="drivers" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_users_technicians" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="users" target="technicians" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_users_employees" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="users" target="employees" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_tenants_customers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d79b00;" parent="1" source="tenants" target="customers" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="150" y="850"/>
+                            <mxPoint x="1240" y="850"/>
+                            <mxPoint x="1240" y="290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_customers_rates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="customers" target="rates" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_customers_lanes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="customers" target="lanes" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1370" y="560"/>
+                            <mxPoint x="1645" y="560"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_locations_lanes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;dashed=1;" parent="1" source="locations" target="lanes" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_customers_orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d6b656;" parent="1" source="customers" target="orders" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1370" y="570"/>
+                            <mxPoint x="2020" y="570"/>
+                            <mxPoint x="2020" y="330"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_drivers_orders" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d6b656;" parent="1" source="drivers" target="orders" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="155" y="1520"/>
+                            <mxPoint x="2155" y="1520"/>
+                            <mxPoint x="2155" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_customers_invoices" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="customers" target="invoices" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1370" y="550"/>
+                            <mxPoint x="2720" y="550"/>
+                            <mxPoint x="2720" y="290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_orders_invoices" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="orders" target="invoices" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_invoices_payments" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="invoices" target="payments" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_payees_payments" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;dashed=1;" parent="1" source="payees" target="payments" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="2390" y="520"/>
+                            <mxPoint x="2930" y="520"/>
+                            <mxPoint x="2930" y="270"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_orders_product_sales" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#b85450;" parent="1" source="orders" target="product_sales" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="2155" y="610"/>
+                            <mxPoint x="2450" y="610"/>
+                            <mxPoint x="2450" y="870"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_lookups_tenants" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#6c8ebf;dashed=1;" parent="1" source="lookups" target="tenants" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1050" y="400"/>
+                            <mxPoint x="1120" y="400"/>
+                            <mxPoint x="1120" y="450"/>
+                            <mxPoint x="150" y="450"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_drivers_safety_compliance" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#666666;" parent="1" source="drivers" target="driver_safety_compliance" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_drivers_accident_records" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#666666;" parent="1" source="drivers" target="driver_accident_records" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="155" y="1510"/>
+                            <mxPoint x="700" y="1510"/>
+                            <mxPoint x="700" y="1150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_drivers_endorsements" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#666666;" parent="1" source="drivers" target="driver_endorsements" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="155" y="1510"/>
+                            <mxPoint x="700" y="1510"/>
+                            <mxPoint x="700" y="1620"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_drivers_operation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d6b656;" parent="1" source="drivers" target="driver_operation" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_users_driver_operation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d6b656;dashed=1;" parent="1" source="users" target="driver_operation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="640"/>
+                            <mxPoint x="270" y="640"/>
+                            <mxPoint x="270" y="1540"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_locations_driver_operation" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#d6b656;dashed=1;" parent="1" source="locations" target="driver_operation" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1890" y="1100"/>
+                            <mxPoint x="1200" y="1100"/>
+                            <mxPoint x="1200" y="1850"/>
+                            <mxPoint x="420" y="1850"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_drivers_fuel_cards" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#996185;" parent="1" source="drivers" target="driver_fuel_cards" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_vehicles_fuel_cards" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#996185;dashed=1;" parent="1" source="vehicles" target="driver_fuel_cards" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1600" y="580"/>
+                            <mxPoint x="1180" y="580"/>
+                            <mxPoint x="1180" y="1760"/>
+                            <mxPoint x="165" y="1760"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel_payees_fuel_cards" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#996185;dashed=1;" parent="1" source="payees" target="driver_fuel_cards" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="2390" y="510"/>
+                            <mxPoint x="1160" y="510"/>
+                            <mxPoint x="1160" y="1780"/>
+                            <mxPoint x="165" y="1780"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
