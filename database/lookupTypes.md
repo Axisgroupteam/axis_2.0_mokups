@@ -4,6 +4,8 @@
 
 ## All Lookup Types (66)
 
+customer_regions
+
 ### Customer (5)
 - Billing Type
 - Account Type
