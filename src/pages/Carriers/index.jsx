@@ -10,6 +10,8 @@ import {
   MoreHorizontalIcon,
   EyeIcon,
   BanIcon,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import ResponseDialog from "@/components/responsive-dialog";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
@@ -33,168 +35,224 @@ const Carriers = () => {
       id: 1,
       name: "Mega Trucking",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-10-27",
     },
     {
       id: 2,
       name: "Werner Enterprises",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-09-15",
     },
     {
       id: 3,
       name: "J.B. Hunt Transport",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2023-08-01",
     },
     {
       id: 4,
       name: "Schneider National",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-07-22",
     },
     {
       id: 5,
       name: "Swift Transportation",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: false,
       createdAt: "2023-06-18",
     },
     {
       id: 6,
       name: "Landstar System",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2023-05-30",
     },
     {
       id: 7,
       name: "XPO Logistics",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-05-12",
     },
     {
       id: 8,
       name: "Old Dominion Freight",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2023-04-28",
     },
     {
       id: 9,
       name: "Saia Inc.",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-04-15",
     },
     {
       id: 10,
       name: "Estes Express Lines",
       status: "Inactive",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2023-03-22",
     },
     {
       id: 11,
       name: "ABF Freight System",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-03-10",
     },
     {
       id: 12,
       name: "YRC Worldwide",
       status: "Inactive",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2023-02-28",
     },
     {
       id: 13,
       name: "Heartland Express",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-02-14",
     },
     {
       id: 14,
       name: "Covenant Transportation",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2023-01-30",
     },
     {
       id: 15,
       name: "Knight-Swift Transportation",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2023-01-15",
     },
     {
       id: 16,
       name: "KLLM Transport Services",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: false,
       createdAt: "2022-12-20",
     },
     {
       id: 17,
       name: "Ryder System",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2022-12-05",
     },
     {
       id: 18,
       name: "Penske Logistics",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2022-11-18",
     },
     {
       id: 19,
       name: "C.R. England",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2022-11-02",
     },
     {
       id: 20,
       name: "Prime Inc.",
       status: "Inactive",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2022-10-15",
     },
     {
       id: 21,
       name: "U.S. Xpress Enterprises",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2022-09-28",
     },
     {
       id: 22,
       name: "Crete Carrier Corporation",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2022-09-10",
     },
     {
       id: 23,
       name: "CRST International",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: false,
       createdAt: "2022-08-25",
     },
     {
       id: 24,
       name: "Averitt Express",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2022-08-08",
     },
     {
       id: 25,
       name: "Southeastern Freight Lines",
       status: "Inactive",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2022-07-22",
     },
     {
       id: 26,
       name: "R+L Carriers",
       status: "Active",
+      isUsingAxis: true,
+      isValidated: true,
       createdAt: "2022-07-05",
     },
     {
       id: 27,
       name: "Roadrunner Transportation",
       status: "Active",
+      isUsingAxis: false,
+      isValidated: true,
       createdAt: "2022-06-18",
     },
     {
       id: 28,
       name: "Celadon Group",
       status: "Inactive",
+      isUsingAxis: false,
+      isValidated: false,
       createdAt: "2022-06-01",
     },
   ];
@@ -269,6 +327,34 @@ const Carriers = () => {
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
+      },
+    },
+    {
+      accessorKey: "isUsingAxis",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Is Using Axis" />
+      ),
+      cell: ({ row }) => {
+        const isUsing = row.getValue("isUsingAxis");
+        return isUsing ? (
+          <CheckCircle className="size-4 text-green-600" />
+        ) : (
+          <XCircle className="size-4 text-red-500" />
+        );
+      },
+    },
+    {
+      accessorKey: "isValidated",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Is Validated" />
+      ),
+      cell: ({ row }) => {
+        const isValidated = row.getValue("isValidated");
+        return isValidated ? (
+          <CheckCircle className="size-4 text-green-600" />
+        ) : (
+          <XCircle className="size-4 text-red-500" />
+        );
       },
     },
     {

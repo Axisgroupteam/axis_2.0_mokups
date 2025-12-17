@@ -18,6 +18,14 @@ import RateDetails from "@/pages/CarrierPortal/Rate/RateDetails";
 import DriverOnboarding from "@/pages/CarrierPortal/Onboarding/DriverOnboarding";
 import CarrierOnboarding from "@/pages/CarrierPortal/Onboarding/CarrierOnboarding";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
+import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
+import SalesOrders from "@/pages/CarrierPortal/Sales/Orders";
+import PendingValidation from "@/pages/CarrierPortal/Sales/PendingValidation";
+import ConfirmedOrders from "@/pages/CarrierPortal/Sales/ConfirmedOrders";
+import BrokerageQueue from "@/pages/CarrierPortal/Brokerage/BrokerageQueue";
+import LoadStatus from "@/pages/CarrierPortal/Brokerage/LoadStatus";
+import RequestOrders from "@/pages/CarrierPortal/Orders/RequestOrders";
+import BulkOrders from "@/pages/CarrierPortal/Orders/BulkOrders";
 
 export const carrierPortalRoutes = [
   {
@@ -25,13 +33,30 @@ export const carrierPortalRoutes = [
     element: <OrdersDashboard />,
     label: "Metrics",
   },
+  // Sales routes (Order Capture - Inside Sales Team)
+  {
+    path: "sales/orders",
+    element: <SalesOrders />,
+    label: "Loads",
+  },
+  {
+    path: "sales/pending-validation",
+    element: <PendingValidation />,
+    label: "Validation",
+  },
+  {
+    path: "sales/confirmed",
+    element: <ConfirmedOrders />,
+    label: "Confirmed",
+  },
+  {
+    path: "orders/request",
+    element: <RequestOrders />,
+    label: "Request Orders",
+  },
   {
     path: "orders/bulk",
-    element: (
-      <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Bulk Orders</h1>
-      </div>
-    ),
+    element: <BulkOrders />,
     label: "Bulk",
   },
   {
@@ -60,6 +85,27 @@ export const carrierPortalRoutes = [
       </div>
     ),
     label: "Precast",
+  },
+  // Brokerage routes (Brokerage Coverage - Andrew Swicegood's Team)
+  {
+    path: "brokerage/queue",
+    element: <BrokerageQueue />,
+    label: "Brokerage Queue",
+  },
+  {
+    path: "brokerage/loads",
+    element: <LoadStatus />,
+    label: "Brokerage Loads",
+  },
+  {
+    path: "brokerage/billing",
+    element: (
+      <div className="p-8 bg-background h-full">
+        <h1 className="text-3xl font-bold">Billing</h1>
+        <p className="text-muted-foreground mt-2">Coming soon...</p>
+      </div>
+    ),
+    label: "Billing",
   },
   {
     path: "master/users",
@@ -130,6 +176,11 @@ export const carrierPortalRoutes = [
     path: "master/categories",
     element: <CategoriesAndOptions />,
     label: "Categories",
+  },
+  {
+    path: "master/business-unit",
+    element: <BusinessUnit />,
+    label: "Business Unit",
   },
   {
     path: "master/additional-charges",
