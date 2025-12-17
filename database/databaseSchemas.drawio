@@ -250,6 +250,24 @@
                 <mxCell id="17" value="&lt;font style=&quot;font-size: 8px;&quot;&gt;( isUsingAxis flag )&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="390" y="120" width="90" height="30" as="geometry"/>
                 </mxCell>
+                <mxCell id="detail_header_tenant" value="TENANT SCHEMA" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontStyle=1;fontSize=14;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="620" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookup_types" value="tenant_lookup_types" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="670" width="200" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookup_types_fields" value="id (PK)&#xa;&#xa;name&#xa;label&#xa;isSystem&#xa;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_tenant_lookup_types" vertex="1">
+                    <mxGeometry y="26" width="200" height="314" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookups" value="tenant_lookups" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1380" y="670" width="220" height="420" as="geometry"/>
+                </mxCell>
+                <mxCell id="detail_tenant_lookups_fields" value="id (PK)&#xa;&#xa;lookupTypeId (FK - tenant_lookup_types)&#xa;&#xa;name&#xa;label&#xa;category&#xa;description&#xa;&#xa;sortOrder&#xa;isSystem&#xa;&#xa;createdAt&#xa;createdBy&#xa;updatedAt&#xa;updatedBy&#xa;&#xa;isArchived&#xa;archivedAt&#xa;archivedBy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="detail_tenant_lookups" vertex="1">
+                    <mxGeometry y="26" width="220" height="394" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel_tenant_lookup_types_lookups" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#82b366;" parent="1" source="detail_tenant_lookup_types" target="detail_tenant_lookups" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
