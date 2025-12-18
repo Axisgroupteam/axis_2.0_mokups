@@ -645,6 +645,20 @@ customer_regions
 
 ---
 
+## Lane
+
+### Location Methods
+- `location_code` (Location Code)
+- `zip` (Zip Code)
+
+### Rate Methods
+- `flat` (Flat)
+- `tons` (Tons)
+- `other` (Other)
+- `rate_table` (Rate Table)
+
+---
+
 ## Location
 
 ### Location Use Type
