@@ -254,6 +254,13 @@ customer_regions
 - `Resend`
 - `Start`
 
+### Order Source
+- `call` (Call)
+- `email` (Email)
+- `portal` (Portal)
+- `text` (Text)
+- `api` (API)
+
 ---
 
 ## Precharge
