@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { BellIcon, PanelLeftClose, PanelLeftOpen, Truck } from "lucide-react";
+import { BellIcon, PanelLeftClose, PanelLeftOpen, Building2 } from "lucide-react";
 
-const CarrierPortalNavbar = () => {
+const CustomerPortalNavbar = () => {
   const breadcrumbs = useBreadcrumbs();
   const { toggleSidebar, open } = useSidebar();
 
@@ -66,17 +66,17 @@ const CarrierPortalNavbar = () => {
         {/* Separator */}
         <div className="h-14 w-px bg-sidebar-border" />
 
-        {/* Carrier Portal Title */}
+        {/* Customer Portal Title */}
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center bg-primary rounded-sm p-1.5">
-            <Truck className="size-4 text-primary-foreground" />
+            <Building2 className="size-4 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
             <span className="font-semibold text-sm leading-tight">
-              Mega Trucking
+              Titan
             </span>
             <span className="text-xs text-muted-foreground leading-tight">
-              Carrier Portal
+              Customer Portal
             </span>
           </div>
         </div>
@@ -85,4 +85,4 @@ const CarrierPortalNavbar = () => {
   );
 };
 
-export default CarrierPortalNavbar;
+export default CustomerPortalNavbar;

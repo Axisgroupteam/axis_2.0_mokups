@@ -1,0 +1,58 @@
+/* Gantt Chart Task Status Colors */
+
+/* Summary (Truck) - Slate Gray */
+/* Override default summary/project color via CSS variables */
+:root,
+.wx-willow-theme,
+.wx-willow-dark-theme,
+.wx-gantt {
+  --wx-gantt-summary-color: #64748b;
+  --wx-gantt-summary-fill-color: #475569;
+  --wx-gantt-project-color: #64748b;
+  --wx-gantt-project-fill-color: #475569;
+}
+
+.wx-task.summary,
+.wx-project,
+.wx-summary,
+.wx-bar.summary,
+[class*="summary"] {
+  background-color: #64748b !important;
+  border-color: #475569 !important;
+}
+
+/* On Time - Green */
+.wx-task.onTime {
+  background-color: #22c55e !important;
+  border-color: #16a34a !important;
+}
+.wx-task.onTime .wx-progress-wrapper {
+  background-color: #22c55e !important;
+}
+.wx-task.onTime .wx-progress-percent {
+  background-color: #16a34a !important;
+}
+
+/* Ahead of Time - Blue */
+.wx-task.ahead {
+  background-color: #3b82f6 !important;
+  border-color: #2563eb !important;
+}
+.wx-task.ahead .wx-progress-wrapper {
+  background-color: #3b82f6 !important;
+}
+.wx-task.ahead .wx-progress-percent {
+  background-color: #2563eb !important;
+}
+
+/* Delayed - Red */
+.wx-task.delayed {
+  background-color: #ef4444 !important;
+  border-color: #dc2626 !important;
+}
+.wx-task.delayed .wx-progress-wrapper {
+  background-color: #ef4444 !important;
+}
+.wx-task.delayed .wx-progress-percent {
+  background-color: #dc2626 !important;
+}

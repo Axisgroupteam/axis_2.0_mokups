@@ -249,7 +249,6 @@ const BusinessUnit = () => {
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
-          <DollarSign className="size-4 text-green-600" />
           <span className="font-semibold text-green-600">
             {formatCurrency(row.getValue("totalRevenue"))}
           </span>

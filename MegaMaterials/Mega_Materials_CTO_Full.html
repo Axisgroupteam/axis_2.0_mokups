@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Materials | AXIS 2.0 Complete CTO Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mm-primary: #059669; --mm-light: #10b981;
+            --ml-primary: #3b82f6; --ml-light: #60a5fa;
+            --mt-primary: #8b5cf6; --mt-light: #a78bfa;
+            --supplier-primary: #f59e0b; --supplier-light: #fbbf24;
+            --customer-primary: #06b6d4; --customer-light: #22d3ee;
+            --ai-primary: #ec4899; --ai-light: #f472b6;
+            --planet-primary: #f97316; --planet-light: #fb923c;
+            --finance-primary: #14b8a6; --finance-light: #2dd4bf;
+            --success: #22c55e; --warning: #eab308; --error: #ef4444;
+            --bg-dark: #0a0a0b; --bg-card: #151518; --bg-elevated: #1e1e22; --bg-input: #2a2a2e;
+            --border-subtle: rgba(255,255,255,0.06); --border-active: rgba(255,255,255,0.15);
+            --text-primary: #fafafa; --text-secondary: #a1a1aa; --text-muted: #71717a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 20px 40px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-inner { max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 16px; }
+        .logo {
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, var(--mm-primary), var(--mm-light));
+            border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px;
+        }
+        .logo-text h1 { font-size: 1.5rem; font-weight: 700; }
+        .logo-text span { font-size: 0.75rem; color: var(--mm-light); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+        .header-badge {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--mm-primary), var(--ml-primary));
+            border-radius: 24px; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-nav-inner { max-width: 1800px; margin: 0 auto; display: flex; padding: 0 20px; }
+        .tab-group {
+            display: flex; border-right: 1px solid var(--border-subtle);
+            padding-right: 8px; margin-right: 8px;
+        }
+        .tab-group:last-child { border-right: none; }
+        .tab-btn {
+            padding: 14px 16px; background: none; border: none;
+            color: var(--text-muted); font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .tab-btn:hover { color: var(--text-secondary); background: var(--bg-elevated); }
+        .tab-btn.active { color: var(--mm-light); border-bottom-color: var(--mm-primary); }
+        .tab-btn .icon { font-size: 1.1rem; }
+        .tab-btn .label { font-size: 0.65rem; }
+
+        /* Main Content */
+        .main-content { max-width: 1800px; margin: 0 auto; padding: 32px 40px; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Section Styles */
+        .section-header { margin-bottom: 24px; }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+        .section-header p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 16px; margin-bottom: 24px; overflow: hidden;
+        }
+        .card-header {
+            padding: 18px 24px; border-bottom: 1px solid var(--border-subtle);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .card-header h3 { font-size: 1rem; font-weight: 600; }
+        .card-header .badge {
+            margin-left: auto; padding: 4px 12px; background: var(--bg-elevated);
+            border-radius: 6px; font-size: 0.7rem; color: var(--text-muted);
+        }
+        .card-body { padding: 24px; }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+
+        /* Stat Cards */
+        .stat-card { background: var(--bg-elevated); border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-muted); }
+        .stat-card.green .value { color: var(--mm-light); }
+        .stat-card.blue .value { color: var(--ml-light); }
+        .stat-card.purple .value { color: var(--mt-light); }
+        .stat-card.orange .value { color: var(--supplier-light); }
+        .stat-card.pink .value { color: var(--ai-light); }
+        .stat-card.teal .value { color: var(--finance-light); }
+
+        /* Info Boxes */
+        .info-box { background: var(--bg-elevated); border-radius: 12px; padding: 18px; height: 100%; }
+        .info-box h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .info-box ul { list-style: none; }
+        .info-box li { font-size: 0.8rem; color: var(--text-secondary); padding: 5px 0; padding-left: 14px; position: relative; }
+        .info-box li::before { content: '•'; position: absolute; left: 0; color: var(--mm-light); }
+
+        /* Phase Flow */
+        .phase-strip {
+            display: flex; gap: 4px; padding: 6px;
+            background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-subtle);
+        }
+        .phase-pill {
+            flex: 1; padding: 16px 12px; text-align: center;
+            border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+            position: relative; background: var(--bg-elevated);
+        }
+        .phase-pill::after {
+            content: '→'; position: absolute; right: -10px; top: 50%;
+            transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; z-index: 1;
+        }
+        .phase-pill:last-child::after { display: none; }
+        .phase-pill:hover { background: var(--bg-input); }
+        .phase-pill.active { box-shadow: inset 0 0 0 2px var(--mm-primary); }
+        .phase-pill .number {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; background: var(--bg-dark);
+            border-radius: 8px; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px;
+        }
+        .phase-pill.active .number { background: var(--mm-primary); }
+        .phase-pill .title { display: block; font-size: 0.8rem; font-weight: 600; }
+        .phase-pill .entity { display: block; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Step Detail */
+        .step-detail { background: var(--bg-elevated); border-radius: 14px; padding: 20px; margin-top: 20px; }
+        .step-detail h4 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .step-box { background: var(--bg-dark); border-radius: 10px; padding: 14px; }
+        .step-box h5 { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .step-box ul { list-style: none; }
+        .step-box li { font-size: 0.8rem; color: var(--text-secondary); padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+        .step-box li::before { content: '→'; color: var(--mm-light); font-size: 0.7rem; }
+
+        /* Module Grid */
+        .module-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .module-card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 14px; padding: 20px; cursor: pointer;
+            transition: all 0.2s ease; position: relative; overflow: hidden;
+        }
+        .module-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--ai-primary); }
+        .module-card.existing::before { background: var(--finance-primary); }
+        .module-card:hover { border-color: var(--ai-primary); transform: translateY(-2px); }
+        .module-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .module-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(236, 72, 153, 0.15);
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .module-card.existing .module-icon { background: rgba(20, 184, 166, 0.15); }
+        .module-info h4 { font-size: 0.85rem; font-weight: 600; color: var(--ai-light); }
+        .module-card.existing .module-info h4 { color: var(--finance-light); }
+        .module-info span { font-size: 0.65rem; color: var(--text-muted); }
+        .module-body { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* Handoff Flow */
+        .handoff-flow {
+            display: flex; align-items: center; gap: 16px;
+            padding: 24px; background: var(--bg-elevated); border-radius: 14px;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .handoff-box {
+            padding: 20px 28px; border-radius: 12px; text-align: center; min-width: 140px;
+        }
+        .handoff-box.mm { background: rgba(5, 150, 105, 0.15); border: 2px solid var(--mm-primary); }
+        .handoff-box.ml { background: rgba(59, 130, 246, 0.15); border: 2px solid var(--ml-primary); }
+        .handoff-box.mt { background: rgba(139, 92, 246, 0.15); border: 2px solid var(--mt-primary); }
+        .handoff-box.external { background: rgba(107, 114, 128, 0.15); border: 2px dashed #6b7280; }
+        .handoff-box .icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .handoff-box .label { font-size: 0.85rem; font-weight: 600; }
+        .handoff-box .sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+        .handoff-arrow { font-size: 1.5rem; color: var(--ml-light); }
+        .decision-branch { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .decision-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Money Flow */
+        .money-flow {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            padding: 24px; background: var(--bg-elevated); border-radius: 14px; flex-wrap: wrap;
+        }
+        .money-entity { padding: 16px 24px; border-radius: 12px; text-align: center; min-width: 130px; }
+        .money-entity.customer { background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); }
+        .money-entity.mm { background: rgba(5, 150, 105, 0.15); border: 1px solid rgba(5, 150, 105, 0.3); }
+        .money-entity.supplier { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .money-entity.ml { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .money-entity.mt { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .money-entity .icon { font-size: 1.4rem; margin-bottom: 6px; }
+        .money-entity .name { font-size: 0.8rem; font-weight: 600; }
+        .money-entity .amount { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+        .money-arrow { display: flex; align-items: center; gap: 8px; color: var(--finance-light); }
+        .money-arrow .amt { padding: 5px 10px; background: var(--bg-dark); border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+
+        /* Data Model */
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .data-entity {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 14px; overflow: hidden;
+        }
+        .data-entity-header {
+            padding: 14px 18px; background: var(--bg-elevated);
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .data-entity-header h4 { font-size: 0.85rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--customer-light); }
+        .data-entity-body { padding: 12px 18px; }
+        .field-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.75rem;
+        }
+        .field-row:last-child { border-bottom: none; }
+        .field-name { font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+        .field-type { font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 0.65rem; }
+
+        /* Status Flow */
+        .status-flow {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
+            padding: 24px; background: var(--bg-elevated); border-radius: 14px;
+        }
+        .status-node {
+            padding: 10px 16px; border-radius: 8px; font-size: 0.7rem; font-weight: 700;
+            font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.2s ease;
+        }
+        .status-node:hover { transform: scale(1.05); }
+        .status-node.active { box-shadow: 0 0 20px currentColor; }
+        .status-arrow { color: var(--text-muted); }
+        .status-negotiating { background: rgba(245, 158, 11, 0.15); color: var(--supplier-light); }
+        .status-contracted { background: rgba(245, 158, 11, 0.25); color: var(--supplier-light); }
+        .status-priced { background: rgba(236, 72, 153, 0.15); color: var(--ai-light); }
+        .status-listed { background: rgba(249, 115, 22, 0.15); color: var(--planet-light); }
+        .status-quoted { background: rgba(5, 150, 105, 0.15); color: var(--mm-light); }
+        .status-sold { background: rgba(5, 150, 105, 0.25); color: var(--mm-light); }
+        .status-logistics { background: rgba(59, 130, 246, 0.15); color: var(--ml-light); }
+        .status-dispatched { background: rgba(139, 92, 246, 0.15); color: var(--mt-light); }
+        .status-delivered { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .status-invoiced { background: rgba(20, 184, 166, 0.15); color: var(--finance-light); }
+        .status-paid { background: rgba(34, 197, 94, 0.25); color: #4ade80; }
+
+        /* API Grid */
+        .api-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .api-category {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 14px; overflow: hidden;
+        }
+        .api-category-header {
+            padding: 14px 18px; background: var(--bg-elevated);
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+        }
+        .api-category-header h4 { font-size: 0.85rem; font-weight: 600; }
+        .api-category-header .count {
+            margin-left: auto; padding: 3px 8px; background: var(--bg-dark);
+            border-radius: 4px; font-size: 0.65rem; color: var(--text-muted);
+        }
+        .api-endpoints { padding: 12px; display: none; }
+        .api-category.expanded .api-endpoints { display: block; }
+        .api-endpoint {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px; background: var(--bg-elevated);
+            border-radius: 8px; margin-bottom: 6px; font-size: 0.75rem;
+        }
+        .api-endpoint:last-child { margin-bottom: 0; }
+        .method-badge {
+            padding: 3px 8px; border-radius: 4px;
+            font-size: 0.6rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+        }
+        .method-get { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .method-post { background: rgba(59, 130, 246, 0.2); color: var(--ml-light); }
+        .method-put { background: rgba(245, 158, 11, 0.2); color: var(--supplier-light); }
+        .api-path { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); }
+
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th {
+            text-align: left; padding: 12px 16px; background: var(--bg-elevated);
+            font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-subtle);
+        }
+        .data-table td {
+            padding: 12px 16px; font-size: 0.8rem;
+            border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary);
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: var(--bg-elevated); }
+
+        /* Tags */
+        .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; }
+        .tag-green { background: rgba(5, 150, 105, 0.2); color: var(--mm-light); }
+        .tag-blue { background: rgba(59, 130, 246, 0.2); color: var(--ml-light); }
+        .tag-purple { background: rgba(139, 92, 246, 0.2); color: var(--mt-light); }
+        .tag-orange { background: rgba(245, 158, 11, 0.2); color: var(--supplier-light); }
+        .tag-pink { background: rgba(236, 72, 153, 0.2); color: var(--ai-light); }
+        .tag-teal { background: rgba(20, 184, 166, 0.2); color: var(--finance-light); }
+        .tag-red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 32px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+            width: 2px; background: var(--border-subtle);
+        }
+        .timeline-item { position: relative; padding-bottom: 20px; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -25px; top: 4px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--mm-primary); border: 2px solid var(--bg-dark);
+        }
+        .timeline-item.pending::before { background: var(--bg-elevated); border-color: var(--text-muted); }
+        .timeline-item h5 { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+        .timeline-item p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* RACI */
+        .raci-cell { font-weight: 700; text-align: center; }
+        .raci-r { color: var(--mm-light); }
+        .raci-a { color: var(--supplier-light); }
+        .raci-c { color: var(--ml-light); }
+        .raci-i { color: var(--text-muted); }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: var(--bg-elevated); border-radius: 12px;
+            padding: 18px; border-left: 4px solid var(--mm-primary);
+        }
+        .kpi-card h5 { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+        .kpi-card .value { font-size: 1.4rem; font-weight: 700; color: var(--mm-light); }
+        .kpi-card .target { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* Edge Cases */
+        .edge-case {
+            background: var(--bg-elevated); border-radius: 12px;
+            padding: 18px; border-left: 4px solid var(--warning); margin-bottom: 16px;
+        }
+        .edge-case:last-child { margin-bottom: 0; }
+        .edge-case h5 { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .edge-case .scenario { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px; }
+        .edge-case .handling {
+            font-size: 0.75rem; color: var(--mm-light);
+            padding: 12px; background: var(--bg-dark); border-radius: 8px;
+        }
+        .edge-case .handling strong { display: block; margin-bottom: 4px; color: var(--text-primary); }
+
+        /* Journey */
+        .journey-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+        .journey-step {
+            background: var(--bg-elevated); border-radius: 12px; padding: 18px; position: relative;
+        }
+        .journey-step::after {
+            content: '→'; position: absolute; right: -16px; top: 50%;
+            transform: translateY(-50%); color: var(--text-muted); font-size: 1rem;
+        }
+        .journey-step:last-child::after { display: none; }
+        .journey-step .step-num {
+            width: 26px; height: 26px; background: var(--mm-primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700; margin-bottom: 10px;
+        }
+        .journey-step h5 { font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+        .journey-step p { font-size: 0.7rem; color: var(--text-muted); }
+        .journey-step .touchpoint {
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle);
+            font-size: 0.65rem; color: var(--ai-light);
+        }
+
+        /* Integration Hub */
+        .integration-hub {
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            padding: 32px; background: var(--bg-elevated); border-radius: 16px;
+        }
+        .hub-center {
+            padding: 20px 40px;
+            background: linear-gradient(135deg, var(--mm-primary), var(--mm-light));
+            border-radius: 14px; font-size: 1.1rem; font-weight: 700; text-align: center;
+        }
+        .hub-connections { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .hub-node {
+            padding: 14px 20px; background: var(--bg-dark);
+            border: 1px solid var(--border-subtle); border-radius: 10px;
+            text-align: center; min-width: 120px;
+        }
+        .hub-node .icon { font-size: 1.2rem; margin-bottom: 6px; }
+        .hub-node .name { font-size: 0.75rem; font-weight: 600; }
+        .hub-node .type { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .grid-4, .module-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-6, .journey-grid { grid-template-columns: repeat(3, 1fr); }
+            .step-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .grid-4, .grid-3, .grid-2, .module-grid, .data-grid, .api-grid { grid-template-columns: 1fr; }
+            .grid-6, .journey-grid, .step-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 20px; }
+            .tab-btn .label { display: none; }
+            .phase-strip { flex-wrap: wrap; }
+            .phase-pill::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo-section">
+                <div class="logo">🏗️</div>
+                <div class="logo-text">
+                    <h1>Mega Materials</h1>
+                    <span>AXIS 2.0 CTO Presentation</span>
+                </div>
+            </div>
+            <div class="header-badge">Complete Business Flow</div>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+        <div class="tab-nav-inner">
+            <!-- Core Flow Tabs -->
+            <div class="tab-group">
+                <button class="tab-btn active" onclick="showTab('fullflow')">
+                    <span class="icon">🔄</span><span class="label">Full Flow</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('modules')">
+                    <span class="icon">🤖</span><span class="label">Modules</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('handoff')">
+                    <span class="icon">🔀</span><span class="label">Handoff</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('datamodel')">
+                    <span class="icon">📊</span><span class="label">Data Model</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('status')">
+                    <span class="icon">⚡</span><span class="label">Status</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('api')">
+                    <span class="icon">🔌</span><span class="label">API</span>
+                </button>
+            </div>
+            <!-- Operational -->
+            <div class="tab-group">
+                <button class="tab-btn" onclick="showTab('customers')">
+                    <span class="icon">👷</span><span class="label">Customers</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('journey')">
+                    <span class="icon">🛒</span><span class="label">Journey</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('suppliers')">
+                    <span class="icon">🏭</span><span class="label">Suppliers</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('inventory')">
+                    <span class="icon">📦</span><span class="label">Inventory</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('credit')">
+                    <span class="icon">💳</span><span class="label">Credit</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('disputes')">
+                    <span class="icon">⚠️</span><span class="label">Disputes</span>
+                </button>
+            </div>
+            <!-- Technical -->
+            <div class="tab-group">
+                <button class="tab-btn" onclick="showTab('integration')">
+                    <span class="icon">🔗</span><span class="label">Integration</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('build')">
+                    <span class="icon">🔧</span><span class="label">Build/Buy</span>
+                </button>
+            </div>
+            <!-- Execution -->
+            <div class="tab-group">
+                <button class="tab-btn" onclick="showTab('roadmap')">
+                    <span class="icon">🗺️</span><span class="label">Roadmap</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('raci')">
+                    <span class="icon">👥</span><span class="label">RACI</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('kpi')">
+                    <span class="icon">📈</span><span class="label">KPIs</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('roi')">
+                    <span class="icon">💵</span><span class="label">ROI</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('edge')">
+                    <span class="icon">🔀</span><span class="label">Edge Cases</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- TAB 1: Full Flow -->
+        <div id="tab-fullflow" class="tab-panel active">
+            <div class="section-header">
+                <h2>Complete 6-Phase Flow</h2>
+                <p>Procure → Price → Market → Sell → Handoff → Fulfill</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>🔄</span>
+                    <h3>Lifecycle Overview</h3>
+                </div>
+                <div class="card-body">
+                    <div class="phase-strip" id="phase-strip">
+                        <div class="phase-pill active" onclick="selectPhase(0)">
+                            <div class="number">1</div>
+                            <div class="title">PROCURE</div>
+                            <div class="entity">Supplier Negotiations</div>
+                        </div>
+                        <div class="phase-pill" onclick="selectPhase(1)">
+                            <div class="number">2</div>
+                            <div class="title">PRICE</div>
+                            <div class="entity">AI Margin Engine</div>
+                        </div>
+                        <div class="phase-pill" onclick="selectPhase(2)">
+                            <div class="number">3</div>
+                            <div class="title">MARKET</div>
+                            <div class="entity">Planet Build</div>
+                        </div>
+                        <div class="phase-pill" onclick="selectPhase(3)">
+                            <div class="number">4</div>
+                            <div class="title">SELL</div>
+                            <div class="entity">Mega Materials</div>
+                        </div>
+                        <div class="phase-pill" onclick="selectPhase(4)">
+                            <div class="number">5</div>
+                            <div class="title">HANDOFF</div>
+                            <div class="entity">Mega Logistics</div>
+                        </div>
+                        <div class="phase-pill" onclick="selectPhase(5)">
+                            <div class="number">6</div>
+                            <div class="title">FULFILL</div>
+                            <div class="entity">MT / External</div>
+                        </div>
+                    </div>
+
+                    <div class="step-detail" id="phase-detail">
+                        <h4 id="phase-title">🔍 Phase 1: PROCURE</h4>
+                        <div class="step-grid" id="phase-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entity Cards -->
+            <div class="grid-4" style="margin-bottom: 24px;">
+                <div class="stat-card orange">
+                    <div class="value">🏭</div>
+                    <div class="label">Supplier</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="value">🏗️</div>
+                    <div class="label">Mega Materials</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="value">📦</div>
+                    <div class="label">Mega Logistics</div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="value">🚛</div>
+                    <div class="label">Mega Trucking</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: AXIS Modules -->
+        <div id="tab-modules" class="tab-panel">
+            <div class="section-header">
+                <h2>AXIS 2.0 AI Modules</h2>
+                <p>8 new modules + 4 existing integrations</p>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 24px;">
+                <div class="stat-card pink"><div class="value">8</div><div class="label">New Modules</div></div>
+                <div class="stat-card teal"><div class="value">4</div><div class="label">Existing</div></div>
+                <div class="stat-card green"><div class="value">12</div><div class="label">Total</div></div>
+                <div class="stat-card blue"><div class="value">6</div><div class="label">Phases Covered</div></div>
+            </div>
+
+            <div class="module-grid">
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">💾</div>
+                        <div class="module-info"><h4>Cost Manager</h4><span>Phase 1</span></div>
+                    </div>
+                    <div class="module-body">Records supplier contracts, negotiated rates, and material costs</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🎯</div>
+                        <div class="module-info"><h4>Pricing Engine</h4><span>Phase 2</span></div>
+                    </div>
+                    <div class="module-body">AI-powered margin recommendations based on market conditions</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📊</div>
+                        <div class="module-info"><h4>Market Intelligence</h4><span>Phase 2</span></div>
+                    </div>
+                    <div class="module-body">Competitor analysis, demand forecasting, price benchmarks</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📢</div>
+                        <div class="module-info"><h4>Campaign Builder</h4><span>Phase 3</span></div>
+                    </div>
+                    <div class="module-body">Creates marketing campaigns with AI-generated listings</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🌐</div>
+                        <div class="module-info"><h4>Planet Build Connector</h4><span>Phase 3</span></div>
+                    </div>
+                    <div class="module-body">API integration for listings, inquiries, and order sync</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">💰</div>
+                        <div class="module-info"><h4>Quote Engine</h4><span>Phase 4</span></div>
+                    </div>
+                    <div class="module-body">Auto-generates quotes with material + freight bundled</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">📝</div>
+                        <div class="module-info"><h4>Sales CRM</h4><span>Phase 4</span></div>
+                    </div>
+                    <div class="module-body">Customer management, pipeline tracking, order history</div>
+                </div>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">🔄</div>
+                        <div class="module-info"><h4>Logistics Bridge</h4><span>Phase 5</span></div>
+                    </div>
+                    <div class="module-body">Automated MM → ML order handoff and status sync</div>
+                </div>
+                <div class="module-card existing">
+                    <div class="module-header">
+                        <div class="module-icon">🚛</div>
+                        <div class="module-info"><h4>Capacity Optimizer</h4><span>Phase 6</span></div>
+                    </div>
+                    <div class="module-body">Routes loads to MT fleet with First Right of Refusal</div>
+                </div>
+                <div class="module-card existing">
+                    <div class="module-header">
+                        <div class="module-icon">📍</div>
+                        <div class="module-info"><h4>Visibility Agent</h4><span>Phase 6</span></div>
+                    </div>
+                    <div class="module-body">Real-time GPS tracking via Samsara integration</div>
+                </div>
+                <div class="module-card existing">
+                    <div class="module-header">
+                        <div class="module-icon">🧾</div>
+                        <div class="module-info"><h4>Billing Bot</h4><span>Settlement</span></div>
+                    </div>
+                    <div class="module-body">Auto-generates invoices with POD attachments</div>
+                </div>
+                <div class="module-card existing">
+                    <div class="module-header">
+                        <div class="module-icon">🌐</div>
+                        <div class="module-info"><h4>Customer Portal</h4><span>All Phases</span></div>
+                    </div>
+                    <div class="module-body">Self-service tracking and order management</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: ML/MT Handoff -->
+        <div id="tab-handoff" class="tab-panel">
+            <div class="section-header">
+                <h2>ML/MT Handoff Flow</h2>
+                <p>How Mega Materials orders transfer to Mega Logistics and get fulfilled</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>🔀</span><h3>Decision Branch</h3></div>
+                <div class="card-body">
+                    <div class="handoff-flow">
+                        <div class="handoff-box mm">
+                            <div class="icon">📝</div>
+                            <div class="label">MM Sale</div>
+                            <div class="sub">Freight = YES</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box ml">
+                            <div class="icon">📋</div>
+                            <div class="label">ML Order</div>
+                            <div class="sub">Created via Bridge</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="decision-branch">
+                            <div class="decision-label">First Right?</div>
+                            <div style="display: flex; gap: 16px;">
+                                <div class="handoff-box mt">
+                                    <div class="icon">🚛</div>
+                                    <div class="label">MT Accepts</div>
+                                    <div class="sub">Primary Path</div>
+                                </div>
+                                <div class="handoff-box external">
+                                    <div class="icon">🚚</div>
+                                    <div class="label">External</div>
+                                    <div class="sub">Overflow</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981;">
+                            <div class="icon">✅</div>
+                            <div class="label">Delivered</div>
+                            <div class="sub">POD Captured</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>💸</span><h3>Intercompany Billing Flow</h3></div>
+                <div class="card-body">
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Material Payment</div>
+                    <div class="money-flow">
+                        <div class="money-entity customer"><div class="icon">👷</div><div class="name">Customer</div><div class="amount">Pays Invoice</div></div>
+                        <div class="money-arrow">→ <span class="amt">$150</span> →</div>
+                        <div class="money-entity mm"><div class="icon">🏗️</div><div class="name">Mega Materials</div><div class="amount">Keeps $15</div></div>
+                        <div class="money-arrow">→ <span class="amt">$100</span> →</div>
+                        <div class="money-entity supplier"><div class="icon">🏭</div><div class="name">Supplier</div><div class="amount">Material Cost</div></div>
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px;">Freight Payment</div>
+                    <div class="money-flow">
+                        <div class="money-entity mm"><div class="icon">🏗️</div><div class="name">Mega Materials</div><div class="amount">Pays Freight</div></div>
+                        <div class="money-arrow">→ <span class="amt">$35</span> →</div>
+                        <div class="money-entity ml"><div class="icon">📦</div><div class="name">Mega Logistics</div><div class="amount">Keeps $5</div></div>
+                        <div class="money-arrow">→ <span class="amt">$30</span> →</div>
+                        <div class="money-entity mt"><div class="icon">🚛</div><div class="name">Mega Trucking</div><div class="amount">Haul Revenue</div></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px; padding: 14px; background: rgba(5, 150, 105, 0.1); border-radius: 10px; border: 1px solid rgba(5, 150, 105, 0.3);">
+                        <span style="font-size: 0.8rem; color: var(--mm-light); font-weight: 600;">Margin Capture:</span>
+                        <span style="font-size: 0.75rem; color: var(--text-secondary); margin-left: 12px;">
+                            MM: <strong style="color: var(--mm-light);">$15</strong> (15%) &nbsp;|&nbsp;
+                            ML: <strong style="color: var(--ml-light);">$5</strong> (14%) &nbsp;|&nbsp;
+                            MT: <strong style="color: var(--mt-light);">$30</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: Data Model -->
+        <div id="tab-datamodel" class="tab-panel">
+            <div class="section-header">
+                <h2>Data Model</h2>
+                <p>6 core entities powering the Mega Materials system</p>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 24px;">
+                <div class="stat-card teal"><div class="value">6</div><div class="label">Entities</div></div>
+                <div class="stat-card blue"><div class="value">8</div><div class="label">Relationships</div></div>
+                <div class="stat-card pink"><div class="value">52</div><div class="label">Fields</div></div>
+                <div class="stat-card orange"><div class="value">6</div><div class="label">Primary Keys</div></div>
+            </div>
+
+            <div class="data-grid">
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>🤝</span><h4>SupplierContract</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">contract_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">supplier_id</span><span class="field-type">string (FK)</span></div>
+                        <div class="field-row"><span class="field-name">material_type</span><span class="field-type">enum</span></div>
+                        <div class="field-row"><span class="field-name">negotiated_rate</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">effective_date</span><span class="field-type">date</span></div>
+                        <div class="field-row"><span class="field-name">volume_tier</span><span class="field-type">json</span></div>
+                        <div class="field-row"><span class="field-name">status</span><span class="field-type">enum</span></div>
+                    </div>
+                </div>
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>💰</span><h4>PriceList</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">price_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">material_type</span><span class="field-type">enum</span></div>
+                        <div class="field-row"><span class="field-name">supplier_cost</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">list_price</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">region</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">ai_confidence</span><span class="field-type">decimal</span></div>
+                    </div>
+                </div>
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>📢</span><h4>MarketingCampaign</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">campaign_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">name</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">material_types</span><span class="field-type">array</span></div>
+                        <div class="field-row"><span class="field-name">target_region</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">start_date</span><span class="field-type">date</span></div>
+                        <div class="field-row"><span class="field-name">status</span><span class="field-type">enum</span></div>
+                    </div>
+                </div>
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>🌐</span><h4>PlanetBuildListing</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">listing_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">pb_external_id</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">campaign_id</span><span class="field-type">string (FK)</span></div>
+                        <div class="field-row"><span class="field-name">title</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">price</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">status</span><span class="field-type">enum</span></div>
+                    </div>
+                </div>
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>📝</span><h4>MaterialSale</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">sale_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">customer_id</span><span class="field-type">string (FK)</span></div>
+                        <div class="field-row"><span class="field-name">material_type</span><span class="field-type">enum</span></div>
+                        <div class="field-row"><span class="field-name">quantity</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">total_price</span><span class="field-type">decimal</span></div>
+                        <div class="field-row"><span class="field-name">includes_freight</span><span class="field-type">boolean</span></div>
+                        <div class="field-row"><span class="field-name">status</span><span class="field-type">enum</span></div>
+                    </div>
+                </div>
+                <div class="data-entity">
+                    <div class="data-entity-header"><span>🔄</span><h4>LogisticsHandoff</h4></div>
+                    <div class="data-entity-body">
+                        <div class="field-row"><span class="field-name">handoff_id</span><span class="field-type">string (PK)</span></div>
+                        <div class="field-row"><span class="field-name">mm_sale_id</span><span class="field-type">string (FK)</span></div>
+                        <div class="field-row"><span class="field-name">ml_order_id</span><span class="field-type">string</span></div>
+                        <div class="field-row"><span class="field-name">carrier_type</span><span class="field-type">enum</span></div>
+                        <div class="field-row"><span class="field-name">handoff_status</span><span class="field-type">enum</span></div>
+                        <div class="field-row"><span class="field-name">created_at</span><span class="field-type">datetime</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: Status Machine -->
+        <div id="tab-status" class="tab-panel">
+            <div class="section-header">
+                <h2>Status Machine</h2>
+                <p>11-status lifecycle from negotiation to payment</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>⚡</span><h3>Lifecycle Status Flow</h3></div>
+                <div class="card-body">
+                    <div class="status-flow">
+                        <span class="status-node status-negotiating active">NEGOTIATING</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-contracted">CONTRACTED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-priced">PRICED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-listed">LISTED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-quoted">QUOTED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-sold">SOLD</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-logistics">LOGISTICS</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-dispatched">DISPATCHED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-delivered">DELIVERED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-invoiced">INVOICED</span>
+                        <span class="status-arrow">→</span>
+                        <span class="status-node status-paid">PAID</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="info-box">
+                    <h4>🏭 Procurement Phase</h4>
+                    <ul>
+                        <li>NEGOTIATING - Active supplier discussions</li>
+                        <li>CONTRACTED - Agreement signed, rates locked</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>🎯 Pricing Phase</h4>
+                    <ul>
+                        <li>PRICED - AI margin applied, approved</li>
+                        <li>LISTED - Published to Planet Build</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>💰 Sales Phase</h4>
+                    <ul>
+                        <li>QUOTED - Quote sent to customer</li>
+                        <li>SOLD - Customer accepted, order recorded</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>📦 Logistics Phase</h4>
+                    <ul>
+                        <li>LOGISTICS - Transferred to ML</li>
+                        <li>DISPATCHED - Driver assigned, en route</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>🚛 Fulfillment Phase</h4>
+                    <ul>
+                        <li>DELIVERED - POD captured</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>💵 Settlement Phase</h4>
+                    <ul>
+                        <li>INVOICED - Invoice sent to customer</li>
+                        <li>PAID - Payment received</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: API Endpoints -->
+        <div id="tab-api" class="tab-panel">
+            <div class="section-header">
+                <h2>API Endpoints</h2>
+                <p>24 endpoints organized by phase</p>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 24px;">
+                <div class="stat-card green"><div class="value">8</div><div class="label">GET</div></div>
+                <div class="stat-card blue"><div class="value">14</div><div class="label">POST</div></div>
+                <div class="stat-card orange"><div class="value">2</div><div class="label">PUT</div></div>
+                <div class="stat-card pink"><div class="value">24</div><div class="label">Total</div></div>
+            </div>
+
+            <div class="api-grid">
+                <div class="api-category expanded" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>🔍</span><h4>Procurement</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/suppliers</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/contracts</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-put">PUT</span><span class="api-path">/api/v1/mm/contracts/{id}/rates</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/costs/{material}</span></div>
+                    </div>
+                </div>
+                <div class="api-category" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>🎯</span><h4>Pricing</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/market-analysis/{region}</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/pricing/recommend</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/pricing/approve</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/price-list</span></div>
+                    </div>
+                </div>
+                <div class="api-category" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>📢</span><h4>Marketing</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/campaigns</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/listings/generate</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/planet-build/publish</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/planet-build/inquiries</span></div>
+                    </div>
+                </div>
+                <div class="api-category" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>💰</span><h4>Sales</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/quotes</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/quotes/{id}/accept</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/sales</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/sales/{id}</span></div>
+                    </div>
+                </div>
+                <div class="api-category" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>🔄</span><h4>Handoff</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mm/logistics/handoff</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/ml/orders/{mm_sale_id}</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/ml/orders/{id}/accept</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/mm/logistics/{sale_id}/status</span></div>
+                    </div>
+                </div>
+                <div class="api-category" onclick="this.classList.toggle('expanded')">
+                    <div class="api-category-header"><span>🚛</span><h4>Fulfillment</h4><span class="count">4</span></div>
+                    <div class="api-endpoints">
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/ml/capacity/check</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/mt/dispatch</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="api-path">/api/v1/tracking/{load_id}</span></div>
+                        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="api-path">/api/v1/billing/invoice</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Customers -->
+        <div id="tab-customers" class="tab-panel">
+            <div class="section-header">
+                <h2>Target Customers</h2>
+                <p>Who buys materials and what are their needs?</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header"><span>🏗️</span><h3>General Contractors</h3><span class="badge">Primary</span></div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>Profile</h4>
+                            <ul>
+                                <li>Commercial & residential builders</li>
+                                <li>$1M - $50M annual revenue</li>
+                                <li>5-50 active projects</li>
+                            </ul>
+                        </div>
+                        <div class="info-box" style="margin-top: 12px;">
+                            <h4>Order Profile</h4>
+                            <ul>
+                                <li>Avg order: 200-1,000 tons</li>
+                                <li>Frequency: Weekly</li>
+                                <li>Prefers: NET 30 terms</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>🏠</span><h3>Landscapers</h3><span class="badge">Secondary</span></div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>Profile</h4>
+                            <ul>
+                                <li>Residential-focused</li>
+                                <li>$250K - $2M annual revenue</li>
+                                <li>Small crews, owner-operated</li>
+                            </ul>
+                        </div>
+                        <div class="info-box" style="margin-top: 12px;">
+                            <h4>Order Profile</h4>
+                            <ul>
+                                <li>Avg order: 10-100 tons</li>
+                                <li>Frequency: 2-4x/month</li>
+                                <li>Prefers: COD or CC</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>🏛️</span><h3>Government</h3><span class="badge">Opportunity</span></div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>Profile</h4>
+                            <ul>
+                                <li>City/county departments</li>
+                                <li>Water management districts</li>
+                                <li>Requires vendor registration</li>
+                            </ul>
+                        </div>
+                        <div class="info-box" style="margin-top: 12px;">
+                            <h4>Order Profile</h4>
+                            <ul>
+                                <li>Avg order: 1,000-10,000 tons</li>
+                                <li>Frequency: Contract-based</li>
+                                <li>Prefers: Purchase orders</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Journey -->
+        <div id="tab-journey" class="tab-panel">
+            <div class="section-header">
+                <h2>Customer Journey</h2>
+                <p>End-to-end experience from discovery to delivery</p>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="journey-grid">
+                        <div class="journey-step">
+                            <div class="step-num">1</div>
+                            <h5>Discovery</h5>
+                            <p>Finds us on Planet Build or Google</p>
+                            <div class="touchpoint">📱 Planet Build listing</div>
+                        </div>
+                        <div class="journey-step">
+                            <div class="step-num">2</div>
+                            <h5>Inquiry</h5>
+                            <p>Submits material request</p>
+                            <div class="touchpoint">📧 Form / Phone call</div>
+                        </div>
+                        <div class="journey-step">
+                            <div class="step-num">3</div>
+                            <h5>Quote</h5>
+                            <p>Receives itemized pricing</p>
+                            <div class="touchpoint">📄 Quote PDF / Email</div>
+                        </div>
+                        <div class="journey-step">
+                            <div class="step-num">4</div>
+                            <h5>Order</h5>
+                            <p>Accepts, provides PO</p>
+                            <div class="touchpoint">✅ Order confirmation</div>
+                        </div>
+                        <div class="journey-step">
+                            <div class="step-num">5</div>
+                            <h5>Delivery</h5>
+                            <p>Tracks & receives material</p>
+                            <div class="touchpoint">📍 GPS tracking link</div>
+                        </div>
+                        <div class="journey-step">
+                            <div class="step-num">6</div>
+                            <h5>Invoice</h5>
+                            <p>Pays per terms</p>
+                            <div class="touchpoint">🧾 Invoice + POD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span>⏱️</span><h3>Response Time SLAs</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Touchpoint</th><th>Target SLA</th></tr></thead>
+                            <tbody>
+                                <tr><td>Inquiry Response</td><td><strong style="color: var(--mm-light);">30 minutes</strong></td></tr>
+                                <tr><td>Quote Delivery</td><td><strong style="color: var(--mm-light);">2 hours</strong></td></tr>
+                                <tr><td>Order Confirmation</td><td><strong style="color: var(--mm-light);">15 minutes</strong></td></tr>
+                                <tr><td>Delivery ETA Update</td><td><strong style="color: var(--mm-light);">Real-time</strong></td></tr>
+                                <tr><td>Invoice Delivery</td><td><strong style="color: var(--mm-light);">Same day</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>📞</span><h3>Communication Channels</h3></div>
+                    <div class="card-body">
+                        <div class="info-box">
+                            <h4>📱 Phone</h4>
+                            <ul><li>Primary for urgent orders</li><li>6am - 6pm M-F, 7am - 12pm Sat</li></ul>
+                        </div>
+                        <div class="info-box" style="margin-top: 12px;">
+                            <h4>📧 Email</h4>
+                            <ul><li>Quotes, confirmations, invoices</li><li>orders@megamaterials.com</li></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Suppliers -->
+        <div id="tab-suppliers" class="tab-panel">
+            <div class="section-header">
+                <h2>Supplier Onboarding</h2>
+                <p>How suppliers get into the system</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>🔄</span><h3>Onboarding Flow</h3></div>
+                <div class="card-body">
+                    <div class="handoff-flow">
+                        <div class="handoff-box" style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--supplier-primary);">
+                            <div class="icon">🔍</div><div class="label">Identify</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--supplier-primary);">
+                            <div class="icon">📋</div><div class="label">Vet</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--supplier-primary);">
+                            <div class="icon">🤝</div><div class="label">Negotiate</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--supplier-primary);">
+                            <div class="icon">📝</div><div class="label">Contract</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(5, 150, 105, 0.1); border: 1px solid var(--mm-primary);">
+                            <div class="icon">💾</div><div class="label">Setup AXIS</div>
+                        </div>
+                        <span class="handoff-arrow">→</span>
+                        <div class="handoff-box" style="background: rgba(34, 197, 94, 0.15); border: 1px solid var(--success);">
+                            <div class="icon">✅</div><div class="label">Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span>✅</span><h3>Vetting Checklist</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Criteria</th><th>Requirement</th></tr></thead>
+                            <tbody>
+                                <tr><td>Business License</td><td>Valid FL license</td></tr>
+                                <tr><td>Insurance</td><td>$1M liability minimum</td></tr>
+                                <tr><td>Material Quality</td><td>FDOT certified (if applicable)</td></tr>
+                                <tr><td>Capacity</td><td>Min 500 tons/day output</td></tr>
+                                <tr><td>Location</td><td>Within 75 miles of demand</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>🏭</span><h3>Supplier Categories</h3></div>
+                    <div class="card-body">
+                        <div class="grid-2">
+                            <div class="info-box">
+                                <h4>🪨 Quarries</h4>
+                                <ul><li>Limestone, granite</li><li>Large volume capacity</li></ul>
+                            </div>
+                            <div class="info-box">
+                                <h4>🌾 Sand Mines</h4>
+                                <ul><li>Fill sand, concrete sand</li><li>High availability</li></ul>
+                            </div>
+                            <div class="info-box">
+                                <h4>🏗️ Concrete Plants</h4>
+                                <ul><li>Ready-mix concrete</li><li>Time-sensitive</li></ul>
+                            </div>
+                            <div class="info-box">
+                                <h4>♻️ Recyclers</h4>
+                                <ul><li>Recycled concrete</li><li>Eco-friendly option</li></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Inventory -->
+        <div id="tab-inventory" class="tab-panel">
+            <div class="section-header">
+                <h2>Inventory & Availability</h2>
+                <p>How we know what's available to sell</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>📦</span><h3>Inventory Model</h3><span class="badge">Asset-Light</span></div>
+                <div class="card-body">
+                    <div style="padding: 20px; background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.3); border-radius: 12px; margin-bottom: 20px;">
+                        <h4 style="color: var(--mm-light); margin-bottom: 10px;">💡 Key Insight: We Don't Hold Inventory</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                            Mega Materials operates as a <strong>brokerage model</strong>. We sell what suppliers have in stock and coordinate delivery. Zero inventory carrying cost.
+                        </p>
+                    </div>
+                    <div class="grid-3">
+                        <div class="info-box">
+                            <h4>✅ What We Track</h4>
+                            <ul>
+                                <li>Supplier material types</li>
+                                <li>Contracted rates</li>
+                                <li>Operating hours</li>
+                                <li>General availability</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🔄 Real-Time Checks</h4>
+                            <ul>
+                                <li>Call supplier for large orders</li>
+                                <li>Confirm before quote</li>
+                                <li>Check delivery feasibility</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🚫 What We Don't Do</h4>
+                            <ul>
+                                <li>Hold physical inventory</li>
+                                <li>Pre-purchase materials</li>
+                                <li>Warehouse products</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Credit -->
+        <div id="tab-credit" class="tab-panel">
+            <div class="section-header">
+                <h2>Credit & Payment Terms</h2>
+                <p>How we extend credit and manage collection</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span>📊</span><h3>Credit Tiers</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Tier</th><th>Limit</th><th>Terms</th><th>Approval</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="tag tag-red">COD</span></td><td>$0</td><td>Pre-payment</td><td>Auto</td></tr>
+                                <tr><td><span class="tag tag-orange">Tier 1</span></td><td>$5,000</td><td>NET 15</td><td>Sales Mgr</td></tr>
+                                <tr><td><span class="tag tag-blue">Tier 2</span></td><td>$25,000</td><td>NET 30</td><td>Controller</td></tr>
+                                <tr><td><span class="tag tag-green">Tier 3</span></td><td>$100,000</td><td>NET 30</td><td>CFO</td></tr>
+                                <tr><td><span class="tag tag-purple">Enterprise</span></td><td>$100K+</td><td>Custom</td><td>CEO</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>📞</span><h3>Collections Process</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Days Past Due</th><th>Action</th></tr></thead>
+                            <tbody>
+                                <tr><td>7 days</td><td>Reminder email</td></tr>
+                                <tr><td>15 days</td><td>Phone call from AR</td></tr>
+                                <tr><td>30 days</td><td>Credit hold</td></tr>
+                                <tr><td>45 days</td><td>Demand letter</td></tr>
+                                <tr><td>60 days</td><td>Collections / Legal</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Disputes -->
+        <div id="tab-disputes" class="tab-panel">
+            <div class="section-header">
+                <h2>Returns & Disputes</h2>
+                <p>What happens when something goes wrong</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span>📋</span><h3>Dispute Types</h3></div>
+                    <div class="card-body">
+                        <div class="edge-case">
+                            <h5>🪨 Quality Issue</h5>
+                            <div class="scenario">Material doesn't meet spec</div>
+                            <div class="handling"><strong>Resolution:</strong> Credit after supplier confirmation. Photo documentation required.</div>
+                        </div>
+                        <div class="edge-case">
+                            <h5>📏 Quantity Dispute</h5>
+                            <div class="scenario">Customer claims short delivery</div>
+                            <div class="handling"><strong>Resolution:</strong> Compare scale tickets. Credit if >5% discrepancy.</div>
+                        </div>
+                        <div class="edge-case">
+                            <h5>💰 Price Dispute</h5>
+                            <div class="scenario">Invoice doesn't match quote</div>
+                            <div class="handling"><strong>Resolution:</strong> Pull original quote from AXIS. Adjust if error.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>🚫</span><h3>Return Policy</h3></div>
+                    <div class="card-body">
+                        <div style="padding: 20px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px;">
+                            <h4 style="color: #f87171; margin-bottom: 10px;">⚠️ No Physical Returns</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                                Due to bulk materials nature, we don't accept physical returns. Once delivered and signed for, title transfers to customer. Remedy is credit, not return.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Integration -->
+        <div id="tab-integration" class="tab-panel">
+            <div class="section-header">
+                <h2>Integration Architecture</h2>
+                <p>How Mega Materials connects to all systems</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span>🔗</span><h3>System Integration Map</h3></div>
+                <div class="card-body">
+                    <div class="integration-hub">
+                        <div class="hub-connections">
+                            <div class="hub-node"><div class="icon">🏭</div><div class="name">Suppliers</div><div class="type">Manual / Portal</div></div>
+                            <div class="hub-node"><div class="icon">🌐</div><div class="name">Planet Build</div><div class="type">API + Webhooks</div></div>
+                            <div class="hub-node"><div class="icon">📧</div><div class="name">Google</div><div class="type">Email / Calendar</div></div>
+                        </div>
+                        <div style="font-size: 1.5rem; color: var(--text-muted);">↓</div>
+                        <div class="hub-center">🏗️ AXIS 2.0 (Mega Materials)</div>
+                        <div style="font-size: 1.5rem; color: var(--text-muted);">↓</div>
+                        <div class="hub-connections">
+                            <div class="hub-node"><div class="icon">📦</div><div class="name">Mega Logistics</div><div class="type">Internal API</div></div>
+                            <div class="hub-node"><div class="icon">🚛</div><div class="name">Mega Trucking</div><div class="type">Internal API</div></div>
+                            <div class="hub-node"><div class="icon">📍</div><div class="name">Samsara</div><div class="type">ELD API</div></div>
+                            <div class="hub-node"><div class="icon">💰</div><div class="name">QuickBooks</div><div class="type">Accounting API</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Build/Buy -->
+        <div id="tab-build" class="tab-panel">
+            <div class="section-header">
+                <h2>Build vs Buy Analysis</h2>
+                <p>What we're building custom vs leveraging existing</p>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead><tr><th>Component</th><th>Decision</th><th>Solution</th><th>Rationale</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Core Platform</strong></td><td><span class="tag tag-green">BUILD</span></td><td>AXIS 2.0</td><td>Competitive advantage</td></tr>
+                            <tr><td><strong>AI Pricing</strong></td><td><span class="tag tag-green">BUILD</span></td><td>Custom ML</td><td>Proprietary logic</td></tr>
+                            <tr><td><strong>CRM</strong></td><td><span class="tag tag-green">BUILD</span></td><td>AXIS Module</td><td>Tight integration</td></tr>
+                            <tr><td><strong>GPS Tracking</strong></td><td><span class="tag tag-blue">BUY</span></td><td>Samsara</td><td>Already deployed</td></tr>
+                            <tr><td><strong>Accounting</strong></td><td><span class="tag tag-blue">BUY</span></td><td>QuickBooks</td><td>Standard, bank integration</td></tr>
+                            <tr><td><strong>Marketplace</strong></td><td><span class="tag tag-orange">PARTNER</span></td><td>Planet Build</td><td>Existing customer base</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Roadmap -->
+        <div id="tab-roadmap" class="tab-panel">
+            <div class="section-header">
+                <h2>Development Roadmap</h2>
+                <p>Phased approach to launch and scale</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header" style="background: rgba(5, 150, 105, 0.1);">
+                        <span>🚀</span><h3>Phase 1: MVP</h3><span class="badge" style="background: var(--mm-primary);">Q1 2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item"><h5>Cost Manager</h5><p>Supplier contracts & rates</p></div>
+                            <div class="timeline-item"><h5>Basic Quote Engine</h5><p>Manual pricing</p></div>
+                            <div class="timeline-item"><h5>Logistics Bridge</h5><p>MM → ML handoff</p></div>
+                        </div>
+                        <div style="margin-top: 16px; padding: 10px; background: var(--bg-elevated); border-radius: 8px; font-size: 0.75rem; color: var(--text-muted);">
+                            <strong>Goal:</strong> First 10 orders end-to-end
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background: rgba(59, 130, 246, 0.1);">
+                        <span>⚡</span><h3>Phase 2: Scale</h3><span class="badge" style="background: var(--ml-primary);">Q2 2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item pending"><h5>AI Pricing Engine</h5><p>Auto margin recommendations</p></div>
+                            <div class="timeline-item pending"><h5>Planet Build Integration</h5><p>Listing sync</p></div>
+                            <div class="timeline-item pending"><h5>Sales CRM</h5><p>Customer management</p></div>
+                        </div>
+                        <div style="margin-top: 16px; padding: 10px; background: var(--bg-elevated); border-radius: 8px; font-size: 0.75rem; color: var(--text-muted);">
+                            <strong>Goal:</strong> 50+ orders/month, 80% automation
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background: rgba(139, 92, 246, 0.1);">
+                        <span>🎯</span><h3>Phase 3: Optimize</h3><span class="badge" style="background: var(--mt-primary);">Q3-Q4 2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item pending"><h5>Market Intelligence</h5><p>Competitor tracking</p></div>
+                            <div class="timeline-item pending"><h5>Campaign Builder</h5><p>AI-generated content</p></div>
+                            <div class="timeline-item pending"><h5>Customer Portal</h5><p>Self-service ordering</p></div>
+                        </div>
+                        <div style="margin-top: 16px; padding: 10px; background: var(--bg-elevated); border-radius: 8px; font-size: 0.75rem; color: var(--text-muted);">
+                            <strong>Goal:</strong> 200+ orders/month, 95% automation
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: RACI -->
+        <div id="tab-raci" class="tab-panel">
+            <div class="section-header">
+                <h2>RACI Matrix</h2>
+                <p>Who's accountable for what across MM/ML/MT</p>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div style="margin-bottom: 16px; display: flex; gap: 24px; font-size: 0.75rem;">
+                        <span><strong class="raci-r">R</strong> = Responsible</span>
+                        <span><strong class="raci-a">A</strong> = Accountable</span>
+                        <span><strong class="raci-c">C</strong> = Consulted</span>
+                        <span><strong class="raci-i">I</strong> = Informed</span>
+                    </div>
+                    <table class="data-table">
+                        <thead><tr><th>Activity</th><th>Vinnie</th><th>Jesus</th><th>Tommy</th><th>Andrew</th><th>Lisa</th><th>AXIS</th></tr></thead>
+                        <tbody>
+                            <tr><td>Supplier Negotiation</td><td class="raci-cell raci-a">A/R</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-i">I</td></tr>
+                            <tr><td>Pricing Approval</td><td class="raci-cell raci-a">A</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>Customer Sales</td><td class="raci-cell raci-a">A</td><td class="raci-cell raci-r">R</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>ML Order Acceptance</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-a">A/R</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>First Right Decision</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-a">A/R</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>MT Dispatch</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-a">A</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>External Carrier</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-c">C</td><td class="raci-cell raci-a">A/R</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-r">R</td></tr>
+                            <tr><td>Invoicing</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-i">I</td><td class="raci-cell raci-a">A</td><td class="raci-cell raci-r">R</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: KPIs -->
+        <div id="tab-kpi" class="tab-panel">
+            <div class="section-header">
+                <h2>KPIs & Success Metrics</h2>
+                <p>How we measure if Mega Materials is working</p>
+            </div>
+
+            <div class="grid-4">
+                <div class="kpi-card"><h5>Monthly Revenue</h5><div class="value">$250K</div><div class="target">Target Q2 2025</div></div>
+                <div class="kpi-card" style="border-left-color: var(--ml-primary);"><h5>Gross Margin</h5><div class="value" style="color: var(--ml-light);">18%</div><div class="target">Blended</div></div>
+                <div class="kpi-card" style="border-left-color: var(--mt-primary);"><h5>MT Utilization</h5><div class="value" style="color: var(--mt-light);">85%</div><div class="target">First Right</div></div>
+                <div class="kpi-card" style="border-left-color: var(--supplier-primary);"><h5>Quote Conversion</h5><div class="value" style="color: var(--supplier-light);">40%</div><div class="target">Quotes → Orders</div></div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="card">
+                    <div class="card-header"><span>📊</span><h3>Operational KPIs</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+                            <tbody>
+                                <tr><td>Quote Response Time</td><td><strong style="color: var(--mm-light);">< 2 hours</strong></td></tr>
+                                <tr><td>On-Time Delivery</td><td><strong style="color: var(--mm-light);">> 95%</strong></td></tr>
+                                <tr><td>Order Accuracy</td><td><strong style="color: var(--mm-light);">> 99%</strong></td></tr>
+                                <tr><td>Dispute Rate</td><td><strong style="color: var(--mm-light);">< 2%</strong></td></tr>
+                                <tr><td>DSO</td><td><strong style="color: var(--mm-light);">< 35 days</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>📈</span><h3>Growth KPIs</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+                            <tbody>
+                                <tr><td>Active Customers</td><td><strong style="color: var(--mm-light);">50</strong></td></tr>
+                                <tr><td>Active Suppliers</td><td><strong style="color: var(--mm-light);">10</strong></td></tr>
+                                <tr><td>Monthly Orders</td><td><strong style="color: var(--mm-light);">100</strong></td></tr>
+                                <tr><td>Repeat Customer Rate</td><td><strong style="color: var(--mm-light);">> 60%</strong></td></tr>
+                                <tr><td>NPS Score</td><td><strong style="color: var(--mm-light);">> 50</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: ROI -->
+        <div id="tab-roi" class="tab-panel">
+            <div class="section-header">
+                <h2>ROI Projection</h2>
+                <p>Investment required vs expected return</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span>💸</span><h3>Investment Required</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Category</th><th>Year 1</th></tr></thead>
+                            <tbody>
+                                <tr><td>Development</td><td style="color: var(--error);">$150,000</td></tr>
+                                <tr><td>Sales Team</td><td style="color: var(--error);">$120,000</td></tr>
+                                <tr><td>Marketing</td><td style="color: var(--error);">$50,000</td></tr>
+                                <tr><td>Operations</td><td style="color: var(--error);">$30,000</td></tr>
+                                <tr><td>Technology</td><td style="color: var(--error);">$25,000</td></tr>
+                                <tr style="background: var(--bg-elevated);"><td><strong>TOTAL</strong></td><td style="color: var(--error); font-weight: 700;">$375,000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span>📈</span><h3>Revenue Projection</h3></div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead><tr><th>Metric</th><th>Year 1</th><th>Year 2</th></tr></thead>
+                            <tbody>
+                                <tr><td>Monthly Orders (avg)</td><td>50</td><td>150</td></tr>
+                                <tr><td>Avg Order Size</td><td>$5,000</td><td>$6,000</td></tr>
+                                <tr><td><strong>Gross Revenue</strong></td><td style="color: var(--mm-light);">$3M</td><td style="color: var(--mm-light);">$10.8M</td></tr>
+                                <tr><td>Gross Margin (18%)</td><td style="color: var(--mm-light);">$540K</td><td style="color: var(--mm-light);">$1.9M</td></tr>
+                                <tr style="background: var(--bg-elevated);"><td><strong>NET</strong></td><td style="color: var(--mm-light); font-weight: 700;">$315K</td><td style="color: var(--mm-light); font-weight: 700;">$1.5M</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-4" style="margin-top: 24px;">
+                <div class="stat-card green"><div class="value">10 mo</div><div class="label">Payback Period</div></div>
+                <div class="stat-card blue"><div class="value">84%</div><div class="label">Year 1 ROI</div></div>
+                <div class="stat-card purple"><div class="value">412%</div><div class="label">Year 2 ROI</div></div>
+                <div class="stat-card teal"><div class="value">$1.8M</div><div class="label">2-Year Net Gain</div></div>
+            </div>
+        </div>
+
+        <!-- TAB: Edge Cases -->
+        <div id="tab-edge" class="tab-panel">
+            <div class="section-header">
+                <h2>Edge Cases</h2>
+                <p>How we handle non-standard scenarios</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="edge-case">
+                    <h5>🚗 Will-Call (Customer Pickup)</h5>
+                    <div class="scenario">Customer picks up material themselves</div>
+                    <div class="handling"><strong>Handling:</strong> Set includes_freight = false. No ML order created. Customer gets supplier location. Material-only billing.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>📍 Multi-Stop / Split Loads</h5>
+                    <div class="scenario">Delivery to multiple jobsites</div>
+                    <div class="handling"><strong>Handling:</strong> Create child orders per stop. Each stop = separate LogisticsHandoff. POD required at each location.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>💰 Price Dispute Post-Delivery</h5>
+                    <div class="scenario">Customer challenges invoice</div>
+                    <div class="handling"><strong>Handling:</strong> Pull immutable Quote record. Compare line-by-line. Credit if error; explain variance if not. 7-day quote validity.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>⏰ Supplier Out of Stock</h5>
+                    <div class="scenario">Supplier can't fulfill after order</div>
+                    <div class="handling"><strong>Handling:</strong> AXIS alerts sales. Auto-search alternative suppliers. Customer approval if price delta. Log for supplier scorecard.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>🚛 MT Declines All Loads</h5>
+                    <div class="scenario">MT fleet at capacity</div>
+                    <div class="handling"><strong>Handling:</strong> Auto-route to Brokerage Queue. Andrew finds external carrier. Track MT decline reasons for capacity planning.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>💳 Credit Limit Exceeded</h5>
+                    <div class="scenario">Order exceeds available credit</div>
+                    <div class="handling"><strong>Handling:</strong> AXIS blocks at quote acceptance. Options: COD, increase limit, pay down balance. Controller override available.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>🌧️ Weather Delay</h5>
+                    <div class="scenario">Rain/hurricane delays delivery</div>
+                    <div class="handling"><strong>Handling:</strong> Force majeure = no penalty. Proactive customer SMS. Reschedule next available window. No freight discount.</div>
+                </div>
+                <div class="edge-case">
+                    <h5>📄 COI / Lien Waiver Request</h5>
+                    <div class="scenario">Customer requires documentation</div>
+                    <div class="handling"><strong>Handling:</strong> Flag in CRM at setup. Auto-generate per order. Attach to invoice. Partial waivers until paid; final after.</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Tab Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Phase Data
+        const phases = [
+            { icon: '🔍', title: 'Phase 1: PROCURE', steps: ['Identify Suppliers', 'Negotiate Rates', 'Record Contract', 'Update AXIS Cost DB'], owner: 'Vinnie Bove', module: 'Cost Manager', entities: ['Supplier', 'MM'] },
+            { icon: '🎯', title: 'Phase 2: PRICE', steps: ['Market Analysis', 'AI Margin Recommendation', 'Approve Pricing', 'Publish Price List'], owner: 'Vinnie Bove + AXIS', module: 'Pricing Engine', entities: ['AXIS AI', 'MM'] },
+            { icon: '📢', title: 'Phase 3: MARKET', steps: ['Create Campaign', 'AI Generate Listings', 'Post to Planet Build', 'Receive Inquiries'], owner: 'Vinnie Bove', module: 'Campaign Builder', entities: ['MM', 'Planet Build'] },
+            { icon: '💰', title: 'Phase 4: SELL', steps: ['Customer Inquiry', 'Generate Quote', 'Accept Quote', 'Record Sale'], owner: 'Inside Sales', module: 'Quote Engine', entities: ['Customer', 'MM', 'AXIS'] },
+            { icon: '🔄', title: 'Phase 5: HANDOFF', steps: ['Check Freight Flag', 'Create ML Order', 'Transfer Logistics Details', 'ML Accepts'], owner: 'Logistics Bridge', module: 'Logistics Bridge', entities: ['MM', 'ML'] },
+            { icon: '🚛', title: 'Phase 6: FULFILL', steps: ['Capacity Check', 'First Right Decision', 'Dispatch Driver', 'Deliver & POD'], owner: 'Tommy Simpson', module: 'Capacity Optimizer', entities: ['ML', 'MT', 'External'] }
+        ];
+
+        function selectPhase(index) {
+            document.querySelectorAll('.phase-pill').forEach((p, i) => {
+                p.classList.remove('active');
+                if (i === index) p.classList.add('active');
+            });
+            renderPhaseDetail(index);
+        }
+
+        function renderPhaseDetail(index) {
+            const phase = phases[index];
+            document.getElementById('phase-title').innerHTML = `${phase.icon} ${phase.title}`;
+            document.getElementById('phase-content').innerHTML = `
+                <div class="step-box"><h5>Steps</h5><ul>${phase.steps.map(s => `<li>${s}</li>`).join('')}</ul></div>
+                <div class="step-box"><h5>Owner</h5><ul><li>${phase.owner}</li></ul></div>
+                <div class="step-box"><h5>AXIS Module</h5><ul><li>${phase.module}</li></ul></div>
+                <div class="step-box"><h5>Entities</h5><ul>${phase.entities.map(e => `<li>${e}</li>`).join('')}</ul></div>
+            `;
+        }
+
+        // Initialize
+        renderPhaseDetail(0);
+    </script>
+</body>
+</html>

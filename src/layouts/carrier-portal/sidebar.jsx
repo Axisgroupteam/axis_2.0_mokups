@@ -42,7 +42,6 @@ import {
   WalletIcon,
   ClipboardCheckIcon,
   UserPlusIcon,
-  Building2,
   ListIcon,
   ReceiptIcon,
   ShoppingBagIcon,
@@ -63,7 +62,7 @@ const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "master" | "onboarding" | null
+  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "onboarding" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -107,9 +106,9 @@ const CarrierPortalSidebar = () => {
       icon: InboxIcon,
     },
     {
-      label: "Billing",
-      href: "/app/carrier-portal/brokerage/billing",
-      icon: ReceiptIcon,
+      label: "Carriers",
+      href: "/app/carrier-portal/brokerage/carriers",
+      icon: TruckIcon,
     },
   ];
 
@@ -173,11 +172,6 @@ const CarrierPortalSidebar = () => {
       label: "Driver",
       href: "/app/carrier-portal/onboarding/driver",
       icon: UserPlusIcon,
-    },
-    {
-      label: "Carrier",
-      href: "/app/carrier-portal/onboarding/carrier",
-      icon: Building2,
     },
   ];
 

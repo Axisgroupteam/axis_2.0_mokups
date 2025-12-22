@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -14,17 +14,36 @@ import { XIcon, FilterIcon } from "lucide-react";
 
 const SmartFilter = ({ filterGroups, onFiltersChange, initialFilters = {}, className = "" }) => {
   const [activeFilters, setActiveFilters] = useState([]);
+  const initialized = useRef(false);
 
-  // Initialize filters from initialFilters prop
+  // Initialize filters from initialFilters prop and static filters with defaultValue
   useEffect(() => {
-    const initial = Object.entries(initialFilters).map(([key, value]) => {
-      const config = filterGroups
-        .flatMap((group) => group.filters)
-        .find((filter) => filter.key === key);
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const allFilters = filterGroups.flatMap((group) => group.filters);
+
+    // Get static filters with default values
+    const staticFilters = allFilters
+      .filter((filter) => filter.static && filter.defaultValue !== undefined)
+      .map((config) => ({ config, value: config.defaultValue }));
+
+    // Get initial filters from prop
+    const initialFromProp = Object.entries(initialFilters).map(([key, value]) => {
+      const config = allFilters.find((filter) => filter.key === key);
       return config ? { config, value } : null;
     }).filter(Boolean);
-    setActiveFilters(initial);
-  }, []);
+
+    // Merge static and initial filters, avoiding duplicates
+    const mergedFilters = [...staticFilters];
+    initialFromProp.forEach((filter) => {
+      if (!mergedFilters.find((f) => f.config.key === filter.config.key)) {
+        mergedFilters.push(filter);
+      }
+    });
+
+    setActiveFilters(mergedFilters);
+  }, [filterGroups, initialFilters]);
 
   // Notify parent when filters change
   useEffect(() => {
@@ -43,7 +62,7 @@ const SmartFilter = ({ filterGroups, onFiltersChange, initialFilters = {}, class
     return filterGroups
       .map((group) => ({
         ...group,
-        filters: group.filters.filter((f) => !activeKeys.includes(f.key) && !f.isDisabled),
+        filters: group.filters.filter((f) => !activeKeys.includes(f.key) && !f.isDisabled && !f.static),
       }))
       .filter((group) => group.filters.length > 0);
   };
@@ -71,18 +90,23 @@ const SmartFilter = ({ filterGroups, onFiltersChange, initialFilters = {}, class
 
   const renderFilter = (activeFilter) => {
     const { config, value } = activeFilter;
+    const isStatic = config.static;
 
     switch (config.type) {
       case "input":
         return (
           <div key={config.key} className="flex items-center rounded-full pl-2 border overflow-hidden py-0.5 pr-0.5">
-            <div className="relative flex-shrink-0 group mr-1">
-              <FilterIcon className="size-3 text-primary mr-1 group-hover:opacity-0 transition-opacity duration-200" />
-              <XIcon
-                className="size-3 text-foreground cursor-pointer absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:text-foreground rounded"
-                onClick={() => removeFilter(config.key)}
-              />
-            </div>
+            {isStatic ? (
+              <FilterIcon className="size-3 text-primary mr-1 flex-shrink-0" />
+            ) : (
+              <div className="relative flex-shrink-0 group mr-1">
+                <FilterIcon className="size-3 text-primary mr-1 group-hover:opacity-0 transition-opacity duration-200" />
+                <XIcon
+                  className="size-3 text-foreground cursor-pointer absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:text-foreground rounded"
+                  onClick={() => removeFilter(config.key)}
+                />
+              </div>
+            )}
             <span className="text-sm text-primary whitespace-nowrap mr-2">
               {config.label}
             </span>
@@ -100,13 +124,17 @@ const SmartFilter = ({ filterGroups, onFiltersChange, initialFilters = {}, class
       case "select":
         return (
           <div key={config.key} className="flex items-center gap-1 rounded-full pl-2 border overflow-hidden">
-            <div className="relative flex-shrink-0 group">
-              <FilterIcon className="size-3 text-primary mr-1 group-hover:opacity-0 transition-opacity duration-200" />
-              <XIcon
-                className="size-3 text-foreground cursor-pointer absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:text-foreground rounded"
-                onClick={() => removeFilter(config.key)}
-              />
-            </div>
+            {isStatic ? (
+              <FilterIcon className="size-3 text-primary mr-1 flex-shrink-0" />
+            ) : (
+              <div className="relative flex-shrink-0 group">
+                <FilterIcon className="size-3 text-primary mr-1 group-hover:opacity-0 transition-opacity duration-200" />
+                <XIcon
+                  className="size-3 text-foreground cursor-pointer absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:text-foreground rounded"
+                  onClick={() => removeFilter(config.key)}
+                />
+              </div>
+            )}
             <span className="text-sm text-primary whitespace-nowrap">
               {config.label}
             </span>

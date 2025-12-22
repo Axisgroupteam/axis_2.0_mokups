@@ -1,9 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import SmartFilter from "@/components/SmartFilter";
+import Planning from "./Planning";
+import Dispatch from "./Dispatch";
+import Delivered from "./Delivered";
+import Complete from "./Complete";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,8 +101,21 @@ const CountdownTimer = ({ minutes }) => {
   );
 };
 
-const BulkOrders = () => {
-  const [activeTab, setActiveTab] = useState("inbox");
+const BulkOrders = ({ defaultTab = "inbox" }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determine active tab from URL
+  const getActiveTab = () => {
+    const path = location.pathname;
+    if (path.includes("/planning")) return "planning";
+    if (path.includes("/dispatch")) return "dispatch";
+    if (path.includes("/delivered")) return "delivered";
+    if (path.includes("/complete")) return "complete";
+    return "inbox";
+  };
+
+  const activeTab = getActiveTab();
   const [filters, setFilters] = useState([]);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState(null);
@@ -287,7 +305,7 @@ const BulkOrders = () => {
     },
     {
       id: 2,
-      loadId: "TQL-2025-001002",
+      loadId: "MT-2025-001002",
       customer: "TQL",
       fleetType: "Aggregate",
       commodity: "DOT 57 Stone",
@@ -336,7 +354,7 @@ const BulkOrders = () => {
     },
     {
       id: 3,
-      loadId: "COY-2025-001003",
+      loadId: "MT-2025-001003",
       customer: "Coyote",
       fleetType: "TMF",
       commodity: "Sand",
@@ -385,7 +403,7 @@ const BulkOrders = () => {
     },
     {
       id: 4,
-      loadId: "CHR-2025-001004",
+      loadId: "MT-2025-001004",
       customer: "CH Robinson",
       fleetType: "Flatbed",
       commodity: "Steel Beams",
@@ -484,7 +502,7 @@ const BulkOrders = () => {
     },
     {
       id: 6,
-      loadId: "TQL-2025-001006",
+      loadId: "MT-2025-001006",
       customer: "TQL",
       fleetType: "Aggregate",
       commodity: "Recycled Base Rock",
@@ -525,7 +543,7 @@ const BulkOrders = () => {
     },
     {
       id: 7,
-      loadId: "COY-2025-001007",
+      loadId: "MT-2025-001007",
       customer: "Coyote",
       fleetType: "TMF",
       commodity: "Grain",
@@ -566,7 +584,7 @@ const BulkOrders = () => {
     },
     {
       id: 8,
-      loadId: "CHR-2025-001008",
+      loadId: "MT-2025-001008",
       customer: "CH Robinson",
       fleetType: "Flatbed",
       commodity: "Equipment",
@@ -740,11 +758,15 @@ const BulkOrders = () => {
     },
   ];
 
+  const handleTabChange = (value) => {
+    navigate(`/app/carrier-portal/orders/bulk/${value}`);
+  };
+
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={handleTabChange}
         className="w-full h-full flex flex-col overflow-hidden"
       >
         <div className="flex-shrink-0">
@@ -787,44 +809,20 @@ const BulkOrders = () => {
             />
           </TabsContent>
 
-          <TabsContent value="planning" className="h-full mt-0 p-4">
-            <div className="border rounded-lg p-8 h-full flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
-                <CalendarClock className="size-12 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-medium">Planning</h3>
-                <p className="text-sm">Orders being planned and scheduled</p>
-              </div>
-            </div>
+          <TabsContent value="planning" className="h-full mt-0">
+            <Planning />
           </TabsContent>
 
-          <TabsContent value="dispatch" className="h-full mt-0 p-4">
-            <div className="border rounded-lg p-8 h-full flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
-                <Truck className="size-12 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-medium">Dispatch</h3>
-                <p className="text-sm">Orders dispatched and in transit</p>
-              </div>
-            </div>
+          <TabsContent value="dispatch" className="h-full mt-0">
+            <Dispatch />
           </TabsContent>
 
-          <TabsContent value="delivered" className="h-full mt-0 p-4">
-            <div className="border rounded-lg p-8 h-full flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
-                <PackageCheck className="size-12 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-medium">Delivered</h3>
-                <p className="text-sm">Orders that have been delivered</p>
-              </div>
-            </div>
+          <TabsContent value="delivered" className="h-full mt-0">
+            <Delivered />
           </TabsContent>
 
-          <TabsContent value="complete" className="h-full mt-0 p-4">
-            <div className="border rounded-lg p-8 h-full flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
-                <CheckCircle2 className="size-12 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-medium">Complete</h3>
-                <p className="text-sm">Fully completed orders</p>
-              </div>
-            </div>
+          <TabsContent value="complete" className="h-full mt-0">
+            <Complete />
           </TabsContent>
         </div>
       </Tabs>

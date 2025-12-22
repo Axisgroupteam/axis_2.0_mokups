@@ -24,8 +24,10 @@ import PendingValidation from "@/pages/CarrierPortal/Sales/PendingValidation";
 import ConfirmedOrders from "@/pages/CarrierPortal/Sales/ConfirmedOrders";
 import BrokerageQueue from "@/pages/CarrierPortal/Brokerage/BrokerageQueue";
 import LoadStatus from "@/pages/CarrierPortal/Brokerage/LoadStatus";
+import Carriers from "@/pages/CarrierPortal/Brokerage/Carriers";
 import RequestOrders from "@/pages/CarrierPortal/Orders/RequestOrders";
 import BulkOrders from "@/pages/CarrierPortal/Orders/BulkOrders";
+import LoadDetails from "@/pages/CarrierPortal/Orders/LoadDetails";
 
 export const carrierPortalRoutes = [
   {
@@ -58,6 +60,56 @@ export const carrierPortalRoutes = [
     path: "orders/bulk",
     element: <BulkOrders />,
     label: "Bulk",
+  },
+  {
+    path: "orders/bulk/inbox",
+    element: <BulkOrders />,
+    label: "Inbox",
+  },
+  {
+    path: "orders/bulk/planning",
+    element: <BulkOrders />,
+    label: "Planning",
+  },
+  {
+    path: "orders/bulk/dispatch",
+    element: <BulkOrders />,
+    label: "Dispatch",
+  },
+  {
+    path: "orders/bulk/delivered",
+    element: <BulkOrders />,
+    label: "Delivered",
+  },
+  {
+    path: "orders/bulk/complete",
+    element: <BulkOrders />,
+    label: "Complete",
+  },
+  {
+    path: "orders/bulk/inbox/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
+  },
+  {
+    path: "orders/bulk/planning/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
+  },
+  {
+    path: "orders/bulk/dispatch/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
+  },
+  {
+    path: "orders/bulk/delivered/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
+  },
+  {
+    path: "orders/bulk/complete/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
   },
   {
     path: "orders/aggregate",
@@ -98,14 +150,9 @@ export const carrierPortalRoutes = [
     label: "Brokerage Loads",
   },
   {
-    path: "brokerage/billing",
-    element: (
-      <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Billing</h1>
-        <p className="text-muted-foreground mt-2">Coming soon...</p>
-      </div>
-    ),
-    label: "Billing",
+    path: "brokerage/carriers",
+    element: <Carriers />,
+    label: "Carriers",
   },
   {
     path: "master/users",

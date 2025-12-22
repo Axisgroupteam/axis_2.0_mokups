@@ -135,3 +135,91 @@
   width: 0;
   height: 0;
 }
+
+/* SVAR Gantt Chart - ensure proper height and scrolling */
+.wx-willow-theme,
+.wx-willow-dark-theme {
+  height: 100%;
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+}
+
+.wx-willow-theme > div,
+.wx-willow-dark-theme > div {
+  height: 100%;
+}
+
+.wx-gantt {
+  height: 100% !important;
+}
+
+/* Ensure tree toggle icons are visible */
+.wx-gantt .wx-tree-toggle,
+.wx-gantt .wx-toggle,
+.wx-gantt [class*="toggle"],
+.wx-gantt [class*="expand"] {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.wx-gantt,
+.wx-gantt * {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+/* SVAR Gantt Chart - shadcn style scrollbar */
+.wx-gantt,
+.wx-gantt * {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.708 0 0) transparent;
+}
+
+.wx-gantt ::-webkit-scrollbar,
+.wx-gantt *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.wx-gantt ::-webkit-scrollbar-track,
+.wx-gantt *::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+.wx-gantt ::-webkit-scrollbar-thumb,
+.wx-gantt *::-webkit-scrollbar-thumb {
+  background: oklch(0.708 0 0);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.wx-gantt ::-webkit-scrollbar-thumb:hover,
+.wx-gantt *::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.556 0 0);
+  background-clip: content-box;
+}
+
+.wx-gantt ::-webkit-scrollbar-corner,
+.wx-gantt *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode scrollbar */
+.dark .wx-gantt,
+.dark .wx-gantt * {
+  scrollbar-color: oklch(0.4 0 0) transparent;
+}
+
+.dark .wx-gantt ::-webkit-scrollbar-thumb,
+.dark .wx-gantt *::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0 0);
+  background-clip: content-box;
+}
+
+.dark .wx-gantt ::-webkit-scrollbar-thumb:hover,
+.dark .wx-gantt *::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0 0);
+  background-clip: content-box;
+}
