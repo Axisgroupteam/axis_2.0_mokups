@@ -46,6 +46,27 @@ export const breadcrumbLabels = {
   "customer-details": "Customer Details",
   "rate-table-details": "Rate Table Details",
 
+  // Fuel sections
+  fuel: "Fuel",
+  "card-assignments": "Card Assignments",
+  transactions: "Transactions",
+  pricing: "Pricing",
+  discounts: "Discounts",
+  suppliers: "Suppliers",
+  "card-providers": "Card Providers",
+  reports: "IFTA & Reports",
+
+  // Materials sections
+  materials: "Materials",
+  contracts: "Contracts",
+  "contract-lines": "Contract Lines",
+  list: "Materials",
+
+  // Brokerage sections
+  brokerage: "Brokerage",
+  queue: "Queue",
+  carriers: "Carriers",
+
   // Common
   details: "Details",
   edit: "Edit",
@@ -68,4 +89,7 @@ export const detailPageLabels = {
 export const nonLinkableSegments = [
   "orders",
   "master",
+  "fuel",
+  "materials",
+  "brokerage",
 ];

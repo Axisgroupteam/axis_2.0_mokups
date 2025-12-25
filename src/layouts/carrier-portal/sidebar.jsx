@@ -56,13 +56,21 @@ import {
   CheckCircle2Icon,
   AlertTriangleIcon,
   ClipboardListIcon,
+  FuelIcon,
+  CreditCardIcon,
+  ArrowLeftRightIcon,
+  TagIcon,
+  PercentIcon,
+  FileTextIcon,
+  SettingsIcon,
+  NetworkIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "onboarding" | null
+  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "materials" | "fuel" | "onboarding" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -166,6 +174,74 @@ const CarrierPortalSidebar = () => {
     },
   ];
 
+  // Materials sub-menu items
+  const materialsSubItems = [
+    {
+      label: "Contracts",
+      href: "/app/carrier-portal/materials/contracts",
+      icon: ClipboardListIcon,
+    },
+    {
+      label: "Contract Lines",
+      href: "/app/carrier-portal/materials/contract-lines",
+      icon: ListIcon,
+    },
+    {
+      label: "Suppliers",
+      href: "/app/carrier-portal/materials/suppliers",
+      icon: Building2Icon,
+    },
+    {
+      label: "Materials",
+      href: "/app/carrier-portal/materials/list",
+      icon: PackageIcon,
+    },
+  ];
+
+  // Fuel sub-menu items
+  const fuelSubItems = [
+    {
+      label: "Card Assignments",
+      href: "/app/carrier-portal/fuel/card-assignments",
+      icon: CreditCardIcon,
+    },
+    {
+      label: "Transactions",
+      href: "/app/carrier-portal/fuel/transactions",
+      icon: ArrowLeftRightIcon,
+    },
+    {
+      label: "Pricing",
+      href: "/app/carrier-portal/fuel/pricing",
+      icon: TagIcon,
+    },
+    {
+      label: "Discounts",
+      href: "/app/carrier-portal/fuel/discounts",
+      icon: PercentIcon,
+    },
+    {
+      label: "Suppliers",
+      href: "/app/carrier-portal/fuel/suppliers",
+      icon: NetworkIcon,
+    },
+    {
+      label: "Card Providers",
+      href: "/app/carrier-portal/fuel/card-providers",
+      icon: CreditCardIcon,
+    },
+    {
+      label: "IFTA & Reports",
+      href: "/app/carrier-portal/fuel/reports",
+      icon: FileTextIcon,
+    },
+    // {
+    //   label: "Settings",
+    //   href: "/app/carrier-portal/fuel/settings",
+    //   icon: SettingsIcon,
+    // },
+  ];
+
   // Onboarding sub-menu items
   const onboardingSubItems = [
     {
@@ -180,6 +256,8 @@ const CarrierPortalSidebar = () => {
     const isOrdersPath = ordersSubItems.some((item) => pathname === item.href);
     const isBrokeragePath = brokerageSubItems.some((item) => pathname === item.href);
     const isMasterPath = masterSubItems.some((item) => pathname === item.href);
+    const isMaterialsPath = materialsSubItems.some((item) => pathname === item.href);
+    const isFuelPath = fuelSubItems.some((item) => pathname === item.href);
     const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
 
     if (isOrdersPath) {
@@ -188,6 +266,10 @@ const CarrierPortalSidebar = () => {
       setOpenMenu("brokerage");
     } else if (isMasterPath) {
       setOpenMenu("master");
+    } else if (isMaterialsPath) {
+      setOpenMenu("materials");
+    } else if (isFuelPath) {
+      setOpenMenu("fuel");
     } else if (isOnboardingPath) {
       setOpenMenu("onboarding");
     } else {
@@ -421,6 +503,128 @@ const CarrierPortalSidebar = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {masterSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Materials with Sub-menu */}
+              <Collapsible
+                open={openMenu === "materials"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "materials" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        materialsSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={materialsSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <BoxIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Materials
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "materials" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {materialsSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Fuel with Sub-menu */}
+              <Collapsible
+                open={openMenu === "fuel"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "fuel" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        fuelSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={fuelSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <FuelIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Fuel
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "fuel" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {fuelSubItems.map((subItem) => {
                         const isActive = pathname === subItem.href;
                         const IconComponent = subItem.icon;
                         return (

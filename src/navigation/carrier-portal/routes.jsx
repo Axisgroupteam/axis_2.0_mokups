@@ -17,6 +17,20 @@ import Rate from "@/pages/CarrierPortal/Rate";
 import RateDetails from "@/pages/CarrierPortal/Rate/RateDetails";
 import DriverOnboarding from "@/pages/CarrierPortal/Onboarding/DriverOnboarding";
 import CarrierOnboarding from "@/pages/CarrierPortal/Onboarding/CarrierOnboarding";
+import Materials from "@/pages/CarrierPortal/Materials";
+import Suppliers from "@/pages/CarrierPortal/Materials/Suppliers";
+import Contracts from "@/pages/CarrierPortal/Materials/Contracts";
+import ContractLines from "@/pages/CarrierPortal/Materials/ContractLines";
+import ContractLineDetails from "@/pages/CarrierPortal/Materials/ContractLineDetails";
+import FuelCards from "@/pages/CarrierPortal/Fuel";
+import FuelTransactions from "@/pages/CarrierPortal/Fuel/Transactions";
+import FuelTransactionDetails from "@/pages/CarrierPortal/Fuel/TransactionDetails";
+import FuelPricing from "@/pages/CarrierPortal/Fuel/Pricing";
+import FuelDiscounts from "@/pages/CarrierPortal/Fuel/Discounts";
+import FuelNetworkPartners from "@/pages/CarrierPortal/Fuel/NetworkPartners";
+import FuelCardProviders from "@/pages/CarrierPortal/Fuel/CardProviders";
+import FuelReports from "@/pages/CarrierPortal/Fuel/Reports";
+import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
 import SalesOrders from "@/pages/CarrierPortal/Sales/Orders";
@@ -273,5 +287,77 @@ export const carrierPortalRoutes = [
     path: "onboarding/carrier",
     element: <CarrierOnboarding />,
     label: "Carrier Onboarding",
+  },
+  // Materials routes
+  {
+    path: "materials/contracts",
+    element: <Contracts />,
+    label: "Contracts",
+  },
+  {
+    path: "materials/contract-lines",
+    element: <ContractLines />,
+    label: "Contract Lines",
+  },
+  {
+    path: "materials/contract-lines/details",
+    element: <ContractLineDetails />,
+    label: "Contract Line Details",
+  },
+  {
+    path: "materials/suppliers",
+    element: <Suppliers />,
+    label: "Suppliers",
+  },
+  {
+    path: "materials/list",
+    element: <Materials />,
+    label: "Materials",
+  },
+  // Fuel routes
+  {
+    path: "fuel/card-assignments",
+    element: <FuelCards />,
+    label: "Card Assignments",
+  },
+  {
+    path: "fuel/transactions",
+    element: <FuelTransactions />,
+    label: "Fuel Transactions",
+  },
+  {
+    path: "fuel/transactions/:transactionId",
+    element: <FuelTransactionDetails />,
+    label: "Transaction Details",
+  },
+  {
+    path: "fuel/pricing",
+    element: <FuelPricing />,
+    label: "Fuel Pricing",
+  },
+  {
+    path: "fuel/discounts",
+    element: <FuelDiscounts />,
+    label: "Fuel Discounts",
+  },
+  {
+    path: "fuel/suppliers",
+    element: <FuelNetworkPartners />,
+    label: "Suppliers",
+  },
+  {
+    path: "fuel/card-providers",
+    element: <FuelCardProviders />,
+    label: "Card Providers",
+  },
+  {
+    path: "fuel/reports",
+    element: <FuelReports />,
+    label: "IFTA & Reports",
+  },
+  {
+    path: "fuel/settings",
+    element: <FuelSettings />,
+    label: "Fuel Settings",
   },
 ];
