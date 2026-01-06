@@ -70,7 +70,7 @@ const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "materials" | "fuel" | "onboarding" | null
+  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "materials" | "fuel" | "onboarding" | "settings" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -162,16 +162,6 @@ const CarrierPortalSidebar = () => {
       href: "/app/carrier-portal/master/business-unit",
       icon: Building2Icon,
     },
-    {
-      label: "Additional Charges",
-      href: "/app/carrier-portal/master/additional-charges",
-      icon: ReceiptIcon,
-    },
-    {
-      label: "Product Sales",
-      href: "/app/carrier-portal/master/product-sales",
-      icon: ShoppingBagIcon,
-    },
   ];
 
   // Materials sub-menu items
@@ -235,11 +225,20 @@ const CarrierPortalSidebar = () => {
       href: "/app/carrier-portal/fuel/reports",
       icon: FileTextIcon,
     },
-    // {
-    //   label: "Settings",
-    //   href: "/app/carrier-portal/fuel/settings",
-    //   icon: SettingsIcon,
-    // },
+    {
+      label: "Settings",
+      href: "/app/carrier-portal/fuel/settings",
+      icon: SettingsIcon,
+    },
+  ];
+
+  // Accessorial sub-menu items
+  const accessorialSubItems = [
+    {
+      label: "Accessorial Codes",
+      href: "/app/carrier-portal/accessorial/codes",
+      icon: ListIcon,
+    },
   ];
 
   // Onboarding sub-menu items
@@ -251,6 +250,15 @@ const CarrierPortalSidebar = () => {
     },
   ];
 
+  // Settings sub-menu items
+  const settingsSubItems = [
+    {
+      label: "General",
+      href: "/app/carrier-portal/settings/general",
+      icon: SettingsIcon,
+    },
+  ];
+
   // Automatically open the correct collapsible menu based on current URL
   useEffect(() => {
     const isOrdersPath = ordersSubItems.some((item) => pathname === item.href);
@@ -258,7 +266,9 @@ const CarrierPortalSidebar = () => {
     const isMasterPath = masterSubItems.some((item) => pathname === item.href);
     const isMaterialsPath = materialsSubItems.some((item) => pathname === item.href);
     const isFuelPath = fuelSubItems.some((item) => pathname === item.href);
+    const isAccessorialPath = accessorialSubItems.some((item) => pathname === item.href);
     const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
+    const isSettingsPath = settingsSubItems.some((item) => pathname === item.href);
 
     if (isOrdersPath) {
       setOpenMenu("orders");
@@ -270,8 +280,12 @@ const CarrierPortalSidebar = () => {
       setOpenMenu("materials");
     } else if (isFuelPath) {
       setOpenMenu("fuel");
+    } else if (isAccessorialPath) {
+      setOpenMenu("accessorial");
     } else if (isOnboardingPath) {
       setOpenMenu("onboarding");
+    } else if (isSettingsPath) {
+      setOpenMenu("settings");
     } else {
       setOpenMenu(null);
     }
@@ -653,6 +667,67 @@ const CarrierPortalSidebar = () => {
                 </SidebarMenuItem>
               </Collapsible>
 
+              {/* Accessorial with Sub-menu */}
+              <Collapsible
+                open={openMenu === "accessorial"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "accessorial" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        accessorialSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={accessorialSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <ReceiptIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Accessorial
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "accessorial" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {accessorialSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
               {/* Onboarding with Sub-menu */}
               <Collapsible
                 open={openMenu === "onboarding"}
@@ -686,6 +761,67 @@ const CarrierPortalSidebar = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {onboardingSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Settings with Sub-menu */}
+              <Collapsible
+                open={openMenu === "settings"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "settings" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        settingsSubItems.some((item) => pathname === item.href) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={settingsSubItems.some(
+                        (item) => pathname === item.href
+                      )}
+                    >
+                      <SettingsIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Settings
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "settings" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {settingsSubItems.map((subItem) => {
                         const isActive = pathname === subItem.href;
                         const IconComponent = subItem.icon;
                         return (

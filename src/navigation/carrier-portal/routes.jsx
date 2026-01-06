@@ -31,6 +31,7 @@ import FuelNetworkPartners from "@/pages/CarrierPortal/Fuel/NetworkPartners";
 import FuelCardProviders from "@/pages/CarrierPortal/Fuel/CardProviders";
 import FuelReports from "@/pages/CarrierPortal/Fuel/Reports";
 import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
+import AccessorialCodes from "@/pages/CarrierPortal/Accessorial";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
 import SalesOrders from "@/pages/CarrierPortal/Sales/Orders";
@@ -244,26 +245,6 @@ export const carrierPortalRoutes = [
     label: "Business Unit",
   },
   {
-    path: "master/additional-charges",
-    element: (
-      <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Additional Charges</h1>
-        <p className="text-muted-foreground mt-2">Coming soon...</p>
-      </div>
-    ),
-    label: "Additional Charges",
-  },
-  {
-    path: "master/product-sales",
-    element: (
-      <div className="p-8 bg-background h-full">
-        <h1 className="text-3xl font-bold">Product Sales</h1>
-        <p className="text-muted-foreground mt-2">Coming soon...</p>
-      </div>
-    ),
-    label: "Product Sales",
-  },
-  {
     path: "master/assets",
     element: <Assets />,
     label: "Assets",
@@ -359,5 +340,22 @@ export const carrierPortalRoutes = [
     path: "fuel/settings",
     element: <FuelSettings />,
     label: "Fuel Settings",
+  },
+  // Accessorial routes
+  {
+    path: "accessorial/codes",
+    element: <AccessorialCodes />,
+    label: "Accessorial Codes",
+  },
+  // Settings routes
+  {
+    path: "settings/general",
+    element: (
+      <div className="p-8 bg-background h-full">
+        <h1 className="text-3xl font-bold">General Settings</h1>
+        <p className="text-muted-foreground mt-2">Coming soon...</p>
+      </div>
+    ),
+    label: "General Settings",
   },
 ];

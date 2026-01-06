@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AXIS - Accessorial Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #cbd5e1;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(30, 41, 59, 0.5);
+      border-bottom: 1px solid #334155;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.025em;
+    }
+
+    .logo span {
+      color: #60a5fa;
+    }
+
+    .header-divider {
+      color: #475569;
+    }
+
+    .header-title {
+      color: #94a3b8;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .company-name {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Navigation */
+    .nav {
+      background: rgba(30, 41, 59, 0.3);
+      border-bottom: 1px solid #334155;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .nav-tab {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-tab:hover {
+      color: #cbd5e1;
+    }
+
+    .nav-tab.active {
+      color: #60a5fa;
+      border-bottom-color: #60a5fa;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 1.5rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .summary-card.warning {
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .summary-card.danger {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .summary-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+
+    .summary-card.warning .summary-label {
+      color: #fbbf24;
+    }
+
+    .summary-card.danger .summary-label {
+      color: #f87171;
+    }
+
+    .summary-value {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .summary-card.warning .summary-value {
+      color: #fbbf24;
+    }
+
+    .summary-card.danger .summary-value {
+      color: #f87171;
+    }
+
+    .summary-sub {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-select {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+
+    .filters-spacer {
+      flex: 1;
+    }
+
+    .auto-refresh {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    /* Table */
+    .table-container {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: rgba(30, 41, 59, 0.5);
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    tr:hover {
+      background: rgba(51, 65, 85, 0.3);
+    }
+
+    tr.escalated {
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    tr.warning-row {
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .cell-primary {
+      color: white;
+      font-weight: 500;
+    }
+
+    .cell-secondary {
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    .cell-amount {
+      color: white;
+      font-weight: 500;
+    }
+
+    .cell-amount.highlight {
+      color: #fbbf24;
+    }
+
+    .cell-amount-note {
+      font-size: 0.75rem;
+      color: #f59e0b;
+    }
+
+    /* Age Colors */
+    .age-normal {
+      color: #94a3b8;
+    }
+
+    .age-warning {
+      color: #fbbf24;
+      font-weight: 500;
+    }
+
+    .age-danger {
+      color: #f87171;
+      font-weight: 600;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      border: 1px solid;
+    }
+
+    .status-customer {
+      background: rgba(96, 165, 250, 0.2);
+      color: #60a5fa;
+      border-color: rgba(96, 165, 250, 0.3);
+    }
+
+    .status-pending {
+      background: rgba(168, 85, 247, 0.2);
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .status-escalated {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .status-approved {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .status-absorbed {
+      background: rgba(168, 85, 247, 0.2);
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    /* Tier Badges */
+    .tier-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      border: 1px solid;
+    }
+
+    .tier-1 {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .tier-2 {
+      background: rgba(96, 165, 250, 0.2);
+      color: #60a5fa;
+      border-color: rgba(96, 165, 250, 0.3);
+    }
+
+    .tier-3 {
+      background: rgba(168, 85, 247, 0.2);
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-view {
+      background: #334155;
+      color: #cbd5e1;
+    }
+
+    .btn-view:hover {
+      background: #475569;
+    }
+
+    .btn-approve {
+      background: #059669;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #10b981;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary:hover {
+      background: #3b82f6;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #cbd5e1;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-warning {
+      background: #d97706;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-warning:hover {
+      background: #f59e0b;
+    }
+
+    .btn-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    /* Detention Monitor */
+    .detention-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .detention-card {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .detention-card.monitoring {
+      border-color: #334155;
+    }
+
+    .detention-card.warning {
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .detention-card.chargeable {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .detention-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .detention-time {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .detention-card.monitoring .detention-time {
+      color: #94a3b8;
+    }
+
+    .detention-card.warning .detention-time {
+      color: #fbbf24;
+    }
+
+    .detention-card.chargeable .detention-time {
+      color: #f87171;
+    }
+
+    .detention-status {
+      padding: 0.125rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      border: 1px solid;
+    }
+
+    .detention-status.monitoring {
+      background: rgba(100, 116, 139, 0.2);
+      color: #94a3b8;
+      border-color: rgba(100, 116, 139, 0.3);
+    }
+
+    .detention-status.warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .detention-status.chargeable {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .detention-details {
+      font-size: 0.875rem;
+    }
+
+    .detention-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+    }
+
+    .detention-label {
+      color: #64748b;
+    }
+
+    .detention-value {
+      color: white;
+    }
+
+    .detention-value.success {
+      color: #4ade80;
+    }
+
+    .detention-footer {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #334155;
+    }
+
+    .detention-progress-label {
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .detention-card.monitoring .detention-progress-label {
+      color: #64748b;
+    }
+
+    .detention-card.warning .detention-progress-label {
+      color: #fbbf24;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 0.5rem;
+      background: #334155;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 9999px;
+    }
+
+    .progress-fill.monitoring {
+      background: #64748b;
+    }
+
+    .progress-fill.warning {
+      background: #f59e0b;
+    }
+
+    .detention-billable {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .detention-billable-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .detention-billable-amount {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #f87171;
+    }
+
+    .detention-billable-note {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .detention-sent-note {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.75rem;
+    }
+
+    .btn-process {
+      width: 100%;
+      margin-top: 0.75rem;
+      background: #dc2626;
+      color: white;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .btn-process:hover {
+      background: #ef4444;
+    }
+
+    /* Live indicator */
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .live-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .live-text {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    /* Code Badge */
+    .code-badge {
+      font-family: monospace;
+      background: rgba(96, 165, 250, 0.1);
+      color: #60a5fa;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .driver-paid-yes {
+      color: #4ade80;
+    }
+
+    .driver-paid-no {
+      color: #64748b;
+    }
+
+    /* Rate Card */
+    .rate-card {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .rate-card-header {
+      padding: 1rem;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rate-card-title {
+      color: white;
+      font-weight: 500;
+    }
+
+    .rate-card-subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .rate-card-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .billing-prefs {
+      padding: 1rem;
+      border-bottom: 1px solid #334155;
+      background: rgba(30, 41, 59, 0.3);
+    }
+
+    .billing-prefs-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+    }
+
+    .billing-prefs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .billing-pref-label {
+      color: #64748b;
+    }
+
+    .billing-pref-value {
+      color: #cbd5e1;
+      margin-left: 0.5rem;
+    }
+
+    .override-note {
+      font-size: 0.75rem;
+      color: #fbbf24;
+    }
+
+    /* Load Card */
+    .load-card {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .load-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .load-title {
+      color: white;
+      font-weight: 500;
+    }
+
+    .load-subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .load-status {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 0.25rem;
+    }
+
+    .load-section {
+      border-top: 1px solid #334155;
+      padding-top: 1rem;
+    }
+
+    .load-section-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+    }
+
+    .load-table {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .load-table th {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+      padding: 0 0 0.5rem 0;
+    }
+
+    .load-table td {
+      padding: 0.75rem 0;
+      border-top: 1px solid rgba(51, 65, 85, 0.5);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      width: 100%;
+      max-width: 32rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      margin: 1rem;
+    }
+
+    .modal.large {
+      max-width: 42rem;
+    }
+
+    .modal-header {
+      padding: 1rem;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: #1e293b;
+    }
+
+    .modal-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .modal-subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+
+    .modal-close:hover {
+      color: white;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .modal-footer {
+      padding: 1rem;
+      border-top: 1px solid #334155;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      position: sticky;
+      bottom: 0;
+      background: #1e293b;
+    }
+
+    .modal-footer.split {
+      justify-content: space-between;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      color: white;
+      font-size: 0.875rem;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+
+    .form-input.code {
+      font-family: monospace;
+      text-transform: uppercase;
+    }
+
+    .form-input.with-prefix {
+      padding-left: 1.75rem;
+    }
+
+    .form-input-wrapper {
+      position: relative;
+    }
+
+    .form-input-prefix {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.5rem;
+      color: #64748b;
+    }
+
+    .form-select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      color: white;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+
+    .form-textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      color: white;
+      font-size: 0.875rem;
+      resize: none;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: #60a5fa;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .form-radio-group {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #cbd5e1;
+      font-size: 0.875rem;
+    }
+
+    .form-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #cbd5e1;
+      font-size: 0.875rem;
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    .form-hint.warning {
+      color: #fbbf24;
+    }
+
+    .form-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+    }
+
+    .form-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-option:hover {
+      background: #0f172a;
+    }
+
+    .form-option-content {
+      flex: 1;
+    }
+
+    .form-option-title {
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .form-option-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .driver-pay-options {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .driver-pay-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .driver-pay-option input[type="text"] {
+      width: 6rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .driver-pay-summary {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.375rem;
+      padding: 0.75rem;
+    }
+
+    .driver-pay-summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+    }
+
+    .driver-pay-summary-label {
+      color: #94a3b8;
+    }
+
+    .driver-pay-summary-value {
+      color: #4ade80;
+    }
+
+    .driver-pay-summary-note {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    /* Upload Area */
+    .upload-area {
+      border: 1px dashed #475569;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .upload-area:hover {
+      border-color: #60a5fa;
+    }
+
+    .upload-text {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .upload-hint {
+      font-size: 0.75rem;
+      color: #475569;
+      margin-top: 0.25rem;
+    }
+
+    /* Detail Modal */
+    .detail-status-banner {
+      background: rgba(96, 165, 250, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .detail-status-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-status-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background: #60a5fa;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .detail-status-text {
+      color: #60a5fa;
+      font-weight: 500;
+    }
+
+    .detail-status-time {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .detail-item {
+      margin-bottom: 0.75rem;
+    }
+
+    .detail-label {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      color: white;
+    }
+
+    .detail-value.success {
+      color: #4ade80;
+    }
+
+    .charge-summary {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .charge-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .charge-row.total {
+      border-top: 1px solid #334155;
+      padding-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .charge-row.driver-pay {
+      border-top: 1px solid #334155;
+      padding-top: 0.75rem;
+      margin-bottom: 0;
+    }
+
+    .charge-label {
+      color: #94a3b8;
+    }
+
+    .charge-label.total {
+      color: white;
+      font-weight: 500;
+    }
+
+    .charge-value {
+      color: white;
+    }
+
+    .charge-value.total {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .charge-value.driver-pay {
+      color: #4ade80;
+    }
+
+    .audit-section-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+    }
+
+    .audit-list {
+      font-size: 0.875rem;
+    }
+
+    .audit-item {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .audit-time {
+      color: #64748b;
+      width: 5rem;
+      flex-shrink: 0;
+    }
+
+    .audit-text {
+      color: #cbd5e1;
+    }
+
+    .attachments-list {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .attachment-item {
+      padding: 0.5rem 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid #334155;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+
+    .notes-text {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .detention-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .billing-prefs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .summary-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        flex-wrap: wrap;
+      }
+
+      .nav {
+        overflow-x: auto;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo"><span>AXIS</span></div>
+      <span class="header-divider">|</span>
+      <span class="header-title">Accessorial Management</span>
+    </div>
+    <div class="header-right">
+      <span class="company-name">Mega Trucking LLC</span>
+      <div class="avatar">ES</div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <button class="nav-tab active" data-tab="dashboard">Operational Dashboard</button>
+    <button class="nav-tab" data-tab="detention">Detention Monitor</button>
+    <button class="nav-tab" data-tab="codes">Accessorial Codes</button>
+    <button class="nav-tab" data-tab="ratecards">Customer Rate Cards</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Dashboard Tab -->
+    <div class="tab-content active" id="dashboard">
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="summary-label">Pending Approval</div>
+          <div class="summary-value">12</div>
+          <div class="summary-sub">4 awaiting customer</div>
+        </div>
+        <div class="summary-card warning">
+          <div class="summary-label">24-48 hrs (Urgent)</div>
+          <div class="summary-value">3</div>
+          <div class="summary-sub">Alerts sent to approvers</div>
+        </div>
+        <div class="summary-card danger">
+          <div class="summary-label">48+ hrs (SLA Breach)</div>
+          <div class="summary-value">1</div>
+          <div class="summary-sub">Escalated to VP Ops</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Disputed</div>
+          <div class="summary-value">2</div>
+          <div class="summary-sub">$1,240 at risk</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <select class="filter-select">
+          <option>All Fleets</option>
+          <option>Heavy Haul</option>
+          <option>Pneumatic</option>
+          <option>Aggregate</option>
+          <option>Flatbed</option>
+          <option>Walking Floor</option>
+          <option>TMF</option>
+        </select>
+        <select class="filter-select">
+          <option>All Customers</option>
+          <option>Martin Marietta</option>
+          <option>Cemex Materials</option>
+          <option>Vulcan Industries</option>
+        </select>
+        <select class="filter-select">
+          <option>All Types</option>
+          <option>Detention</option>
+          <option>Layover</option>
+          <option>TONU</option>
+          <option>Diversion</option>
+        </select>
+        <select class="filter-select">
+          <option>All Status</option>
+          <option>Awaiting Customer</option>
+          <option>Pending Dispatch Mgr</option>
+          <option>Escalated</option>
+        </select>
+        <div class="filters-spacer"></div>
+        <div class="auto-refresh">Auto-refresh: 60s</div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Age</th>
+              <th>ID / Load</th>
+              <th>Customer</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Driver / Truck</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="age-normal">4 hrs</span></td>
+              <td>
+                <div class="cell-primary">ACC-4521</div>
+                <div class="cell-secondary">LD-78234</div>
+              </td>
+              <td>
+                <div class="cell-primary">Martin Marietta</div>
+                <div class="cell-secondary">Orlando Quarry</div>
+              </td>
+              <td>Detention <span class="cell-secondary">(3 hrs)</span></td>
+              <td><span class="cell-amount">$225</span></td>
+              <td>
+                <div class="cell-primary">Rodriguez, M.</div>
+                <div class="cell-secondary">T-1847</div>
+              </td>
+              <td><span class="status-badge status-customer">Awaiting Customer Approval</span></td>
+              <td>
+                <div class="btn-actions">
+                  <button class="btn btn-view" onclick="openModal('detail')">View</button>
+                  <button class="btn btn-approve">Approve</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="age-normal">18 hrs</span></td>
+              <td>
+                <div class="cell-primary">ACC-4519</div>
+                <div class="cell-secondary">LD-78229</div>
+              </td>
+              <td>
+                <div class="cell-primary">Cemex Materials</div>
+                <div class="cell-secondary">Tampa Terminal</div>
+              </td>
+              <td>Layover</td>
+              <td>
+                <span class="cell-amount highlight">$650</span>
+                <div class="cell-amount-note">VP approval req'd</div>
+              </td>
+              <td>
+                <div class="cell-primary">Thompson, K.</div>
+                <div class="cell-secondary">T-2103</div>
+              </td>
+              <td><span class="status-badge status-pending">Pending Dispatch Manager</span></td>
+              <td>
+                <div class="btn-actions">
+                  <button class="btn btn-view" onclick="openModal('detail')">View</button>
+                  <button class="btn btn-approve">Approve</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="escalated">
+              <td><span class="age-danger">52 hrs</span></td>
+              <td>
+                <div class="cell-primary">ACC-4517</div>
+                <div class="cell-secondary">LD-78221</div>
+              </td>
+              <td>
+                <div class="cell-primary">Vulcan Industries</div>
+                <div class="cell-secondary">Jacksonville</div>
+              </td>
+              <td>TONU</td>
+              <td>
+                <span class="cell-amount highlight">$850</span>
+                <div class="cell-amount-note">VP approval req'd</div>
+              </td>
+              <td>
+                <div class="cell-primary">Garcia, R.</div>
+                <div class="cell-secondary">T-1654</div>
+              </td>
+              <td><span class="status-badge status-escalated">Escalated - VP Approval</span></td>
+              <td>
+                <div class="btn-actions">
+                  <button class="btn btn-view" onclick="openModal('detail')">View</button>
+                  <button class="btn btn-approve">Approve</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="age-normal">12 hrs</span></td>
+              <td>
+                <div class="cell-primary">ACC-4515</div>
+                <div class="cell-secondary">LD-78218</div>
+              </td>
+              <td>
+                <div class="cell-primary">Florida Rock</div>
+                <div class="cell-secondary">Ocala Distribution</div>
+              </td>
+              <td>Diversion</td>
+              <td><span class="cell-amount">$340</span></td>
+              <td>
+                <div class="cell-primary">Williams, D.</div>
+                <div class="cell-secondary">T-1932</div>
+              </td>
+              <td><span class="status-badge status-customer">Awaiting Customer Approval</span></td>
+              <td>
+                <div class="btn-actions">
+                  <button class="btn btn-view" onclick="openModal('detail')">View</button>
+                  <button class="btn btn-approve">Approve</button>
+                </div>
+              </td>
+            </tr>
+            <tr class="warning-row">
+              <td><span class="age-warning">36 hrs</span></td>
+              <td>
+                <div class="cell-primary">ACC-4512</div>
+                <div class="cell-secondary">LD-78209</div>
+              </td>
+              <td>
+                <div class="cell-primary">Ranger Construction</div>
+                <div class="cell-secondary">Fort Myers Site</div>
+              </td>
+              <td>Driver Assist</td>
+              <td><span class="cell-amount">$175</span></td>
+              <td>
+                <div class="cell-primary">Martinez, J.</div>
+                <div class="cell-secondary">T-2087</div>
+              </td>
+              <td><span class="status-badge status-pending">Pending Dispatch Manager</span></td>
+              <td>
+                <div class="btn-actions">
+                  <button class="btn btn-view" onclick="openModal('detail')">View</button>
+                  <button class="btn btn-approve">Approve</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Detention Monitor Tab -->
+    <div class="tab-content" id="detention">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Live Detention Monitor</h2>
+          <p class="section-subtitle">Real-time geofence tracking • Auto-triggers enabled</p>
+        </div>
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          <span class="live-text">Live</span>
+        </div>
+      </div>
+
+      <div class="detention-grid">
+        <!-- Warning Card -->
+        <div class="detention-card warning">
+          <div class="detention-header">
+            <span class="detention-status warning">WARNING SENT</span>
+            <span class="detention-time">1:24</span>
+          </div>
+          <div class="detention-details">
+            <div class="detention-row">
+              <span class="detention-label">Load:</span>
+              <span class="detention-value">LD-78251</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Customer:</span>
+              <span class="detention-value">Cemex Materials</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Location:</span>
+              <span class="detention-value">Tampa Terminal</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Appt Time:</span>
+              <span class="detention-value">10:00 AM</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Arrived:</span>
+              <span class="detention-value success">9:47 AM ✓</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Threshold:</span>
+              <span class="detention-value">2 hrs</span>
+            </div>
+          </div>
+          <div class="detention-footer">
+            <div class="detention-progress-label">Chargeable in 36 minutes</div>
+            <div class="progress-bar">
+              <div class="progress-fill warning" style="width: 70%"></div>
+            </div>
+          </div>
+          <div class="detention-sent-note">Warning sent to: dispatch@cemex.com at 10:47 AM</div>
+        </div>
+
+        <!-- Chargeable Card -->
+        <div class="detention-card chargeable">
+          <div class="detention-header">
+            <span class="detention-status chargeable">CHARGEABLE</span>
+            <span class="detention-time">3:12</span>
+          </div>
+          <div class="detention-details">
+            <div class="detention-row">
+              <span class="detention-label">Load:</span>
+              <span class="detention-value">LD-78234</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Customer:</span>
+              <span class="detention-value">Martin Marietta</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Location:</span>
+              <span class="detention-value">Orlando Quarry</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Appt Time:</span>
+              <span class="detention-value">8:00 AM</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Arrived:</span>
+              <span class="detention-value success">7:52 AM ✓</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Rate:</span>
+              <span class="detention-value">$75/hr</span>
+            </div>
+          </div>
+          <div class="detention-footer">
+            <div class="detention-billable">
+              <span class="detention-billable-label">Billable:</span>
+              <span class="detention-billable-amount">$225.00</span>
+            </div>
+            <div class="detention-billable-note">1 hr 12 min over threshold</div>
+            <button class="btn btn-process">Process Charge</button>
+          </div>
+        </div>
+
+        <!-- Monitoring Card -->
+        <div class="detention-card monitoring">
+          <div class="detention-header">
+            <span class="detention-status monitoring">MONITORING</span>
+            <span class="detention-time">0:32</span>
+          </div>
+          <div class="detention-details">
+            <div class="detention-row">
+              <span class="detention-label">Load:</span>
+              <span class="detention-value">LD-78259</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Customer:</span>
+              <span class="detention-value">Florida Rock</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Location:</span>
+              <span class="detention-value">Ocala Distribution</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Appt Time:</span>
+              <span class="detention-value">11:30 AM</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Arrived:</span>
+              <span class="detention-value success">11:28 AM ✓</span>
+            </div>
+            <div class="detention-row">
+              <span class="detention-label">Threshold:</span>
+              <span class="detention-value">2 hrs</span>
+            </div>
+          </div>
+          <div class="detention-footer">
+            <div class="detention-progress-label">Warning at 1:00 (in 28 min)</div>
+            <div class="progress-bar">
+              <div class="progress-fill monitoring" style="width: 27%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accessorial Codes Tab -->
+    <div class="tab-content" id="codes">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Accessorial Codes</h2>
+          <p class="section-subtitle">Global configuration for all fleets</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('newCode')">+ Add Accessorial Code</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Charge Structure</th>
+              <th>Approval Tier</th>
+              <th>Driver Paid</th>
+              <th>Driver Pay Method</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-badge">DET</span></td>
+              <td class="cell-primary">Detention</td>
+              <td>Per Hour</td>
+              <td><span class="tier-badge tier-1">Tier 1: Auto</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Percentage (50%)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">LAY</span></td>
+              <td class="cell-primary">Layover</td>
+              <td>Per Day</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Flat ($150)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">STP</span></td>
+              <td class="cell-primary">Stop Off</td>
+              <td>Flat + Mileage</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Flat ($50)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">DIV</span></td>
+              <td class="cell-primary">Diversion</td>
+              <td>Flat + OOR Miles</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Same as Billed</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">TNU</span></td>
+              <td class="cell-primary">TONU</td>
+              <td>Flat Fee</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Percentage (75%)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">DRV</span></td>
+              <td class="cell-primary">Driver Assist</td>
+              <td>Flat Fee</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Flat ($75)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">TRP</span></td>
+              <td class="cell-primary">Tarping</td>
+              <td>Flat Fee</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Flat ($50)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">HAZ</span></td>
+              <td class="cell-primary">Hazmat</td>
+              <td>Flat Fee</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-no">No</span></td>
+              <td class="cell-secondary">N/A</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">TOL</span></td>
+              <td class="cell-primary">Tolls</td>
+              <td>Pass-through</td>
+              <td><span class="tier-badge tier-1">Tier 1: Auto</span></td>
+              <td><span class="driver-paid-no">No</span></td>
+              <td class="cell-secondary">N/A</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">OVW</span></td>
+              <td class="cell-primary">Overweight</td>
+              <td>Variable</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-no">No</span></td>
+              <td class="cell-secondary">N/A</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">OOR</span></td>
+              <td class="cell-primary">Out of Route Miles</td>
+              <td>Per Mile</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Same as Billed</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">RDL</span></td>
+              <td class="cell-primary">Re-delivery</td>
+              <td>Flat Fee</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Percentage (50%)</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">PRM</span></td>
+              <td class="cell-primary">Permits</td>
+              <td>Pass-through</td>
+              <td><span class="tier-badge tier-1">Tier 1: Auto</span></td>
+              <td><span class="driver-paid-no">No</span></td>
+              <td class="cell-secondary">N/A</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-badge">EMP</span></td>
+              <td class="cell-primary">Empty Miles</td>
+              <td>Per Mile</td>
+              <td><span class="tier-badge tier-2">Tier 2: Dispatch Mgr</span></td>
+              <td><span class="driver-paid-yes">✓ Yes</span></td>
+              <td class="cell-secondary">Same as Billed</td>
+              <td><span class="status-badge status-approved">Active</span></td>
+              <td><button class="btn btn-view">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Customer Rate Cards Tab -->
+    <div class="tab-content" id="ratecards">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Customer Accessorial Rate Cards</h2>
+          <p class="section-subtitle">Customer-specific rates and billing preferences</p>
+        </div>
+        <button class="btn btn-primary">+ New Rate Card</button>
+      </div>
+
+      <div class="rate-card">
+        <div class="rate-card-header">
+          <div>
+            <h3 class="rate-card-title">Martin Marietta</h3>
+            <p class="rate-card-subtitle">Rate Card ID: RC-0042 • Effective: Jan 1, 2025</p>
+          </div>
+          <div class="rate-card-actions">
+            <button class="btn btn-secondary">Duplicate</button>
+            <button class="btn btn-primary">Edit</button>
+          </div>
+        </div>
+
+        <div class="billing-prefs">
+          <h4 class="billing-prefs-title">BILLING PREFERENCES</h4>
+          <div class="billing-prefs-grid">
+            <div>
+              <span class="billing-pref-label">Charge Display:</span>
+              <span class="billing-pref-value">Itemized Separately</span>
+            </div>
+            <div>
+              <span class="billing-pref-label">Bill-To Code:</span>
+              <span class="billing-pref-value">Same as Freight</span>
+            </div>
+            <div>
+              <span class="billing-pref-label">Invoice Method:</span>
+              <span class="billing-pref-value">Include on Freight Invoice</span>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Accessorial</th>
+              <th>Rate</th>
+              <th>Threshold</th>
+              <th>Override Billing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-primary">Detention</td>
+              <td>$75.00 / hour</td>
+              <td class="cell-secondary">After 2 hours</td>
+              <td class="cell-secondary">—</td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Layover</td>
+              <td>$350.00 / day</td>
+              <td class="cell-secondary">—</td>
+              <td class="cell-secondary">—</td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Stop Off</td>
+              <td>$100.00 + $2.50/mi</td>
+              <td class="cell-secondary">—</td>
+              <td class="cell-secondary">—</td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Diversion</td>
+              <td>$150.00 + $3.00/mi OOR</td>
+              <td class="cell-secondary">—</td>
+              <td class="cell-secondary">—</td>
+            </tr>
+            <tr>
+              <td class="cell-primary">TONU</td>
+              <td>$400.00 flat</td>
+              <td class="cell-secondary">—</td>
+              <td class="cell-secondary">—</td>
+            </tr>
+            <tr>
+              <td class="cell-primary">Tolls</td>
+              <td>Pass-through + $5.00 fee</td>
+              <td class="cell-secondary">—</td>
+              <td><span class="override-note">Combined with freight</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- New Code Modal -->
+  <div class="modal-overlay" id="newCodeModal">
+    <div class="modal large">
+      <div class="modal-header">
+        <h3 class="modal-title">New Accessorial Code</h3>
+        <button class="modal-close" onclick="closeModal('newCode')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-section">
+          <h4 class="form-section-title">BASIC INFO</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Code</label>
+              <input type="text" class="form-input code" placeholder="e.g., DET" maxlength="3">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-input" placeholder="e.g., Detention">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-input" placeholder="Brief description">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">CHARGE STRUCTURE</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Charge Type</label>
+              <select class="form-select">
+                <option>Flat Fee</option>
+                <option>Per Hour</option>
+                <option>Per Day</option>
+                <option>Per Mile</option>
+                <option>Percentage of Freight</option>
+                <option>Pass-through (Actual Cost)</option>
+                <option>Flat + Per Mile</option>
+                <option>Variable (Multiple Options)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Default Amount</label>
+              <div class="form-input-wrapper">
+                <span class="form-input-prefix">$</span>
+                <input type="text" class="form-input with-prefix" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-checkbox-label">
+              <input type="checkbox">
+              Add processing fee to pass-through
+            </label>
+            <p class="form-hint" style="margin-left: 1.5rem;">Fee will be bundled, not itemized on invoice</p>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">APPROVAL TIER</h4>
+          <label class="form-option">
+            <input type="radio" name="tier">
+            <div class="form-option-content">
+              <span class="form-option-title">Tier 1: Auto-Apply</span>
+              <p class="form-option-desc">System applies automatically (geofence/pass-through)</p>
+            </div>
+          </label>
+          <label class="form-option">
+            <input type="radio" name="tier" checked>
+            <div class="form-option-content">
+              <span class="form-option-title">Tier 2: Dispatch Manager</span>
+              <p class="form-option-desc">Requires Dispatch Manager approval</p>
+            </div>
+          </label>
+          <label class="form-option">
+            <input type="radio" name="tier">
+            <div class="form-option-content">
+              <span class="form-option-title">Tier 3: VP of Ops</span>
+              <p class="form-option-desc">Requires VP of Operations approval</p>
+            </div>
+          </label>
+          <p class="form-hint warning">Note: Charges over $500 automatically escalate to Tier 3</p>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">DRIVER PAY</h4>
+          <label class="form-checkbox-label">
+            <input type="checkbox" checked>
+            Driver is paid for this accessorial
+          </label>
+          <div class="driver-pay-options">
+            <div class="driver-pay-option">
+              <label class="form-radio-label">
+                <input type="radio" name="driverPay">
+                Same as amount billed to customer
+              </label>
+            </div>
+            <div class="driver-pay-option">
+              <label class="form-radio-label">
+                <input type="radio" name="driverPay" checked>
+                Flat amount:
+              </label>
+              <input type="text" class="form-input" placeholder="$0.00" style="width: 6rem;">
+            </div>
+            <div class="driver-pay-option">
+              <label class="form-radio-label">
+                <input type="radio" name="driverPay">
+                Percentage of billed:
+              </label>
+              <input type="text" class="form-input" placeholder="50%" style="width: 4rem;">
+            </div>
+          </div>
+          <p class="form-hint" style="margin-left: 1.5rem;">Driver pay follows this configuration—no overrides allowed</p>
+        </div>
+
+        <div class="form-section">
+          <h4 class="form-section-title">BILLING DEFAULTS</h4>
+          <div class="form-group">
+            <label class="form-label">Charge Display</label>
+            <select class="form-select">
+              <option>Itemized Separately</option>
+              <option>Combined with Freight (Single Line)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bill-To Code</label>
+            <select class="form-select">
+              <option>Same as Freight</option>
+              <option>Separate Code</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Invoice Method</label>
+            <select class="form-select">
+              <option>Include on Freight Invoice</option>
+              <option>Separate Accessorial Invoice</option>
+            </select>
+          </div>
+          <p class="form-hint">These defaults can be overridden per customer in their rate card</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('newCode')">Cancel</button>
+        <button class="btn btn-primary">Create Accessorial Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal large">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">ACC-4521 • Detention</h3>
+          <p class="modal-subtitle">Load LD-78234 • Martin Marietta</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('detail')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-status-banner">
+          <div class="detail-status-left">
+            <span class="detail-status-dot"></span>
+            <span class="detail-status-text">Awaiting Customer Approval</span>
+          </div>
+          <span class="detail-status-time">Sent 4 hrs ago</span>
+        </div>
+
+        <div class="detail-grid">
+          <div>
+            <div class="detail-item">
+              <span class="detail-label">LOCATION</span>
+              <p class="detail-value">Orlando Quarry</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">APPOINTMENT</span>
+              <p class="detail-value">8:00 AM</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">ACTUAL ARRIVAL</span>
+              <p class="detail-value success">7:52 AM ✓ On Time</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">TIME ON-SITE</span>
+              <p class="detail-value">3 hrs 12 min</p>
+            </div>
+          </div>
+          <div>
+            <div class="detail-item">
+              <span class="detail-label">DRIVER</span>
+              <p class="detail-value">Rodriguez, M.</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">TRUCK</span>
+              <p class="detail-value">T-1847</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">THRESHOLD</span>
+              <p class="detail-value">2 hours</p>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">RATE</span>
+              <p class="detail-value">$75.00 / hour</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="charge-summary">
+          <div class="charge-row">
+            <span class="charge-label">Billable Hours</span>
+            <span class="charge-value">3 hrs</span>
+          </div>
+          <div class="charge-row">
+            <span class="charge-label">Rate</span>
+            <span class="charge-value">$75.00 / hr</span>
+          </div>
+          <div class="charge-row total">
+            <span class="charge-label total">Total Charge</span>
+            <span class="charge-value total">$225.00</span>
+          </div>
+          <div class="charge-row driver-pay">
+            <span class="charge-label">Driver Pay (50%)</span>
+            <span class="charge-value driver-pay">$112.50</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <h4 class="audit-section-title">AUDIT TRAIL</h4>
+          <div class="audit-list">
+            <div class="audit-item">
+              <span class="audit-time">11:12 AM</span>
+              <span class="audit-text">System auto-triggered detention (geofence)</span>
+            </div>
+            <div class="audit-item">
+              <span class="audit-time">11:12 AM</span>
+              <span class="audit-text">Customer approval request sent to dispatch@martinmarietta.com</span>
+            </div>
+            <div class="audit-item">
+              <span class="audit-time">9:00 AM</span>
+              <span class="audit-text">1-hour warning sent to customer</span>
+            </div>
+            <div class="audit-item">
+              <span class="audit-time">7:52 AM</span>
+              <span class="audit-text">Driver entered geofence (on-time arrival confirmed)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <h4 class="audit-section-title">ATTACHMENTS</h4>
+          <div class="attachments-list">
+            <div class="attachment-item">📄 geofence_log.pdf</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="audit-section-title">NOTES</h4>
+          <p class="notes-text">No notes added.</p>
+        </div>
+      </div>
+      <div class="modal-footer split">
+        <div>
+          <button class="btn btn-danger">Waive Charge</button>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="closeModal('detail')">Close</button>
+          <button class="btn btn-warning">Resend to Customer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Modal Functions
+    function openModal(modalName) {
+      document.getElementById(modalName + 'Modal').classList.add('active');
+    }
+
+    function closeModal(modalName) {
+      document.getElementById(modalName + 'Modal').classList.remove('active');
+    }
+
+    // Close modal when clicking overlay
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+          overlay.classList.remove('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

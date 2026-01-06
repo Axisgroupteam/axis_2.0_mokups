@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AXIS - Accessorial Module Process Flows</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #cbd5e1;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(30, 41, 59, 0.5);
+      border-bottom: 1px solid #334155;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .logo span {
+      color: #60a5fa;
+    }
+
+    .header-divider {
+      color: #475569;
+    }
+
+    .header-title {
+      color: #94a3b8;
+    }
+
+    /* Navigation */
+    .nav {
+      background: rgba(30, 41, 59, 0.3);
+      border-bottom: 1px solid #334155;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .nav-tab {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-tab:hover {
+      color: #cbd5e1;
+    }
+
+    .nav-tab.active {
+      color: #60a5fa;
+      border-bottom-color: #60a5fa;
+    }
+
+    /* Main */
+    .main {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Flow Container */
+    .flow-container {
+      background: rgba(30, 41, 59, 0.3);
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .flow-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .flow-description {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Flow Diagram */
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: fit-content;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .flow-row.spread {
+      gap: 3rem;
+    }
+
+    /* Flow Nodes */
+    .node {
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+      min-width: 160px;
+      position: relative;
+    }
+
+    .node-start {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+      border-radius: 2rem;
+    }
+
+    .node-end {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      border-radius: 2rem;
+    }
+
+    .node-process {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+
+    .node-decision {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+      transform: rotate(0deg);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      padding: 1.5rem 2rem;
+      min-width: 140px;
+    }
+
+    .node-decision-box {
+      background: rgba(245, 158, 11, 0.2);
+      border: 2px solid rgba(245, 158, 11, 0.5);
+      color: #fcd34d;
+      border-radius: 0.25rem;
+    }
+
+    .node-auto {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+
+    .node-manual {
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #c4b5fd;
+    }
+
+    .node-alert {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .node-customer {
+      background: rgba(6, 182, 212, 0.2);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: #67e8f9;
+    }
+
+    .node-waiting {
+      background: rgba(100, 116, 139, 0.2);
+      border: 1px solid rgba(100, 116, 139, 0.4);
+      color: #cbd5e1;
+    }
+
+    .node-label {
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Arrows */
+    .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      font-size: 1.25rem;
+    }
+
+    .arrow-down {
+      height: 2rem;
+    }
+
+    .arrow-down::after {
+      content: "↓";
+    }
+
+    .arrow-right::after {
+      content: "→";
+    }
+
+    .arrow-left::after {
+      content: "←";
+    }
+
+    .arrow-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      background: #0f172a;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      margin: 0 0.5rem;
+    }
+
+    .arrow-label.yes {
+      color: #4ade80;
+    }
+
+    .arrow-label.no {
+      color: #f87171;
+    }
+
+    /* Branch Container */
+    .branch-container {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-top: 0.5rem;
+    }
+
+    .branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .branch-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+
+    .branch-label.yes {
+      color: #4ade80;
+    }
+
+    .branch-label.no {
+      color: #f87171;
+    }
+
+    /* Connector Lines */
+    .connector-horizontal {
+      width: 100px;
+      height: 2px;
+      background: #475569;
+      position: relative;
+    }
+
+    .connector-vertical {
+      width: 2px;
+      height: 30px;
+      background: #475569;
+    }
+
+    .connector-t {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .connector-t-top {
+      width: 2px;
+      height: 15px;
+      background: #475569;
+    }
+
+    .connector-t-horizontal {
+      width: 200px;
+      height: 2px;
+      background: #475569;
+    }
+
+    .connector-t-branches {
+      display: flex;
+      justify-content: space-between;
+      width: 200px;
+    }
+
+    .connector-t-branch {
+      width: 2px;
+      height: 15px;
+      background: #475569;
+    }
+
+    /* Swimlane */
+    .swimlane-container {
+      display: flex;
+      gap: 0;
+      margin-top: 1rem;
+    }
+
+    .swimlane {
+      flex: 1;
+      border: 1px solid #334155;
+      min-height: 500px;
+    }
+
+    .swimlane:first-child {
+      border-radius: 0.5rem 0 0 0.5rem;
+    }
+
+    .swimlane:last-child {
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .swimlane-header {
+      background: rgba(30, 41, 59, 0.5);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #334155;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .swimlane-header.system {
+      color: #60a5fa;
+    }
+
+    .swimlane-header.dispatcher {
+      color: #a78bfa;
+    }
+
+    .swimlane-header.manager {
+      color: #fbbf24;
+    }
+
+    .swimlane-header.customer {
+      color: #2dd4bf;
+    }
+
+    .swimlane-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #334155;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -1.75rem;
+      top: 0.25rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: #60a5fa;
+      border: 2px solid #0f172a;
+    }
+
+    .timeline-dot.warning {
+      background: #fbbf24;
+    }
+
+    .timeline-dot.danger {
+      background: #f87171;
+    }
+
+    .timeline-dot.success {
+      background: #4ade80;
+    }
+
+    .timeline-time {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-content {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #334155;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .legend-color {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 0.25rem;
+    }
+
+    .legend-color.start {
+      background: linear-gradient(135deg, #059669, #10b981);
+    }
+
+    .legend-color.end {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+    }
+
+    .legend-color.process {
+      background: rgba(59, 130, 246, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.6);
+    }
+
+    .legend-color.decision {
+      background: rgba(245, 158, 11, 0.4);
+      border: 1px solid rgba(245, 158, 11, 0.6);
+    }
+
+    .legend-color.auto {
+      background: rgba(34, 197, 94, 0.4);
+      border: 1px solid rgba(34, 197, 94, 0.6);
+    }
+
+    .legend-color.manual {
+      background: rgba(168, 85, 247, 0.4);
+      border: 1px solid rgba(168, 85, 247, 0.6);
+    }
+
+    .legend-color.customer {
+      background: rgba(6, 182, 212, 0.4);
+      border: 1px solid rgba(6, 182, 212, 0.6);
+    }
+
+    .legend-color.alert {
+      background: rgba(239, 68, 68, 0.4);
+      border: 1px solid rgba(239, 68, 68, 0.6);
+    }
+
+    /* Section Divider */
+    .section-divider {
+      margin: 2rem 0;
+      border-top: 1px dashed #334155;
+    }
+
+    /* Horizontal Flow */
+    .horizontal-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Sub-process box */
+    .subprocess {
+      border: 1px dashed #475569;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .subprocess-title {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    /* Notes */
+    .flow-note {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid #f59e0b;
+      padding: 0.75rem 1rem;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #fcd34d;
+    }
+
+    .flow-note-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .flow-note-text {
+      color: #94a3b8;
+      font-size: 0.8125rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo"><span>AXIS</span></div>
+      <span class="header-divider">|</span>
+      <span class="header-title">Accessorial Module Process Flows</span>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <button class="nav-tab active" data-tab="lifecycle">Accessorial Lifecycle</button>
+    <button class="nav-tab" data-tab="detention">Detention Automation</button>
+    <button class="nav-tab" data-tab="approval">Customer Approval</button>
+    <button class="nav-tab" data-tab="dispute">Dispute Resolution</button>
+    <button class="nav-tab" data-tab="tiers">Approval Tiers</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Accessorial Lifecycle -->
+    <div class="tab-content active" id="lifecycle">
+      <h1 class="page-title">Accessorial Lifecycle Flow</h1>
+      <p class="page-subtitle">End-to-end process from accessorial creation to invoice</p>
+
+      <div class="flow-container">
+        <div class="flow-diagram">
+          <!-- Start -->
+          <div class="node node-start">Accessorial Trigger</div>
+          <div class="arrow arrow-down"></div>
+
+          <!-- Trigger Type Decision -->
+          <div class="node node-decision-box">Trigger Type?</div>
+          
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label">AUTO</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-auto">
+                <div class="node-label">System</div>
+                Geofence Detection<br>(Detention, Tolls)
+              </div>
+            </div>
+            <div class="branch">
+              <div class="branch-label">MANUAL</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-manual">
+                <div class="node-label">Dispatcher</div>
+                Add from Load Screen<br>(Stop Off, Tarping, etc.)
+              </div>
+            </div>
+          </div>
+
+          <div class="arrow arrow-down"></div>
+
+          <!-- Disposition -->
+          <div class="node node-decision-box">Disposition?</div>
+
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label yes">BILL TO CUSTOMER</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-process">
+                Customer Rate Card<br>Applied
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-decision-box">Amount > $500?</div>
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-alert">Escalate to VP</div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label no">NO</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-process">Standard Tier</div>
+                </div>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-customer">
+                <div class="node-label">Customer</div>
+                Awaiting Approval
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-decision-box">Approved?</div>
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-auto">Ready for Invoice</div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label no">DISPUTED</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-alert">Dispute Workflow</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label no">ABSORB</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-manual">
+                Select Reason Code
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-waiting">
+                <div class="node-label">Level 2 Manager</div>
+                Pending Approval
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-decision-box">Approved?</div>
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-auto">Absorbed<br>(Driver Paid)</div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label no">NO</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-process">Change to Bill</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arrow arrow-down" style="margin-top: 1rem;"></div>
+          <div class="node node-end">Invoice / Complete</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-color start"></div> Start/Trigger</div>
+          <div class="legend-item"><div class="legend-color end"></div> End State</div>
+          <div class="legend-item"><div class="legend-color process"></div> Process Step</div>
+          <div class="legend-item"><div class="legend-color decision"></div> Decision Point</div>
+          <div class="legend-item"><div class="legend-color auto"></div> Auto/System Action</div>
+          <div class="legend-item"><div class="legend-color manual"></div> Manual/User Action</div>
+          <div class="legend-item"><div class="legend-color customer"></div> Customer Action</div>
+          <div class="legend-item"><div class="legend-color alert"></div> Alert/Escalation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detention Automation -->
+    <div class="tab-content" id="detention">
+      <h1 class="page-title">Detention Automation Flow</h1>
+      <p class="page-subtitle">Geofence-based detention tracking and auto-triggering</p>
+
+      <div class="flow-container">
+        <div class="flow-diagram">
+          <div class="node node-start">Driver Approaches Location</div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-auto">
+            <div class="node-label">System</div>
+            Driver Enters Geofence
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-decision-box">Arrived On Time?</div>
+
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label yes">YES (≤ Appointment)</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-auto">
+                Start Detention Clock<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Eligible for charges</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-process">
+                Monitoring Active<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Countdown to threshold</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+
+              <div class="node node-decision-box">1 Hr Before Threshold?</div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-customer">
+                <div class="node-label">Customer</div>
+                1-Hour Warning Sent<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Email + Text + Portal</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+
+              <div class="node node-decision-box">Threshold Reached?</div>
+
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-alert">
+                    <div class="node-label">Auto-Trigger</div>
+                    Detention Charge Created
+                  </div>
+                  <div class="arrow arrow-down"></div>
+                  <div class="node node-customer">
+                    Customer Approval<br>Request Sent
+                  </div>
+                  <div class="arrow arrow-down"></div>
+                  <div class="node node-process">
+                    Continue Tracking<br>
+                    <span style="font-size: 0.75rem; opacity: 0.8;">Accumulate hours</span>
+                  </div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label no">NO (Driver Departs)</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-auto">No Charge<br>
+                    <span style="font-size: 0.75rem; opacity: 0.8;">Within threshold</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label no">NO (Late Arrival)</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-waiting">
+                <div class="node-label">Not Eligible</div>
+                No Auto-Detention<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Driver arrived late</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">No Charge</div>
+            </div>
+          </div>
+
+          <div class="arrow arrow-down" style="margin-top: 1rem;"></div>
+          <div class="node node-auto">
+            Driver Exits Geofence
+          </div>
+          <div class="arrow arrow-down"></div>
+          <div class="node node-process">
+            Final Hours Calculated<br>
+            <span style="font-size: 0.75rem; opacity: 0.8;">Rate × Hours = Charge</span>
+          </div>
+          <div class="arrow arrow-down"></div>
+          <div class="node node-end">Proceed to Customer Approval</div>
+        </div>
+
+        <div class="flow-note">
+          <div class="flow-note-title">Key Business Rule</div>
+          <div class="flow-note-text">Detention is ONLY chargeable if driver arrived ON or BEFORE the appointment time. Late arrivals are not eligible for detention charges, regardless of wait time.</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-color start"></div> Start</div>
+          <div class="legend-item"><div class="legend-color end"></div> End</div>
+          <div class="legend-item"><div class="legend-color auto"></div> System Auto-Action</div>
+          <div class="legend-item"><div class="legend-color customer"></div> Customer Notification</div>
+          <div class="legend-item"><div class="legend-color alert"></div> Charge Triggered</div>
+          <div class="legend-item"><div class="legend-color decision"></div> Decision</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Approval -->
+    <div class="tab-content" id="approval">
+      <h1 class="page-title">Customer Approval Flow</h1>
+      <p class="page-subtitle">Pre-invoice approval workflow with escalation</p>
+
+      <div class="flow-container">
+        <div class="flow-diagram">
+          <div class="node node-start">Accessorial Charge Created</div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-process">
+            Load Customer Rate Card<br>
+            <span style="font-size: 0.75rem; opacity: 0.8;">Apply negotiated rates & billing prefs</span>
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-auto">
+            <div class="node-label">System</div>
+            Generate Approval Request
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="horizontal-flow">
+            <div class="node node-customer" style="min-width: 120px;">
+              Email Sent
+            </div>
+            <div class="node node-customer" style="min-width: 120px;">
+              Text Sent<br>
+              <span style="font-size: 0.7rem; opacity: 0.8;">(if preferred)</span>
+            </div>
+            <div class="node node-customer" style="min-width: 120px;">
+              Portal<br>Notification
+            </div>
+          </div>
+
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-waiting">
+            <div class="node-label">Status</div>
+            Awaiting Customer Approval
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-decision-box">Customer Response?</div>
+
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label yes">APPROVED</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-auto">
+                Status → APPROVED
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">Ready for Invoice</div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label no">REJECTED / DISPUTED</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-alert">
+                Status → DISPUTED
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-manual">
+                Assign to Level 2<br>Manager
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">Dispute Workflow</div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label">NO RESPONSE (24 hrs)</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-alert">
+                <div class="node-label">Escalation</div>
+                24-Hour Timeout
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="horizontal-flow">
+                <div class="node node-customer" style="min-width: 140px;">
+                  Escalate to<br>Customer Manager
+                </div>
+                <div class="node node-manual" style="min-width: 140px;">
+                  Notify Our<br>Dispatch Manager
+                </div>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-waiting">
+                Continue Waiting<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Follow-up initiated</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-note">
+          <div class="flow-note-title">Important</div>
+          <div class="flow-note-text">There is NO auto-approval. Charges require explicit customer confirmation before invoicing. This eliminates invoice surprises and reduces disputes.</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-color start"></div> Start</div>
+          <div class="legend-item"><div class="legend-color end"></div> End</div>
+          <div class="legend-item"><div class="legend-color auto"></div> System Action</div>
+          <div class="legend-item"><div class="legend-color customer"></div> Customer Touchpoint</div>
+          <div class="legend-item"><div class="legend-color manual"></div> Internal Action</div>
+          <div class="legend-item"><div class="legend-color alert"></div> Escalation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dispute Resolution -->
+    <div class="tab-content" id="dispute">
+      <h1 class="page-title">Dispute Resolution Flow</h1>
+      <p class="page-subtitle">48-hour SLA dispute handling process</p>
+
+      <div class="flow-container">
+        <div class="flow-diagram">
+          <div class="node node-start">Customer Disputes Charge</div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-auto">
+            <div class="node-label">System</div>
+            Status → DISPUTED
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-manual">
+            <div class="node-label">Auto-Assign</div>
+            Route to Level 2 Manager<br>(Dispatch Manager)
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-process">
+            Gather Documentation<br>
+            <span style="font-size: 0.75rem; opacity: 0.8;">Geofence logs, timestamps, BOL, driver notes</span>
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-manual">
+            <div class="node-label">Manager</div>
+            Review Evidence
+          </div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-decision-box">Resolution?</div>
+
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label yes">UPHOLD</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-auto">
+                Charge Confirmed<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Evidence supports charge</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-customer">
+                Notify Customer<br>of Decision
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">Proceed to Invoice</div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label">REDUCE</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-manual">
+                Adjust Amount<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Partial credit</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-customer">
+                Notify Customer<br>of Adjustment
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">Invoice Reduced Amt</div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label no">WAIVE</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-manual">
+                Select Waive<br>Reason Code
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-auto">
+                Charge Cancelled<br>
+                <span style="font-size: 0.75rem; opacity: 0.8;">Logged for reporting</span>
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-end">No Invoice</div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="subprocess">
+            <div class="subprocess-title">SLA Escalation (if no resolution in 48 hrs)</div>
+            <div class="flow-diagram">
+              <div class="horizontal-flow">
+                <div class="node node-waiting">48 Hours Elapsed</div>
+                <div class="arrow arrow-right"></div>
+                <div class="node node-alert">SLA Breach Flagged</div>
+                <div class="arrow arrow-right"></div>
+                <div class="node node-alert">Escalate to Level 3+<br>(VP of Operations)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-note">
+          <div class="flow-note-title">SLA Requirement</div>
+          <div class="flow-note-text">All disputes must be resolved within 48 hours. SLA breaches are logged as a performance metric for dispatch managers.</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-color start"></div> Start</div>
+          <div class="legend-item"><div class="legend-color end"></div> End</div>
+          <div class="legend-item"><div class="legend-color auto"></div> System Action</div>
+          <div class="legend-item"><div class="legend-color manual"></div> Manager Action</div>
+          <div class="legend-item"><div class="legend-color customer"></div> Customer Notification</div>
+          <div class="legend-item"><div class="legend-color alert"></div> Escalation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approval Tiers -->
+    <div class="tab-content" id="tiers">
+      <h1 class="page-title">Approval Tier Logic</h1>
+      <p class="page-subtitle">Decision tree for determining approval authority</p>
+
+      <div class="flow-container">
+        <div class="flow-diagram">
+          <div class="node node-start">Accessorial Added to Load</div>
+          <div class="arrow arrow-down"></div>
+
+          <div class="node node-decision-box">Accessorial Type?</div>
+
+          <div class="branch-container">
+            <div class="branch">
+              <div class="branch-label">TIER 1 TYPES</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-auto">
+                Detention (Auto)<br>
+                Tolls<br>
+                Permits
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-decision-box">Amount > $500?</div>
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label no">NO</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-auto">
+                    <div class="node-label">Tier 1</div>
+                    Auto-Apply<br>
+                    <span style="font-size: 0.75rem; opacity: 0.8;">No approval needed</span>
+                  </div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-alert">
+                    <div class="node-label">Tier 3</div>
+                    VP of Operations
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="branch">
+              <div class="branch-label">TIER 2 TYPES</div>
+              <div class="connector-vertical"></div>
+              <div class="node node-manual">
+                Stop Off, Diversion<br>
+                Tarping, Hazmat<br>
+                Layover, TONU<br>
+                Driver Assist<br>
+                Overweight, Re-delivery<br>
+                Out of Route, Empty Miles
+              </div>
+              <div class="arrow arrow-down"></div>
+              <div class="node node-decision-box">Amount > $500?</div>
+              <div class="branch-container">
+                <div class="branch">
+                  <div class="branch-label no">NO</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-manual">
+                    <div class="node-label">Tier 2</div>
+                    Dispatch Manager
+                  </div>
+                </div>
+                <div class="branch">
+                  <div class="branch-label yes">YES</div>
+                  <div class="connector-vertical"></div>
+                  <div class="node node-alert">
+                    <div class="node-label">Tier 3</div>
+                    VP of Operations
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="subprocess">
+            <div class="subprocess-title">Absorption Override</div>
+            <div class="flow-diagram">
+              <div class="horizontal-flow">
+                <div class="node node-process">Any Accessorial</div>
+                <div class="arrow arrow-right"></div>
+                <div class="node node-decision-box" style="padding: 0.75rem 1rem; clip-path: none;">Absorb?</div>
+                <div class="arrow arrow-right"></div>
+                <div class="node node-manual">
+                  <div class="node-label">Always</div>
+                  Level 2 Manager<br>Approval Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-note">
+          <div class="flow-note-title">$500 Rule</div>
+          <div class="flow-note-text">Any single accessorial exceeding $500 automatically escalates to Level 3 (VP of Operations), regardless of the accessorial type's default tier.</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-color start"></div> Start</div>
+          <div class="legend-item"><div class="legend-color auto"></div> Tier 1 (Auto)</div>
+          <div class="legend-item"><div class="legend-color manual"></div> Tier 2 (Dispatch Mgr)</div>
+          <div class="legend-item"><div class="legend-color alert"></div> Tier 3 (VP Ops)</div>
+          <div class="legend-item"><div class="legend-color decision"></div> Decision</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Tab Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active from all tabs
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active to clicked tab
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

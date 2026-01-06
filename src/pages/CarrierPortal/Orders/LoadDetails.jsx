@@ -22,6 +22,12 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -59,6 +65,8 @@ import {
   Upload,
   Image,
   X,
+  MoreHorizontalIcon,
+  PencilIcon,
 } from "lucide-react";
 import { MdEdit } from "react-icons/md";
 
@@ -242,15 +250,122 @@ const LoadDetails = () => {
     setIsEditSheetOpen(false);
   };
 
-  // Mock additional charges data
+  // Mock additional charges data - Load-specific accessorials
   const additionalCharges = [
-    { id: 1, code: "FSC", description: "Fuel Surcharge", unit: "Per Mile", chargeCustomer: "$0.45", payDriver: "Yes", driverRate: "$0.35" },
-    { id: 2, code: "DET", description: "Detention Fee", unit: "Per Hour", chargeCustomer: "$75.00", payDriver: "Yes", driverRate: "$50.00" },
-    { id: 3, code: "LMP", description: "Lumper Fee", unit: "Flat", chargeCustomer: "$150.00", payDriver: "No", driverRate: "-" },
-    { id: 4, code: "LAY", description: "Layover", unit: "Per Day", chargeCustomer: "$250.00", payDriver: "Yes", driverRate: "$200.00" },
-    { id: 5, code: "TARP", description: "Tarp Fee", unit: "Flat", chargeCustomer: "$75.00", payDriver: "Yes", driverRate: "$50.00" },
-    { id: 6, code: "STOP", description: "Stop Off Charge", unit: "Per Stop", chargeCustomer: "$50.00", payDriver: "Yes", driverRate: "$35.00" },
+    {
+      id: 1,
+      code: "DET",
+      name: "Detention",
+      quantity: 2,
+      rate: 75.00,
+      amount: 150.00,
+      driverPay: 75.00,
+      status: "Approved",
+      addedBy: "System (Auto)",
+      dateAdded: "Dec 10, 2024",
+      notes: "Arrived on time, waited 2 hours at pickup"
+    },
+    {
+      id: 2,
+      code: "TRP",
+      name: "Tarping",
+      quantity: 1,
+      rate: 75.00,
+      amount: 75.00,
+      driverPay: 50.00,
+      status: "Approved",
+      addedBy: "John Smith",
+      dateAdded: "Dec 10, 2024",
+      notes: "Load required tarping per customer request"
+    },
+    {
+      id: 3,
+      code: "STP",
+      name: "Stop Off",
+      quantity: 1,
+      rate: 100.00,
+      amount: 100.00,
+      driverPay: 50.00,
+      status: "Pending",
+      addedBy: "Mike Davis",
+      dateAdded: "Dec 10, 2024",
+      notes: "Additional stop at warehouse"
+    },
   ];
+
+  // Available accessorial codes for selection
+  const accessorialCodes = [
+    { code: "DET", name: "Detention", rate: 75.00, chargeType: "Per Hour", driverPayMethod: "percentage", driverPayAmount: 50 },
+    { code: "LAY", name: "Layover", rate: 350.00, chargeType: "Per Day", driverPayMethod: "flat", driverPayAmount: 150 },
+    { code: "STP", name: "Stop Off", rate: 100.00, chargeType: "Flat + Mileage", driverPayMethod: "flat", driverPayAmount: 50 },
+    { code: "DIV", name: "Diversion", rate: 150.00, chargeType: "Flat + OOR Miles", driverPayMethod: "same", driverPayAmount: 0 },
+    { code: "TNU", name: "TONU", rate: 400.00, chargeType: "Flat Fee", driverPayMethod: "percentage", driverPayAmount: 75 },
+    { code: "DRV", name: "Driver Assist", rate: 75.00, chargeType: "Flat Fee", driverPayMethod: "flat", driverPayAmount: 75 },
+    { code: "TRP", name: "Tarping", rate: 75.00, chargeType: "Flat Fee", driverPayMethod: "flat", driverPayAmount: 50 },
+    { code: "HAZ", name: "Hazmat", rate: 150.00, chargeType: "Flat Fee", driverPayMethod: "none", driverPayAmount: 0 },
+    { code: "TOL", name: "Tolls", rate: 0, chargeType: "Pass-through", driverPayMethod: "none", driverPayAmount: 0 },
+    { code: "OVW", name: "Overweight", rate: 0, chargeType: "Variable", driverPayMethod: "none", driverPayAmount: 0 },
+    { code: "OOR", name: "Out of Route Miles", rate: 3.00, chargeType: "Per Mile", driverPayMethod: "same", driverPayAmount: 0 },
+    { code: "RDL", name: "Re-delivery", rate: 200.00, chargeType: "Flat Fee", driverPayMethod: "percentage", driverPayAmount: 50 },
+    { code: "PRM", name: "Permits", rate: 0, chargeType: "Pass-through", driverPayMethod: "none", driverPayAmount: 0 },
+    { code: "EMP", name: "Empty Miles", rate: 2.50, chargeType: "Per Mile", driverPayMethod: "same", driverPayAmount: 0 },
+  ];
+
+  // Form state for adding/editing accessorial
+  const [accessorialFormData, setAccessorialFormData] = useState({
+    code: "",
+    quantity: "1",
+    rate: "",
+    notes: "",
+  });
+  const [editingCharge, setEditingCharge] = useState(null);
+
+  const handleAccessorialCodeChange = (code) => {
+    const selectedCode = accessorialCodes.find(c => c.code === code);
+    setAccessorialFormData({
+      ...accessorialFormData,
+      code: code,
+      rate: selectedCode ? selectedCode.rate.toString() : "",
+    });
+  };
+
+  const getSelectedAccessorialInfo = () => {
+    return accessorialCodes.find(c => c.code === accessorialFormData.code);
+  };
+
+  const calculateAmount = () => {
+    const rate = parseFloat(accessorialFormData.rate) || 0;
+    const quantity = parseFloat(accessorialFormData.quantity) || 1;
+    return rate * quantity;
+  };
+
+  const calculateDriverPay = () => {
+    const selectedCode = getSelectedAccessorialInfo();
+    if (!selectedCode) return 0;
+
+    const amount = calculateAmount();
+    if (selectedCode.driverPayMethod === "same") return amount;
+    if (selectedCode.driverPayMethod === "flat") return selectedCode.driverPayAmount;
+    if (selectedCode.driverPayMethod === "percentage") return amount * (selectedCode.driverPayAmount / 100);
+    return 0;
+  };
+
+  const handleEditCharge = (charge) => {
+    setEditingCharge(charge);
+    setAccessorialFormData({
+      code: charge.code,
+      quantity: charge.quantity.toString(),
+      rate: charge.rate.toString(),
+      notes: charge.notes || "",
+    });
+    setIsChargeSheetOpen(true);
+  };
+
+  const handleCloseChargeSheet = () => {
+    setIsChargeSheetOpen(false);
+    setEditingCharge(null);
+    setAccessorialFormData({ code: "", quantity: "1", rate: "", notes: "" });
+  };
 
   // Filter configuration for additional charges
   const chargeFilterGroups = [
@@ -286,15 +401,66 @@ const LoadDetails = () => {
     },
   ];
 
-  // Mock product sales data
+  // Mock product sales data for this load
   const productSales = [
-    { id: 1, code: "CEM-I", name: "Cement Type I", unit: "Ton", price: "$85.00", cost: "$65.00" },
-    { id: 2, code: "CEM-II", name: "Cement Type II", unit: "Ton", price: "$90.00", cost: "$70.00" },
-    { id: 3, code: "CEM-III", name: "Cement Type III", unit: "Ton", price: "$95.00", cost: "$75.00" },
-    { id: 4, code: "FLY-A", name: "Flyash Class A", unit: "Ton", price: "$45.00", cost: "$30.00" },
-    { id: 5, code: "SLG-100", name: "Slag Grade 100", unit: "Ton", price: "$55.00", cost: "$40.00" },
-    { id: 6, code: "AGG-57", name: "Aggregate #57", unit: "Ton", price: "$25.00", cost: "$18.00" },
+    { id: 1, sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", quantity: 24, unitPrice: 45.00, total: 1080.00, addedBy: "John Smith", dateAdded: "Dec 10, 2024" },
+    { id: 2, sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", quantity: 12, unitPrice: 35.00, total: 420.00, addedBy: "Sarah Johnson", dateAdded: "Dec 10, 2024" },
   ];
+
+  // Available materials for selection (from Materials module)
+  const availableMaterials = [
+    { sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", defaultPrice: 45.00 },
+    { sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", defaultPrice: 35.00 },
+    { sku: "MAT-SD-002", name: "Fill Sand", uom: "ton", defaultPrice: 30.00 },
+    { sku: "MAT-CON-001", name: "Ready-Mix Concrete", uom: "cubic yard", defaultPrice: 125.00 },
+    { sku: "MAT-REC-001", name: "Recycled Concrete", uom: "ton", defaultPrice: 28.00 },
+    { sku: "MAT-ST-089", name: "#89 Stone", uom: "ton", defaultPrice: 42.00 },
+    { sku: "MAT-SD-003", name: "Masonry Sand", uom: "ton", defaultPrice: 38.00 },
+    { sku: "MAT-REC-002", name: "Asphalt Millings", uom: "ton", defaultPrice: 25.00 },
+  ];
+
+  // Form state for adding/editing product
+  const [productFormData, setProductFormData] = useState({
+    sku: "",
+    quantity: "",
+    unitPrice: "",
+  });
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  const handleProductChange = (sku) => {
+    const selectedMaterial = availableMaterials.find(m => m.sku === sku);
+    setProductFormData({
+      ...productFormData,
+      sku: sku,
+      unitPrice: selectedMaterial ? selectedMaterial.defaultPrice.toString() : "",
+    });
+  };
+
+  const getSelectedMaterialInfo = () => {
+    return availableMaterials.find(m => m.sku === productFormData.sku);
+  };
+
+  const calculateProductTotal = () => {
+    const price = parseFloat(productFormData.unitPrice) || 0;
+    const quantity = parseFloat(productFormData.quantity) || 0;
+    return price * quantity;
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setProductFormData({
+      sku: product.sku,
+      quantity: product.quantity.toString(),
+      unitPrice: product.unitPrice.toString(),
+    });
+    setIsProductSheetOpen(true);
+  };
+
+  const handleCloseProductSheet = () => {
+    setIsProductSheetOpen(false);
+    setEditingProduct(null);
+    setProductFormData({ sku: "", quantity: "", unitPrice: "" });
+  };
 
   // Filter configuration for product sales
   const [productFilters, setProductFilters] = useState([]);
@@ -455,17 +621,40 @@ const LoadDetails = () => {
   const chargesColumns = [
     {
       id: "actions",
-      header: "Action",
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Edit className="size-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600">
-            <Trash2 className="size-4" />
-          </Button>
-        </div>
-      ),
+      header: "Actions",
+      size: 60,
+      cell: ({ row }) => {
+        const charge = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="start" className="w-48">
+              <div className="px-2 py-1.5 border-b mb-1">
+                <p className="font-medium text-sm">{charge.name}</p>
+                <p className="text-xs text-muted-foreground">{charge.code}</p>
+              </div>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleEditCharge(charge)}
+              >
+                <PencilIcon className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
     },
     {
       accessorKey: "code",
@@ -473,54 +662,88 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Code" />
       ),
       cell: ({ row }) => (
-        <span className="font-mono font-medium">{row.getValue("code")}</span>
+        <span className="font-mono text-sm bg-blue-500/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded">
+          {row.getValue("code")}
+        </span>
       ),
     },
     {
-      accessorKey: "description",
+      accessorKey: "name",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Description" />
       ),
     },
     {
-      accessorKey: "unit",
+      accessorKey: "quantity",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Unit" />
+        <DataTableColumnHeader column={column} title="Qty/Hours" />
       ),
       cell: ({ row }) => (
-        <Badge variant="outline">{row.getValue("unit")}</Badge>
+        <span className="text-center">{row.getValue("quantity")}</span>
       ),
     },
     {
-      accessorKey: "chargeCustomer",
+      accessorKey: "rate",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Charge Customer" />
+        <DataTableColumnHeader column={column} title="Rate" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium text-green-600">{row.getValue("chargeCustomer")}</span>
+        <span className="font-medium">${row.getValue("rate").toFixed(2)}</span>
       ),
     },
     {
-      accessorKey: "payDriver",
+      accessorKey: "amount",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Pay Driver" />
+        <DataTableColumnHeader column={column} title="Amount" />
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium text-green-600">${row.getValue("amount").toFixed(2)}</span>
+      ),
+    },
+    {
+      accessorKey: "driverPay",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Driver Pay" />
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium text-amber-600">${row.getValue("driverPay").toFixed(2)}</span>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       cell: ({ row }) => {
-        const payDriver = row.getValue("payDriver");
+        const status = row.getValue("status");
+        const statusColors = {
+          Approved: "bg-green-500/10 text-green-700 border-green-500/50",
+          Pending: "bg-amber-500/10 text-amber-700 border-amber-500/50",
+          Disputed: "bg-red-500/10 text-red-700 border-red-500/50",
+        };
         return (
-          <Badge className={payDriver === "Yes" ? "bg-green-500/10 text-green-700 border-green-500/50" : "bg-red-500/10 text-red-700 border-red-500/50"}>
-            {payDriver}
+          <Badge className={statusColors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/50"}>
+            {status}
           </Badge>
         );
       },
     },
     {
-      accessorKey: "driverRate",
+      accessorKey: "addedBy",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Driver Rate" />
+        <DataTableColumnHeader column={column} title="Added By" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium">{row.getValue("driverRate")}</span>
+        <span className="text-sm text-muted-foreground">{row.getValue("addedBy")}</span>
+      ),
+    },
+    {
+      accessorKey: "dateAdded",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date Added" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">{row.getValue("dateAdded")}</span>
       ),
     },
   ];
@@ -529,58 +752,108 @@ const LoadDetails = () => {
   const productColumns = [
     {
       id: "actions",
-      header: "Action",
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Edit className="size-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600">
-            <Trash2 className="size-4" />
-          </Button>
-        </div>
-      ),
+      header: "Actions",
+      size: 60,
+      cell: ({ row }) => {
+        const product = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="start" className="w-48">
+              <div className="px-2 py-1.5 border-b mb-1">
+                <p className="font-medium text-sm">{product.name}</p>
+                <p className="text-xs text-muted-foreground">{product.sku}</p>
+              </div>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleEditProduct(product)}
+              >
+                <PencilIcon className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
     },
     {
-      accessorKey: "code",
+      accessorKey: "sku",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Code" />
+        <DataTableColumnHeader column={column} title="SKU" />
       ),
       cell: ({ row }) => (
-        <span className="font-mono font-medium">{row.getValue("code")}</span>
+        <span className="font-mono text-sm">{row.getValue("sku")}</span>
       ),
     },
     {
       accessorKey: "name",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Material Name" />
       ),
     },
     {
-      accessorKey: "unit",
+      accessorKey: "uom",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Unit" />
+        <DataTableColumnHeader column={column} title="UOM" />
       ),
       cell: ({ row }) => (
-        <Badge variant="outline">{row.getValue("unit")}</Badge>
+        <span className="text-muted-foreground">{row.getValue("uom")}</span>
       ),
     },
     {
-      accessorKey: "price",
+      accessorKey: "quantity",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Price" />
+        <DataTableColumnHeader column={column} title="Quantity" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium text-green-600">{row.getValue("price")}</span>
+        <span className="font-medium">{row.getValue("quantity")}</span>
       ),
     },
     {
-      accessorKey: "cost",
+      accessorKey: "unitPrice",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Cost" />
+        <DataTableColumnHeader column={column} title="Unit Price" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium text-amber-600">{row.getValue("cost")}</span>
+        <span className="font-medium">${row.getValue("unitPrice").toFixed(2)}</span>
+      ),
+    },
+    {
+      accessorKey: "total",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Total" />
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium text-green-600">${row.getValue("total").toFixed(2)}</span>
+      ),
+    },
+    {
+      accessorKey: "addedBy",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Added By" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">{row.getValue("addedBy")}</span>
+      ),
+    },
+    {
+      accessorKey: "dateAdded",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Date Added" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">{row.getValue("dateAdded")}</span>
       ),
     },
   ];
@@ -806,16 +1079,61 @@ const LoadDetails = () => {
 
           {/* Additional Charge Tab */}
           <TabsContent value="additional-charge" className="h-full mt-0 p-4">
-            <div className="flex items-center justify-center h-full">
-              <p className="text-muted-foreground">Upcoming...</p>
+            <div className="border border-border rounded-lg bg-background">
+              {/* Filter and Add Button */}
+              <div className="flex items-center justify-between px-2 py-2 border-b border-border">
+                <SmartFilter
+                  filterGroups={chargeFilterGroups}
+                  onFiltersChange={handleChargeFiltersChange}
+                />
+                {!isViewOnly && (
+                  <Button
+                    size="sm"
+                    onClick={() => setIsChargeSheetOpen(true)}
+                    className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+                  >
+                    <Plus className="size-3" />
+                    Add Accessorial
+                  </Button>
+                )}
+              </div>
+
+              {/* Data Table */}
+              <div className="px-4 pb-3">
+                <DataTable
+                  columns={chargesColumns}
+                  data={additionalCharges}
+                  showViewOptions={false}
+                />
+              </div>
             </div>
           </TabsContent>
 
           {/* Product Sale Tab */}
-          <TabsContent value="product-sale" className="h-full mt-0 p-4">
-            <div className="flex items-center justify-center h-full">
-              <p className="text-muted-foreground">Upcoming...</p>
+          <TabsContent value="product-sale" className="h-full mt-0 p-4 space-y-4">
+            {/* Filter and Add Button */}
+            <div className="flex items-center justify-between">
+              <SmartFilter
+                filterGroups={productFilterGroups}
+                onFiltersChange={handleProductFiltersChange}
+              />
+              {!isViewOnly && (
+                <Button
+                  onClick={() => setIsProductSheetOpen(true)}
+                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
+              )}
             </div>
+
+            {/* Data Table */}
+            <DataTable
+              columns={productColumns}
+              data={productSales}
+              showViewOptions={false}
+            />
           </TabsContent>
 
           {/* Audit Log Tab */}
@@ -987,47 +1305,133 @@ const LoadDetails = () => {
         </div>
       </Tabs>
 
-      {/* Add Charge Sheet */}
-      <Sheet open={isChargeSheetOpen} onOpenChange={setIsChargeSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+      {/* Add/Edit Accessorial Sheet */}
+      <Sheet open={isChargeSheetOpen} onOpenChange={(open) => {
+        if (!open) {
+          handleCloseChargeSheet();
+        }
+      }}>
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-lg font-bold text-foreground">
-              Add Additional Charge
+              {editingCharge ? "Edit Accessorial Charge" : "Add Accessorial Charge"}
             </SheetTitle>
           </SheetHeader>
-          <div className="space-y-4 mt-4 px-6">
+          <div className="space-y-5 mt-4 px-6">
+            {/* Accessorial Code Selection */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Charge Type <span className="text-red-500">*</span>
+                Accessorial Code <span className="text-red-500">*</span>
               </Label>
-              <Select>
-                <SelectTrigger className="h-10 w-full">
-                  <SelectValue placeholder="Select charge type" />
+              <Select
+                value={accessorialFormData.code}
+                onValueChange={handleAccessorialCodeChange}
+                disabled={!!editingCharge}
+              >
+                <SelectTrigger className={cn("h-10 w-full", editingCharge && "bg-muted")}>
+                  <SelectValue placeholder="Select accessorial code" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="fuel-surcharge">Fuel Surcharge</SelectItem>
-                  <SelectItem value="detention-fee">Detention Fee</SelectItem>
-                  <SelectItem value="lumper-fee">Lumper Fee</SelectItem>
-                  <SelectItem value="layover">Layover</SelectItem>
-                  <SelectItem value="accessorial">Accessorial</SelectItem>
+                  {accessorialCodes.map((code) => (
+                    <SelectItem key={code.code} value={code.code}>
+                      <span className="font-mono mr-2">{code.code}</span>
+                      <span className="text-muted-foreground">- {code.name}</span>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Selected Code Info */}
+            {getSelectedAccessorialInfo() && (
+              <div className="p-3 bg-muted/50 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Charge Type:</span>
+                  <Badge variant="outline">{getSelectedAccessorialInfo().chargeType}</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Default Rate:</span>
+                  <span className="font-medium">${getSelectedAccessorialInfo().rate.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Driver Pay:</span>
+                  <span className="text-sm">
+                    {getSelectedAccessorialInfo().driverPayMethod === "same" && "Same as Billed"}
+                    {getSelectedAccessorialInfo().driverPayMethod === "flat" && `$${getSelectedAccessorialInfo().driverPayAmount.toFixed(2)} Flat`}
+                    {getSelectedAccessorialInfo().driverPayMethod === "percentage" && `${getSelectedAccessorialInfo().driverPayAmount}% of Billed`}
+                    {getSelectedAccessorialInfo().driverPayMethod === "none" && "No Pay"}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Quantity/Hours/Miles */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Amount <span className="text-red-500">*</span>
+                Quantity/Hours/Miles <span className="text-red-500">*</span>
               </Label>
-              <Input type="number" placeholder="Enter amount" className="h-10" />
+              <Input
+                type="number"
+                min="0"
+                step="0.5"
+                placeholder="Enter quantity"
+                className="h-10"
+                value={accessorialFormData.quantity}
+                onChange={(e) => setAccessorialFormData({ ...accessorialFormData, quantity: e.target.value })}
+              />
             </div>
+
+            {/* Rate (editable) */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Rate <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  className="h-10 pl-7"
+                  value={accessorialFormData.rate}
+                  onChange={(e) => setAccessorialFormData({ ...accessorialFormData, rate: e.target.value })}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Rate auto-filled from code defaults. Override if needed.</p>
+            </div>
+
+            {/* Calculated Values */}
+            {accessorialFormData.code && accessorialFormData.rate && (
+              <div className="p-4 bg-card border rounded-lg space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Total Amount:</span>
+                  <span className="text-lg font-bold text-green-600">${calculateAmount().toFixed(2)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Driver Pay:</span>
+                  <span className="text-lg font-bold text-amber-600">${calculateDriverPay().toFixed(2)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Notes */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Notes</Label>
-              <Input placeholder="Enter notes" className="h-10" />
+              <Input
+                placeholder="Enter notes for this charge..."
+                className="h-10"
+                value={accessorialFormData.notes}
+                onChange={(e) => setAccessorialFormData({ ...accessorialFormData, notes: e.target.value })}
+              />
             </div>
-            <div className="flex gap-3 pt-4">
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-6 border-t">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsChargeSheetOpen(false)}
+                onClick={handleCloseChargeSheet}
                 className="flex-1 h-10"
               >
                 Cancel
@@ -1035,57 +1439,127 @@ const LoadDetails = () => {
               <Button
                 type="submit"
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                disabled={!accessorialFormData.code || !accessorialFormData.rate}
               >
-                Save
+                {editingCharge ? "Update Charge" : "Add Charge"}
               </Button>
             </div>
           </div>
         </SheetContent>
       </Sheet>
 
-      {/* Add Product Sheet */}
-      <Sheet open={isProductSheetOpen} onOpenChange={setIsProductSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+      {/* Add/Edit Product Sheet */}
+      <Sheet open={isProductSheetOpen} onOpenChange={(open) => {
+        if (!open) {
+          handleCloseProductSheet();
+        }
+      }}>
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-lg font-bold text-foreground">
-              Add Product Sale
+              {editingProduct ? "Edit Product Sale" : "Add Product Sale"}
             </SheetTitle>
           </SheetHeader>
-          <div className="space-y-4 mt-4 px-6">
+          <div className="space-y-5 mt-4 px-6">
+            {/* Material Selection */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Product <span className="text-red-500">*</span>
+                Material <span className="text-red-500">*</span>
               </Label>
-              <Select>
-                <SelectTrigger className="h-10 w-full">
-                  <SelectValue placeholder="Select product" />
+              <Select
+                value={productFormData.sku}
+                onValueChange={handleProductChange}
+                disabled={!!editingProduct}
+              >
+                <SelectTrigger className={cn("h-10 w-full", editingProduct && "bg-muted")}>
+                  <SelectValue placeholder="Select material" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cement-type-i">Cement Type I</SelectItem>
-                  <SelectItem value="cement-type-ii">Cement Type II</SelectItem>
-                  <SelectItem value="cement-type-iii">Cement Type III</SelectItem>
-                  <SelectItem value="flyash">Flyash</SelectItem>
-                  <SelectItem value="slag">Slag</SelectItem>
+                  {availableMaterials.map((material) => (
+                    <SelectItem key={material.sku} value={material.sku}>
+                      <span className="font-mono mr-2">{material.sku}</span>
+                      <span className="text-muted-foreground">- {material.name}</span>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Selected Material Info */}
+            {getSelectedMaterialInfo() && (
+              <div className="p-3 bg-muted/50 rounded-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Material:</span>
+                  <span className="font-medium">{getSelectedMaterialInfo().name}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">UOM:</span>
+                  <span className="text-sm">{getSelectedMaterialInfo().uom}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Default Price:</span>
+                  <span className="font-medium">${getSelectedMaterialInfo().defaultPrice.toFixed(2)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Quantity */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
                 Quantity <span className="text-red-500">*</span>
               </Label>
-              <Input type="number" placeholder="Enter quantity" className="h-10" />
+              <Input
+                type="number"
+                min="0"
+                step="0.5"
+                placeholder="Enter quantity"
+                className="h-10"
+                value={productFormData.quantity}
+                onChange={(e) => setProductFormData({ ...productFormData, quantity: e.target.value })}
+              />
+              {getSelectedMaterialInfo() && (
+                <p className="text-xs text-muted-foreground">
+                  Unit: {getSelectedMaterialInfo().uom}
+                </p>
+              )}
             </div>
+
+            {/* Unit Price */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
                 Unit Price <span className="text-red-500">*</span>
               </Label>
-              <Input type="number" placeholder="Enter unit price" className="h-10" />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  className="h-10 pl-7"
+                  value={productFormData.unitPrice}
+                  onChange={(e) => setProductFormData({ ...productFormData, unitPrice: e.target.value })}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">Price auto-filled from material defaults. Override if needed.</p>
             </div>
-            <div className="flex gap-3 pt-4">
+
+            {/* Calculated Total */}
+            {productFormData.sku && productFormData.unitPrice && productFormData.quantity && (
+              <div className="p-4 bg-card border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Total Amount:</span>
+                  <span className="text-lg font-bold text-green-600">${calculateProductTotal().toFixed(2)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-6 border-t">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsProductSheetOpen(false)}
+                onClick={handleCloseProductSheet}
                 className="flex-1 h-10"
               >
                 Cancel
@@ -1093,8 +1567,9 @@ const LoadDetails = () => {
               <Button
                 type="submit"
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                disabled={!productFormData.sku || !productFormData.unitPrice || !productFormData.quantity}
               >
-                Save
+                {editingProduct ? "Update Product" : "Add Product"}
               </Button>
             </div>
           </div>

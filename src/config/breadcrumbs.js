@@ -67,6 +67,10 @@ export const breadcrumbLabels = {
   queue: "Queue",
   carriers: "Carriers",
 
+  // Accessorial sections
+  accessorial: "Accessorial",
+  codes: "Accessorial Codes",
+
   // Common
   details: "Details",
   edit: "Edit",
@@ -92,4 +96,5 @@ export const nonLinkableSegments = [
   "fuel",
   "materials",
   "brokerage",
+  "accessorial",
 ];

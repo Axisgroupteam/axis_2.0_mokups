@@ -35,6 +35,9 @@ import {
   ChevronUpIcon,
   History,
   MessageSquare,
+  PencilIcon,
+  Trash2,
+  Package,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -74,6 +77,30 @@ const CustomerDetails = () => {
     importFile: null,
     rows: [{ id: 1, min: 0, max: 1, customerRate: 0, driverRate: 0 }],
     selectedCommodities: [],
+  });
+
+  // Additional Charges state
+  const [additionalChargesFilters, setAdditionalChargesFilters] = useState([]);
+  const [isChargeSheetOpen, setIsChargeSheetOpen] = useState(false);
+  const [editingCharge, setEditingCharge] = useState(null);
+  const [chargeFormData, setChargeFormData] = useState({
+    code: "",
+    name: "",
+    chargeType: "",
+    defaultAmount: "",
+    status: "Active",
+  });
+
+  // Product Sales state
+  const [productSalesFilters, setProductSalesFilters] = useState([]);
+  const [isProductSheetOpen, setIsProductSheetOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [productFormData, setProductFormData] = useState({
+    sku: "",
+    name: "",
+    uom: "",
+    defaultPrice: "",
+    status: "Active",
   });
 
   // All commodities list
@@ -295,7 +322,7 @@ const CustomerDetails = () => {
     (commodity) => !usedCommodities.includes(commodity)
   );
 
-  // Mock accessorial charges data
+  // Mock accessorial charges data (existing - for rates tab)
   const accessorialCharges = [
     {
       id: 1,
@@ -323,6 +350,260 @@ const CustomerDetails = () => {
       minCharge: "$50.00",
       maxCharge: "$200.00",
       status: "Inactive",
+    },
+  ];
+
+  // Additional Charges mock data (for customer-specific accessorial codes)
+  const additionalChargesData = [
+    { id: 1, code: "DET", name: "Detention", chargeType: "Per Hour", defaultAmount: 75.00, approvalTier: "tier1", driverPaid: true, driverPayMethod: "percentage", driverPayAmount: "50%", status: "Active" },
+    { id: 2, code: "LAY", name: "Layover", chargeType: "Per Day", defaultAmount: 350.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$150", status: "Active" },
+    { id: 3, code: "STP", name: "Stop Off", chargeType: "Flat + Mileage", defaultAmount: 100.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$50", status: "Active" },
+    { id: 4, code: "TNU", name: "TONU", chargeType: "Flat Fee", defaultAmount: 400.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "percentage", driverPayAmount: "75%", status: "Active" },
+    { id: 5, code: "DRV", name: "Driver Assist", chargeType: "Flat Fee", defaultAmount: 75.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$75", status: "Active" },
+    { id: 6, code: "TRP", name: "Tarping", chargeType: "Flat Fee", defaultAmount: 75.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$50", status: "Inactive" },
+  ];
+
+  // Product Sales mock data (customer-specific materials/products)
+  const productSalesData = [
+    { id: 1, sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", defaultPrice: 45.00, status: "Active" },
+    { id: 2, sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", defaultPrice: 35.00, status: "Active" },
+    { id: 3, sku: "MAT-SD-002", name: "Fill Sand", uom: "ton", defaultPrice: 30.00, status: "Active" },
+    { id: 4, sku: "MAT-CON-001", name: "Ready-Mix Concrete", uom: "cubic yard", defaultPrice: 125.00, status: "Active" },
+    { id: 5, sku: "MAT-REC-001", name: "Recycled Concrete", uom: "ton", defaultPrice: 28.00, status: "Inactive" },
+  ];
+
+  // Additional Charges filter groups
+  const additionalChargesFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        { key: "name", label: "Name", type: "input", group: "Basic", placeholder: "Search name..." },
+        { key: "status", label: "Status", type: "select", group: "Basic", options: [{ label: "Active", value: "Active" }, { label: "Inactive", value: "Inactive" }] },
+      ],
+    },
+  ];
+
+  // Product Sales filter groups
+  const productSalesFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        { key: "name", label: "Name", type: "input", group: "Basic", placeholder: "Search name..." },
+        { key: "status", label: "Status", type: "select", group: "Basic", options: [{ label: "Active", value: "Active" }, { label: "Inactive", value: "Inactive" }] },
+      ],
+    },
+  ];
+
+  const handleAdditionalChargesFiltersChange = useCallback((newFilters) => {
+    setAdditionalChargesFilters(newFilters);
+  }, []);
+
+  const handleProductSalesFiltersChange = useCallback((newFilters) => {
+    setProductSalesFilters(newFilters);
+  }, []);
+
+  // Charge handlers
+  const handleEditCharge = (charge) => {
+    setEditingCharge(charge);
+    setChargeFormData({
+      code: charge.code,
+      name: charge.name,
+      chargeType: charge.chargeType,
+      defaultAmount: charge.defaultAmount.toString(),
+      status: charge.status,
+    });
+    setIsChargeSheetOpen(true);
+  };
+
+  const handleCloseChargeSheet = () => {
+    setIsChargeSheetOpen(false);
+    setEditingCharge(null);
+    setChargeFormData({ code: "", name: "", chargeType: "", defaultAmount: "", status: "Active" });
+  };
+
+  // Product handlers
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setProductFormData({
+      sku: product.sku,
+      name: product.name,
+      uom: product.uom,
+      defaultPrice: product.defaultPrice.toString(),
+      status: product.status,
+    });
+    setIsProductSheetOpen(true);
+  };
+
+  const handleCloseProductSheet = () => {
+    setIsProductSheetOpen(false);
+    setEditingProduct(null);
+    setProductFormData({ sku: "", name: "", uom: "", defaultPrice: "", status: "Active" });
+  };
+
+  const getStatusBadgeColor = (status) => {
+    const colors = {
+      Active: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Inactive: "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
+    };
+    return colors[status] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+  };
+
+  const getTierBadgeColor = (tier) => {
+    const colors = {
+      tier1: "bg-green-500/10 text-green-700 border-green-500/50",
+      tier2: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      tier3: "bg-purple-500/10 text-purple-700 border-purple-500/50",
+    };
+    return colors[tier] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+  };
+
+  const getTierLabel = (tier) => {
+    const labels = { tier1: "Tier 1: Auto", tier2: "Tier 2: Dispatch Mgr", tier3: "Tier 3: VP Ops" };
+    return labels[tier] || tier;
+  };
+
+  // Additional Charges columns
+  const additionalChargesColumns = [
+    {
+      id: "actions",
+      header: "Actions",
+      size: 60,
+      cell: ({ row }) => {
+        const charge = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="start" className="w-48">
+              <div className="px-2 py-1.5 border-b mb-1">
+                <p className="font-medium text-sm">{charge.name}</p>
+                <p className="text-xs text-muted-foreground">{charge.code}</p>
+              </div>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => handleEditCharge(charge)}>
+                <PencilIcon className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "code",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+      cell: ({ row }) => (
+        <span className="font-mono text-sm bg-blue-500/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded">
+          {row.getValue("code")}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    },
+    {
+      accessorKey: "chargeType",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Charge Type" />,
+      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("chargeType")}</span>,
+    },
+    {
+      accessorKey: "defaultAmount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Default Amount" />,
+      cell: ({ row }) => <span className="font-medium">${row.getValue("defaultAmount").toFixed(2)}</span>,
+    },
+    {
+      accessorKey: "approvalTier",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Approval Tier" />,
+      cell: ({ row }) => {
+        const tier = row.getValue("approvalTier");
+        return <Badge className={getTierBadgeColor(tier)}>{getTierLabel(tier)}</Badge>;
+      },
+    },
+    {
+      accessorKey: "driverPayAmount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Driver Pay" />,
+      cell: ({ row }) => <span className="text-muted-foreground text-sm">{row.getValue("driverPayAmount")}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      cell: ({ row }) => {
+        const status = row.getValue("status");
+        return <Badge className={getStatusBadgeColor(status)}>{status}</Badge>;
+      },
+    },
+  ];
+
+  // Product Sales columns
+  const productSalesColumns = [
+    {
+      id: "actions",
+      header: "Actions",
+      size: 60,
+      cell: ({ row }) => {
+        const product = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="right" align="start" className="w-48">
+              <div className="px-2 py-1.5 border-b mb-1">
+                <p className="font-medium text-sm">{product.name}</p>
+                <p className="text-xs text-muted-foreground">{product.sku}</p>
+              </div>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => handleEditProduct(product)}>
+                <PencilIcon className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "sku",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="SKU" />,
+      cell: ({ row }) => <span className="font-mono text-sm">{row.getValue("sku")}</span>,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Material Name" />,
+    },
+    {
+      accessorKey: "uom",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="UOM" />,
+      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("uom")}</span>,
+    },
+    {
+      accessorKey: "defaultPrice",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Default Price" />,
+      cell: ({ row }) => <span className="font-medium">${row.getValue("defaultPrice").toFixed(2)}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      cell: ({ row }) => {
+        const status = row.getValue("status");
+        return <Badge className={getStatusBadgeColor(status)}>{status}</Badge>;
+      },
     },
   ];
 
@@ -691,6 +972,14 @@ const CustomerDetails = () => {
               <TrendingUpIcon className="size-4" />
               Rates
             </TabsTrigger>
+            <TabsTrigger value="additional-charges" className="h-full">
+              <DollarSignIcon className="size-4" />
+              Additional Charges
+            </TabsTrigger>
+            <TabsTrigger value="product-sales" className="h-full">
+              <Package className="size-4" />
+              Product Sales
+            </TabsTrigger>
             <TabsTrigger value="pickup-locations" className="h-full">
               <MapPinIcon className="size-4" />
               Pickup Locations
@@ -864,6 +1153,60 @@ const CustomerDetails = () => {
                   data={rateTables}
                   showViewOptions={false}
                   pageSize={10}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Additional Charges Tab */}
+          <TabsContent value="additional-charges" className="space-y-4 px-2 h-full mt-0">
+            <div className="border border-border rounded-lg bg-background">
+              <div className="flex items-center justify-between px-2 py-2 border-b border-border">
+                <SmartFilter
+                  filterGroups={additionalChargesFilterGroups}
+                  onFiltersChange={handleAdditionalChargesFiltersChange}
+                />
+                <Button
+                  size="sm"
+                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+                  onClick={() => setIsChargeSheetOpen(true)}
+                >
+                  <PlusIcon className="size-3" />
+                  Add Charge
+                </Button>
+              </div>
+              <div className="px-4 pb-3">
+                <DataTable
+                  columns={additionalChargesColumns}
+                  data={additionalChargesData}
+                  showViewOptions={false}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Product Sales Tab */}
+          <TabsContent value="product-sales" className="space-y-4 px-2 h-full mt-0">
+            <div className="border border-border rounded-lg bg-background">
+              <div className="flex items-center justify-between px-2 py-2 border-b border-border">
+                <SmartFilter
+                  filterGroups={productSalesFilterGroups}
+                  onFiltersChange={handleProductSalesFiltersChange}
+                />
+                <Button
+                  size="sm"
+                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
+                  onClick={() => setIsProductSheetOpen(true)}
+                >
+                  <PlusIcon className="size-3" />
+                  Add Product
+                </Button>
+              </div>
+              <div className="px-4 pb-3">
+                <DataTable
+                  columns={productSalesColumns}
+                  data={productSalesData}
+                  showViewOptions={false}
                 />
               </div>
             </div>
@@ -1149,6 +1492,169 @@ const CustomerDetails = () => {
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
               >
                 Create
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Add/Edit Charge Sheet */}
+      <Sheet open={isChargeSheetOpen} onOpenChange={(open) => {
+        if (!open) handleCloseChargeSheet();
+      }}>
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+          <SheetHeader className="pb-4 border-b px-6">
+            <SheetTitle className="text-xl font-bold text-foreground">
+              {editingCharge ? "Edit Charge" : "Add New Charge"}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="space-y-5 mt-4 px-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Code <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., DET"
+                value={chargeFormData.code}
+                onChange={(e) => setChargeFormData({ ...chargeFormData, code: e.target.value.toUpperCase() })}
+                className="h-10 font-mono"
+                maxLength={3}
+                disabled={!!editingCharge}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Name <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., Detention"
+                value={chargeFormData.name}
+                onChange={(e) => setChargeFormData({ ...chargeFormData, name: e.target.value })}
+                className="h-10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Charge Type <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., Per Hour, Flat Fee"
+                value={chargeFormData.chargeType}
+                onChange={(e) => setChargeFormData({ ...chargeFormData, chargeType: e.target.value })}
+                className="h-10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Default Amount <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={chargeFormData.defaultAmount}
+                  onChange={(e) => setChargeFormData({ ...chargeFormData, defaultAmount: e.target.value })}
+                  className="h-10 pl-7"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 pt-6 border-t">
+              <Button type="button" variant="outline" onClick={handleCloseChargeSheet} className="flex-1 h-10">
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                disabled={!chargeFormData.code || !chargeFormData.name || !chargeFormData.defaultAmount}
+              >
+                {editingCharge ? "Update Charge" : "Create Charge"}
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Add/Edit Product Sheet */}
+      <Sheet open={isProductSheetOpen} onOpenChange={(open) => {
+        if (!open) handleCloseProductSheet();
+      }}>
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+          <SheetHeader className="pb-4 border-b px-6">
+            <SheetTitle className="text-xl font-bold text-foreground">
+              {editingProduct ? "Edit Product" : "Add New Product"}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="space-y-5 mt-4 px-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                SKU <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., MAT-LS-057"
+                value={productFormData.sku}
+                onChange={(e) => setProductFormData({ ...productFormData, sku: e.target.value.toUpperCase() })}
+                className="h-10 font-mono"
+                disabled={!!editingProduct}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Material Name <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., #57 Limestone"
+                value={productFormData.name}
+                onChange={(e) => setProductFormData({ ...productFormData, name: e.target.value })}
+                className="h-10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                UOM (Unit of Measure) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                placeholder="e.g., ton, cubic yard"
+                value={productFormData.uom}
+                onChange={(e) => setProductFormData({ ...productFormData, uom: e.target.value })}
+                className="h-10"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Default Price <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={productFormData.defaultPrice}
+                  onChange={(e) => setProductFormData({ ...productFormData, defaultPrice: e.target.value })}
+                  className="h-10 pl-7"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 pt-6 border-t">
+              <Button type="button" variant="outline" onClick={handleCloseProductSheet} className="flex-1 h-10">
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                disabled={!productFormData.sku || !productFormData.name || !productFormData.defaultPrice}
+              >
+                {editingProduct ? "Update Product" : "Create Product"}
               </Button>
             </div>
           </div>
