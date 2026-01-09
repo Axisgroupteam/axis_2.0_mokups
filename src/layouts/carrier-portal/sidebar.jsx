@@ -46,6 +46,7 @@ import {
   ReceiptIcon,
   ShoppingBagIcon,
   BadgeDollarSignIcon,
+  BanknoteIcon,
   PhoneIncomingIcon,
   ClockIcon,
   CheckCircleIcon,
@@ -241,6 +242,30 @@ const CarrierPortalSidebar = () => {
     },
   ];
 
+  // Billing sub-menu items
+  const billingSubItems = [
+    {
+      label: "Ready to Invoice",
+      href: "/app/carrier-portal/billing/ready-to-invoice",
+      icon: FileTextIcon,
+    },
+    {
+      label: "Invoices",
+      href: "/app/carrier-portal/billing/invoices",
+      icon: ReceiptIcon,
+    },
+    {
+      label: "Ready to Settle",
+      href: "/app/carrier-portal/billing/ready-to-settle",
+      icon: WalletIcon,
+    },
+    {
+      label: "Settlements",
+      href: "/app/carrier-portal/billing/settlements",
+      icon: BanknoteIcon,
+    },
+  ];
+
   // Onboarding sub-menu items
   const onboardingSubItems = [
     {
@@ -267,6 +292,7 @@ const CarrierPortalSidebar = () => {
     const isMaterialsPath = materialsSubItems.some((item) => pathname === item.href);
     const isFuelPath = fuelSubItems.some((item) => pathname === item.href);
     const isAccessorialPath = accessorialSubItems.some((item) => pathname === item.href);
+    const isBillingPath = billingSubItems.some((item) => pathname === item.href) || pathname.includes("/billing/");
     const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
     const isSettingsPath = settingsSubItems.some((item) => pathname === item.href);
 
@@ -282,6 +308,8 @@ const CarrierPortalSidebar = () => {
       setOpenMenu("fuel");
     } else if (isAccessorialPath) {
       setOpenMenu("accessorial");
+    } else if (isBillingPath) {
+      setOpenMenu("billing");
     } else if (isOnboardingPath) {
       setOpenMenu("onboarding");
     } else if (isSettingsPath) {
@@ -700,6 +728,67 @@ const CarrierPortalSidebar = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {accessorialSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Billing with Sub-menu */}
+              <Collapsible
+                open={openMenu === "billing"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "billing" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        (billingSubItems.some((item) => pathname === item.href) || pathname.includes("/billing/")) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                      )}
+                      isActive={billingSubItems.some(
+                        (item) => pathname === item.href
+                      ) || pathname.includes("/billing/")}
+                    >
+                      <DollarSignIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        Billing
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "billing" && "rotate-90"
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {billingSubItems.map((subItem) => {
                         const isActive = pathname === subItem.href;
                         const IconComponent = subItem.icon;
                         return (
