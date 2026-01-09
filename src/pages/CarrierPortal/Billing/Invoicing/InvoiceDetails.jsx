@@ -31,6 +31,16 @@ import {
   TruckIcon,
   MapPinIcon,
   PlusIcon,
+  PaperclipIcon,
+  CloudIcon,
+  CheckCircle2Icon,
+  RefreshCwIcon,
+  ExternalLinkIcon,
+  FileIcon,
+  ImageIcon,
+  FileStack,
+  Truck,
+  EyeIcon,
 } from "lucide-react";
 
 const InvoiceDetails = () => {
@@ -64,7 +74,57 @@ const InvoiceDetails = () => {
     paidAmount: 0.00,
     balanceDue: 10650.00,
     notes: "Thank you for your business. Payment is due within 15 days.",
+    // Invoice Type
+    invoiceType: "summary", // "summary" or "per-load"
+    loadCount: 5,
+    // PDF Info
+    pdfStatus: "generated",
+    pdfUrl: "/invoices/INV-2025-0001.pdf",
+    pdfGeneratedAt: "2025-01-05T14:30:00Z",
+    // QuickBooks Info
+    qbSyncStatus: "synced", // "synced", "pending", "failed", "not_enabled"
+    qbInvoiceId: "10045",
+    qbLastSyncAt: "2025-01-05T14:35:00Z",
+    qbPdfAttached: true,
   };
+
+  // Mock attachments
+  const attachments = [
+    {
+      id: 1,
+      type: "invoice_pdf",
+      name: "INV-2025-0001.pdf",
+      url: "/invoices/INV-2025-0001.pdf",
+      size: "245 KB",
+      uploadedAt: "2025-01-05T14:30:00Z",
+    },
+    {
+      id: 2,
+      type: "pod",
+      name: "POD-ML-2025-001245.pdf",
+      url: "/documents/POD-ML-2025-001245.pdf",
+      size: "1.2 MB",
+      loadNo: "ML-2025-001245",
+      uploadedAt: "2025-01-03T16:45:00Z",
+    },
+    {
+      id: 3,
+      type: "pod",
+      name: "POD-ML-2025-001246.pdf",
+      url: "/documents/POD-ML-2025-001246.pdf",
+      size: "980 KB",
+      loadNo: "ML-2025-001246",
+      uploadedAt: "2025-01-03T17:20:00Z",
+    },
+    {
+      id: 4,
+      type: "scale_ticket",
+      name: "TKT-78501.pdf",
+      url: "/documents/TKT-78501.pdf",
+      size: "156 KB",
+      uploadedAt: "2025-01-03T16:50:00Z",
+    },
+  ];
 
   // Mock line items (loads)
   const lineItems = [
@@ -153,6 +213,59 @@ const InvoiceDetails = () => {
       month: "short",
       day: "numeric",
     });
+  };
+
+  const formatDateTime = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getAttachmentIcon = (type) => {
+    switch (type) {
+      case "invoice_pdf":
+        return <FileText className="size-4 text-red-500" />;
+      case "pod":
+        return <ImageIcon className="size-4 text-blue-500" />;
+      case "scale_ticket":
+        return <FileIcon className="size-4 text-amber-500" />;
+      default:
+        return <FileIcon className="size-4 text-gray-500" />;
+    }
+  };
+
+  const getAttachmentTypeLabel = (type) => {
+    switch (type) {
+      case "invoice_pdf":
+        return "Invoice PDF";
+      case "pod":
+        return "POD";
+      case "scale_ticket":
+        return "Scale Ticket";
+      default:
+        return "Document";
+    }
+  };
+
+  const getInvoiceTypeBadge = () => {
+    if (invoice.invoiceType === "per-load") {
+      return (
+        <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/50">
+          <Truck className="size-3 mr-1" />
+          Per-Load
+        </Badge>
+      );
+    }
+    return (
+      <Badge className="bg-purple-500/10 text-purple-700 border-purple-500/50">
+        <FileStack className="size-3 mr-1" />
+        Summary
+      </Badge>
+    );
   };
 
   const getStatusBadge = (status) => {
@@ -278,9 +391,10 @@ const InvoiceDetails = () => {
                   {invoice.invoiceNo}
                 </h1>
                 <Badge className={getStatusBadge(invoice.status)}>{invoice.status}</Badge>
+                {getInvoiceTypeBadge()}
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                Invoice for {invoice.customer}
+                Invoice for {invoice.customer} • {invoice.loadCount} load(s)
               </p>
             </div>
           </div>
@@ -462,6 +576,158 @@ const InvoiceDetails = () => {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Attachments & Documents */}
+          <div className="border rounded-lg bg-card">
+            <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <PaperclipIcon className="size-4" />
+                Attachments & Documents ({attachments.length})
+              </h3>
+              <Button variant="outline" size="sm">
+                <PlusIcon className="size-3 mr-1" />
+                Add Attachment
+              </Button>
+            </div>
+            <div className="divide-y">
+              {attachments.map((attachment) => (
+                <div key={attachment.id} className="px-4 py-3 flex items-center justify-between hover:bg-muted/50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-muted">
+                      {getAttachmentIcon(attachment.type)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{attachment.name}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Badge variant="outline" className="text-xs px-1.5 py-0">
+                          {getAttachmentTypeLabel(attachment.type)}
+                        </Badge>
+                        <span>{attachment.size}</span>
+                        {attachment.loadNo && (
+                          <span className="font-mono">{attachment.loadNo}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm">
+                      <EyeIcon className="size-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <DownloadIcon className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* QuickBooks Integration */}
+          <div className="border rounded-lg bg-card">
+            <div className="px-4 py-3 border-b bg-muted">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <CloudIcon className="size-4" />
+                QuickBooks Integration
+              </h3>
+            </div>
+            <div className="p-4">
+              {invoice.qbSyncStatus === "synced" ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-full bg-green-500/10">
+                        <CheckCircle2Icon className="size-5 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-green-700">Synced to QuickBooks</p>
+                        <p className="text-xs text-muted-foreground">
+                          Last synced: {formatDateTime(invoice.qbLastSyncAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm">
+                        <RefreshCwIcon className="size-4 mr-2" />
+                        Re-sync
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <ExternalLinkIcon className="size-4 mr-2" />
+                        View in QB
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 pt-3 border-t">
+                    <div>
+                      <p className="text-xs text-muted-foreground">QB Invoice #</p>
+                      <p className="font-mono font-medium">{invoice.qbInvoiceId}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">PDF Attached</p>
+                      <Badge className={invoice.qbPdfAttached ? "bg-green-500/10 text-green-700 border-green-500/50" : "bg-gray-500/10 text-gray-700 border-gray-500/50"}>
+                        {invoice.qbPdfAttached ? "Yes" : "No"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Customer Synced</p>
+                      <Badge className="bg-green-500/10 text-green-700 border-green-500/50">
+                        Linked
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              ) : invoice.qbSyncStatus === "pending" ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-amber-500/10">
+                      <CloudIcon className="size-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-amber-700">Pending Sync</p>
+                      <p className="text-xs text-muted-foreground">
+                        Invoice will be synced to QuickBooks
+                      </p>
+                    </div>
+                  </div>
+                  <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    <CloudIcon className="size-4 mr-2" />
+                    Sync Now
+                  </Button>
+                </div>
+              ) : invoice.qbSyncStatus === "failed" ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-red-500/10">
+                      <CloudIcon className="size-5 text-red-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-red-700">Sync Failed</p>
+                      <p className="text-xs text-muted-foreground">
+                        Unable to sync to QuickBooks. Please retry.
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="outline">
+                    <RefreshCwIcon className="size-4 mr-2" />
+                    Retry Sync
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-gray-500/10">
+                      <CloudIcon className="size-5 text-gray-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-600">QuickBooks Not Enabled</p>
+                      <p className="text-xs text-muted-foreground">
+                        Enable QuickBooks sync in customer settings
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

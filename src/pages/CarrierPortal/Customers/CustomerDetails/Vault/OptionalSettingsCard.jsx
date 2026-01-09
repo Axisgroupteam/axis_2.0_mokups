@@ -1,5 +1,5 @@
 import { MdEdit } from "react-icons/md";
-import { Settings } from "lucide-react";
+import { Settings, CloudIcon, FileTextIcon, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const OptionalSettingsCard = () => {
@@ -11,6 +11,14 @@ const OptionalSettingsCard = () => {
     autoRenditionProcess: true,
     autoBill: true,
     readyToBill: false,
+    // QuickBooks Integration
+    qbSyncEnabled: true,
+    qbAccountId: "QB-ACC-4521",
+    qbLastSync: "2024-01-28T14:30:00Z",
+    qbSyncStatus: "connected", // "connected", "disconnected", "error"
+    // PDF Settings
+    autoGeneratePdf: true,
+    pdfTemplate: "Standard",
   };
 
   const BooleanBadge = ({ value }) => {
@@ -25,6 +33,43 @@ const OptionalSettingsCard = () => {
         {value ? "Yes" : "No"}
       </Badge>
     );
+  };
+
+  const QBStatusBadge = ({ status }) => {
+    const statusConfig = {
+      connected: {
+        className: "bg-emerald-500/10 text-emerald-700 border-emerald-500/50",
+        icon: <CheckCircle2 className="size-3 mr-1" />,
+        label: "Connected",
+      },
+      disconnected: {
+        className: "bg-gray-500/10 text-gray-700 border-gray-500/50",
+        icon: <XCircle className="size-3 mr-1" />,
+        label: "Disconnected",
+      },
+      error: {
+        className: "bg-red-500/10 text-red-700 border-red-500/50",
+        icon: <AlertCircle className="size-3 mr-1" />,
+        label: "Error",
+      },
+    };
+    const config = statusConfig[status] || statusConfig.disconnected;
+    return (
+      <Badge className={config.className}>
+        {config.icon}
+        {config.label}
+      </Badge>
+    );
+  };
+
+  const formatDateTime = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   return (
@@ -74,6 +119,56 @@ const OptionalSettingsCard = () => {
           <div className="px-4 py-2.5">
             <p className="text-xs text-muted-foreground mb-0.5">Ready to Bill</p>
             <BooleanBadge value={settingsData.readyToBill} />
+          </div>
+        </div>
+
+        {/* QuickBooks Integration Header */}
+        <div className="px-4 py-3 bg-muted/50 flex items-center gap-2">
+          <CloudIcon className="size-4 text-muted-foreground" />
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">QuickBooks Integration</p>
+        </div>
+
+        {/* QB Sync Enabled and Status */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Sync to QuickBooks</p>
+            <BooleanBadge value={settingsData.qbSyncEnabled} />
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Connection Status</p>
+            <QBStatusBadge status={settingsData.qbSyncStatus} />
+          </div>
+        </div>
+
+        {/* QB Account ID and Last Sync */}
+        {settingsData.qbSyncEnabled && (
+          <div className="grid grid-cols-2 divide-x divide-border">
+            <div className="px-4 py-2.5">
+              <p className="text-xs text-muted-foreground mb-0.5">QB Account ID</p>
+              <p className="text-sm font-mono font-medium text-foreground">{settingsData.qbAccountId}</p>
+            </div>
+            <div className="px-4 py-2.5">
+              <p className="text-xs text-muted-foreground mb-0.5">Last Sync</p>
+              <p className="text-sm font-medium text-foreground">{formatDateTime(settingsData.qbLastSync)}</p>
+            </div>
+          </div>
+        )}
+
+        {/* PDF Settings Header */}
+        <div className="px-4 py-3 bg-muted/50 flex items-center gap-2">
+          <FileTextIcon className="size-4 text-muted-foreground" />
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">PDF Settings</p>
+        </div>
+
+        {/* Auto Generate PDF and Template */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Auto Generate PDF</p>
+            <BooleanBadge value={settingsData.autoGeneratePdf} />
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">PDF Template</p>
+            <p className="text-sm font-medium text-foreground">{settingsData.pdfTemplate}</p>
           </div>
         </div>
       </div>

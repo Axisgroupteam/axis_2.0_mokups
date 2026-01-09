@@ -1,5 +1,6 @@
 import { MdEdit } from "react-icons/md";
-import { FileText } from "lucide-react";
+import { FileText, FileStack, Truck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const BillCard = () => {
   // Mock bill data
@@ -10,7 +11,43 @@ const BillCard = () => {
     lastPayment: "2024-01-25",
     averageDays: 18,
     since: "2022-03-15",
-    summaryBillFormat: "Detailed",
+    // Invoice Preferences
+    invoiceType: "summary", // "summary" or "per-load"
+    invoiceGrouping: "weekly", // "weekly", "bi-weekly", "monthly", "none"
+    attachPodToInvoice: true,
+    emailInvoice: true,
+    invoiceEmailRecipients: "billing@titanconstruction.com",
+  };
+
+  const InvoiceTypeBadge = ({ type }) => {
+    const isPerLoad = type === "per-load";
+    return (
+      <Badge
+        className={
+          isPerLoad
+            ? "bg-blue-500/10 text-blue-700 border-blue-500/50"
+            : "bg-purple-500/10 text-purple-700 border-purple-500/50"
+        }
+      >
+        {isPerLoad ? (
+          <><Truck className="size-3 mr-1" /> Per-Load</>
+        ) : (
+          <><FileStack className="size-3 mr-1" /> Summary</>
+        )}
+      </Badge>
+    );
+  };
+
+  const GroupingBadge = ({ grouping }) => {
+    const labels = {
+      weekly: "Weekly",
+      "bi-weekly": "Bi-Weekly",
+      monthly: "Monthly",
+      none: "No Grouping",
+    };
+    return (
+      <span className="text-sm font-medium text-foreground">{labels[grouping] || grouping}</span>
+    );
   };
 
   const formatDate = (dateString) => {
@@ -71,11 +108,58 @@ const BillCard = () => {
           </div>
         </div>
 
-        {/* Summary Bill Format */}
-        <div className="px-4 py-2.5">
-          <p className="text-xs text-muted-foreground mb-0.5">Summary Bill Format</p>
-          <p className="text-sm font-medium text-foreground">{billData.summaryBillFormat}</p>
+        {/* Invoice Preferences Header */}
+        <div className="px-4 py-3 bg-muted/50">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Invoice Preferences</p>
         </div>
+
+        {/* Invoice Type and Grouping */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-1">Invoice Type</p>
+            <InvoiceTypeBadge type={billData.invoiceType} />
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Invoice Grouping</p>
+            <GroupingBadge grouping={billData.invoiceGrouping} />
+          </div>
+        </div>
+
+        {/* Attach POD and Email Invoice */}
+        <div className="grid grid-cols-2 divide-x divide-border">
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Attach POD to Invoice</p>
+            <Badge
+              className={
+                billData.attachPodToInvoice
+                  ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/50"
+                  : "bg-gray-500/10 text-gray-700 border-gray-500/50"
+              }
+            >
+              {billData.attachPodToInvoice ? "Yes" : "No"}
+            </Badge>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Email Invoice</p>
+            <Badge
+              className={
+                billData.emailInvoice
+                  ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/50"
+                  : "bg-gray-500/10 text-gray-700 border-gray-500/50"
+              }
+            >
+              {billData.emailInvoice ? "Yes" : "No"}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Email Recipients */}
+        {billData.emailInvoice && (
+          <div className="px-4 py-2.5">
+            <p className="text-xs text-muted-foreground mb-0.5">Invoice Email Recipients</p>
+            <p className="text-sm font-medium text-primary">{billData.invoiceEmailRecipients}</p>
+          </div>
+        )}
       </div>
     </div>
   );

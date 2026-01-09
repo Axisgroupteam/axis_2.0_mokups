@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
 import SmartFilter from "@/components/SmartFilter";
 import {
@@ -30,6 +31,10 @@ import {
   TruckIcon,
   PackageIcon,
   CheckCircle2Icon,
+  FileStack,
+  Truck,
+  CloudIcon,
+  PaperclipIcon,
 } from "lucide-react";
 
 const ReadyToInvoice = () => {
@@ -37,6 +42,12 @@ const ReadyToInvoice = () => {
   const [filters, setFilters] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [showBatchInvoiceDialog, setShowBatchInvoiceDialog] = useState(false);
+
+  // Invoice creation options
+  const [invoiceType, setInvoiceType] = useState("summary"); // "summary" or "per-load"
+  const [autoGeneratePdf, setAutoGeneratePdf] = useState(true);
+  const [syncToQuickBooks, setSyncToQuickBooks] = useState(true);
+  const [attachPodDocuments, setAttachPodDocuments] = useState(true);
 
   // Mock data - loads that are complete and ready to be invoiced
   const readyToInvoiceData = [
@@ -506,42 +517,136 @@ const ReadyToInvoice = () => {
 
       {/* Batch Invoice Dialog */}
       <AlertDialog open={showBatchInvoiceDialog} onOpenChange={setShowBatchInvoiceDialog}>
-        <AlertDialogContent className="max-w-lg">
+        <AlertDialogContent className="max-w-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>Create Invoices</AlertDialogTitle>
             <AlertDialogDescription>
-              You are about to create invoices for {selectedRows.length} loads.
+              Configure invoice settings for {selectedRows.length} loads.
               {Object.keys(selectedByCustomer).length > 1 && (
-                <span className="block mt-2">
-                  This will generate {Object.keys(selectedByCustomer).length} separate invoices (one per customer).
+                <span className="block mt-1">
+                  Creating invoices for {Object.keys(selectedByCustomer).length} customers.
                 </span>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-3">
-            {Object.values(selectedByCustomer).map((group) => (
-              <div key={group.customerId} className="border rounded-lg p-3 bg-muted/50">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{group.customer}</p>
-                    <p className="text-xs text-muted-foreground">{group.loads.length} loads</p>
+
+          <div className="py-4 space-y-4">
+            {/* Customer Summary */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground">Customers</p>
+              {Object.values(selectedByCustomer).map((group) => (
+                <div key={group.customerId} className="border rounded-lg p-3 bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{group.customer}</p>
+                      <p className="text-xs text-muted-foreground">{group.loads.length} loads</p>
+                    </div>
+                    <p className="font-bold text-green-600">{formatCurrency(group.total)}</p>
                   </div>
-                  <p className="font-bold text-green-600">{formatCurrency(group.total)}</p>
                 </div>
+              ))}
+              <div className="border-t pt-3 flex items-center justify-between">
+                <span className="font-medium">Grand Total</span>
+                <span className="text-lg font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
               </div>
-            ))}
-            <div className="border-t pt-3 flex items-center justify-between">
-              <span className="font-medium">Grand Total</span>
-              <span className="text-lg font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
+            </div>
+
+            {/* Invoice Type Selection */}
+            <div className="space-y-3 pt-2 border-t">
+              <p className="text-sm font-medium">Invoice Type</p>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setInvoiceType("summary")}
+                  className={`p-3 border rounded-lg text-left transition-all ${
+                    invoiceType === "summary"
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "border-border hover:border-muted-foreground/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <FileStack className={`size-4 ${invoiceType === "summary" ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className="font-medium">Summary Invoice</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Combine all loads into one invoice per customer
+                  </p>
+                  {invoiceType === "summary" && (
+                    <p className="text-xs text-primary mt-2 font-medium">
+                      Creates {Object.keys(selectedByCustomer).length} invoice(s)
+                    </p>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInvoiceType("per-load")}
+                  className={`p-3 border rounded-lg text-left transition-all ${
+                    invoiceType === "per-load"
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "border-border hover:border-muted-foreground/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Truck className={`size-4 ${invoiceType === "per-load" ? "text-primary" : "text-muted-foreground"}`} />
+                    <span className="font-medium">Per-Load Invoice</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Create separate invoice for each load
+                  </p>
+                  {invoiceType === "per-load" && (
+                    <p className="text-xs text-primary mt-2 font-medium">
+                      Creates {selectedRows.length} invoice(s)
+                    </p>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Additional Options */}
+            <div className="space-y-3 pt-2 border-t">
+              <p className="text-sm font-medium">Options</p>
+              <div className="space-y-2">
+                <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
+                  <Checkbox
+                    checked={autoGeneratePdf}
+                    onCheckedChange={setAutoGeneratePdf}
+                  />
+                  <div className="flex items-center gap-2">
+                    <FileText className="size-4 text-muted-foreground" />
+                    <span className="text-sm">Auto-generate PDF after creation</span>
+                  </div>
+                </label>
+                <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
+                  <Checkbox
+                    checked={syncToQuickBooks}
+                    onCheckedChange={setSyncToQuickBooks}
+                  />
+                  <div className="flex items-center gap-2">
+                    <CloudIcon className="size-4 text-muted-foreground" />
+                    <span className="text-sm">Sync to QuickBooks</span>
+                  </div>
+                </label>
+                <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
+                  <Checkbox
+                    checked={attachPodDocuments}
+                    onCheckedChange={setAttachPodDocuments}
+                  />
+                  <div className="flex items-center gap-2">
+                    <PaperclipIcon className="size-4 text-muted-foreground" />
+                    <span className="text-sm">Attach POD documents</span>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
+
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleCreateInvoice(selectedRows)}
               className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
             >
-              Create {Object.keys(selectedByCustomer).length} Invoice(s)
+              Create {invoiceType === "summary" ? Object.keys(selectedByCustomer).length : selectedRows.length} Invoice(s)
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

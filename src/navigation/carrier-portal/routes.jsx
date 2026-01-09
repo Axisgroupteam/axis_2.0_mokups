@@ -34,10 +34,8 @@ import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
 import AccessorialCodes from "@/pages/CarrierPortal/Accessorial";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 // Billing imports
-import ReadyToInvoice from "@/pages/CarrierPortal/Billing/Invoicing/ReadyToInvoice";
 import Invoices from "@/pages/CarrierPortal/Billing/Invoicing/Invoices";
 import InvoiceDetails from "@/pages/CarrierPortal/Billing/Invoicing/InvoiceDetails";
-import ReadyToSettle from "@/pages/CarrierPortal/Billing/Settlements/ReadyToSettle";
 import Settlements from "@/pages/CarrierPortal/Billing/Settlements/Settlements";
 import SettlementDetails from "@/pages/CarrierPortal/Billing/Settlements/SettlementDetails";
 import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
@@ -356,14 +354,9 @@ export const carrierPortalRoutes = [
   },
   // Billing routes - Customer Invoicing (AR)
   {
-    path: "billing/ready-to-invoice",
-    element: <ReadyToInvoice />,
-    label: "Ready to Invoice",
-  },
-  {
     path: "billing/invoices",
     element: <Invoices />,
-    label: "Invoices",
+    label: "Invoicing",
   },
   {
     path: "billing/invoices/:invoiceNo",
@@ -371,11 +364,6 @@ export const carrierPortalRoutes = [
     label: "Invoice Details",
   },
   // Billing routes - Driver Settlements (AP)
-  {
-    path: "billing/ready-to-settle",
-    element: <ReadyToSettle />,
-    label: "Ready to Settle",
-  },
   {
     path: "billing/settlements",
     element: <Settlements />,

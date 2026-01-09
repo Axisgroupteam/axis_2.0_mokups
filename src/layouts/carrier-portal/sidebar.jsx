@@ -245,19 +245,9 @@ const CarrierPortalSidebar = () => {
   // Billing sub-menu items
   const billingSubItems = [
     {
-      label: "Ready to Invoice",
-      href: "/app/carrier-portal/billing/ready-to-invoice",
-      icon: FileTextIcon,
-    },
-    {
-      label: "Invoices",
+      label: "Invoicing",
       href: "/app/carrier-portal/billing/invoices",
       icon: ReceiptIcon,
-    },
-    {
-      label: "Ready to Settle",
-      href: "/app/carrier-portal/billing/ready-to-settle",
-      icon: WalletIcon,
     },
     {
       label: "Settlements",
