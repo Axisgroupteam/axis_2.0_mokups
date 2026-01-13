@@ -79,7 +79,9 @@ const LoadDetails = () => {
   const isViewOnly = mode === "view";
   const isFromDelivered = location.pathname.includes("/delivered/");
   const isFromComplete = location.pathname.includes("/complete/");
-  const showPodTab = isFromDelivered || isFromComplete;
+  const isFromHistory = location.pathname.includes("/history/");
+  const showPodTab = isFromDelivered || isFromComplete || isFromHistory;
+  const showTrackingTab = isViewOnly && !showPodTab;
 
   // Sheet states
   const [isChargeSheetOpen, setIsChargeSheetOpen] = useState(false);
@@ -932,7 +934,7 @@ const LoadDetails = () => {
               <History className="size-4" />
               Audit Log
             </TabsTrigger>
-            {isViewOnly && !showPodTab && (
+            {showTrackingTab && (
               <TabsTrigger value="tracking" className="h-full">
                 <Navigation className="size-4" />
                 Tracking

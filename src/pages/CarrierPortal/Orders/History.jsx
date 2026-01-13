@@ -18,13 +18,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   MoreHorizontal,
   Truck,
   MapPin,
@@ -32,64 +25,31 @@ import {
   Settings,
   DollarSign,
   ShoppingCart,
-  History,
+  History as HistoryIcon,
   Receipt,
-  CheckCircle,
-  AlertTriangle,
-  XCircle,
+  FileText,
   CheckCircle2,
-  Scale,
+  Clock,
   ExternalLink,
-  SparklesIcon,
 } from "lucide-react";
 
-const Complete = () => {
+const History = () => {
   const navigate = useNavigate();
   const [filters, setFilters] = useState([]);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [selectedLoad, setSelectedLoad] = useState(null);
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [statusChangeLoad, setStatusChangeLoad] = useState(null);
-  const [isValidationDialogOpen, setIsValidationDialogOpen] = useState(false);
-  const [selectedLoadForValidation, setSelectedLoadForValidation] = useState(null);
 
   const handleLoadClick = (load) => {
     setSelectedLoad(load);
     setIsDetailSheetOpen(true);
   };
 
-  const handleStatusChangeClick = (load) => {
-    setStatusChangeLoad(load);
-    setIsStatusModalOpen(true);
-  };
-
-  const handleConfirmStatusChange = () => {
-    // Here you would typically make an API call to update the status
-    console.log("Status changed to Delivered for load:", statusChangeLoad?.loadNo);
-    setIsStatusModalOpen(false);
-    setStatusChangeLoad(null);
-  };
-
   // Filter configuration
   const filterGroups = [
     {
-      id: "complete-filters",
+      id: "history-filters",
       label: "Filter Orders",
       filters: [
-        {
-          key: "status",
-          label: "Status",
-          type: "select",
-          group: "Basic",
-          static: true,
-          defaultValue: "delivered",
-          options: [
-            { value: "delivered", label: "Delivered" },
-            { value: "resend", label: "Resend" },
-            { value: "detention", label: "Detention" },
-            { value: "workflow", label: "Workflow" },
-          ],
-        },
         {
           key: "loadNo",
           label: "Load No",
@@ -105,11 +65,11 @@ const Complete = () => {
           placeholder: "Search ticket number...",
         },
         {
-          key: "vehicle",
-          label: "Vehicle",
+          key: "invoiceNo",
+          label: "Invoice No",
           type: "input",
           group: "Basic",
-          placeholder: "Search vehicle...",
+          placeholder: "Search invoice number...",
         },
         {
           key: "customer",
@@ -139,8 +99,9 @@ const Complete = () => {
     setFilters(newFilters);
   }, []);
 
-  // Mock data for Complete (all with vehicles assigned)
-  const completeData = [
+  // Mock data for History - loads that passed validation
+  const historyData = [
+    // Ready to Bill loads (passed validation, not yet invoiced)
     {
       id: 1,
       vehicle: "TRK-2847",
@@ -160,13 +121,10 @@ const Complete = () => {
       dropOffPhone: "(214) 555-0202",
       commodity: "Cement",
       rates: "$1,850.00",
-      validation: {
-        status: "failed",
-        weightMatches: false,
-        amountMatches: true,
-        failureReasons: ["Weight mismatch: Expected 24,500 lbs, Actual 23,200 lbs"],
-        checkedAt: "2024-12-01T16:30:00Z",
-      },
+      billingStatus: "Ready to Bill",
+      validatedAt: "2024-12-01 16:30",
+      invoiceNo: null,
+      invoiceDate: null,
     },
     {
       id: 2,
@@ -187,13 +145,10 @@ const Complete = () => {
       dropOffPhone: "(210) 555-0404",
       commodity: "Flyash",
       rates: "$1,200.00",
-      validation: {
-        status: "failed",
-        weightMatches: true,
-        amountMatches: false,
-        failureReasons: ["Amount mismatch: Expected $1,200.00, Actual $1,050.00"],
-        checkedAt: "2024-12-01T17:15:00Z",
-      },
+      billingStatus: "Ready to Bill",
+      validatedAt: "2024-12-01 17:15",
+      invoiceNo: null,
+      invoiceDate: null,
     },
     {
       id: 3,
@@ -214,215 +169,231 @@ const Complete = () => {
       dropOffPhone: "(405) 555-0606",
       commodity: "Sand",
       rates: "$2,400.00",
-      validation: {
-        status: "failed",
-        weightMatches: false,
-        amountMatches: true,
-        failureReasons: ["Weight mismatch: Expected 25,000 lbs, Actual 23,500 lbs"],
-        checkedAt: "2024-12-02T14:45:00Z",
-      },
+      billingStatus: "Ready to Bill",
+      validatedAt: "2024-12-02 14:45",
+      invoiceNo: null,
+      invoiceDate: null,
     },
+    // Invoiced loads
     {
       id: 4,
       vehicle: "TRK-7734",
-      loadNo: "MT-2025-000904",
-      ticketNo: "TKT-77404",
-      pickUpNo: "PU-77204",
+      loadNo: "MT-2025-000804",
+      ticketNo: "TKT-77304",
+      pickUpNo: "PU-77104",
       customer: "Coyote",
       customerContractId: "CTR-COY-2025-007",
       customerRegion: "West",
       pickup: "789 Steel Works Dr, El Paso, TX 79901",
-      pickupDate: "2024-12-02",
+      pickupDate: "2024-11-28",
       pickupContactName: "David Martinez",
       pickupPhone: "(915) 555-0707",
       dropOff: "456 Industrial Park, Phoenix, AZ 85001",
-      dropOffDate: "2024-12-03",
+      dropOffDate: "2024-11-29",
       dropOffContactName: "Jennifer Lee",
       dropOffPhone: "(602) 555-0808",
       commodity: "Limestone",
       rates: "$3,100.00",
-      validation: {
-        status: "failed",
-        weightMatches: true,
-        amountMatches: false,
-        failureReasons: ["Amount mismatch: Expected $3,100.00, Actual $2,850.00"],
-        checkedAt: "2024-12-03T10:20:00Z",
-      },
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-29 15:30",
+      invoiceNo: "INV-2024-001234",
+      invoiceDate: "2024-11-30",
+      invoiceStatus: "Paid in Full",
     },
     {
       id: 5,
       vehicle: "TRK-3356",
-      loadNo: "MT-2025-000905",
-      ticketNo: "TKT-77405",
-      pickUpNo: "PU-77205",
+      loadNo: "MT-2025-000805",
+      ticketNo: "TKT-77305",
+      pickUpNo: "PU-77105",
       customer: "CH Robinson",
       customerContractId: "CTR-CHR-2025-019",
       customerRegion: "East",
       pickup: "5678 Commerce St, Dallas, TX 75201",
-      pickupDate: "2024-12-03",
+      pickupDate: "2024-11-27",
       pickupContactName: "Chris Anderson",
       pickupPhone: "(214) 555-0909",
       dropOff: "654 Cement Factory Ln, Little Rock, AR 72201",
-      dropOffDate: "2024-12-03",
+      dropOffDate: "2024-11-27",
       dropOffContactName: "Amanda Taylor",
       dropOffPhone: "(501) 555-1010",
       commodity: "Cement",
       rates: "$2,200.00",
-      validation: {
-        status: "failed",
-        weightMatches: false,
-        amountMatches: false,
-        failureReasons: [
-          "Weight mismatch: Expected 24,000 lbs, Actual 22,800 lbs",
-          "Amount mismatch: Expected $2,200.00, Actual $2,050.00"
-        ],
-        checkedAt: "2024-12-03T11:30:00Z",
-      },
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-27 18:00",
+      invoiceNo: "INV-2024-001235",
+      invoiceDate: "2024-11-28",
+      invoiceStatus: "Invoiced",
     },
     {
       id: 6,
       vehicle: "TRK-5589",
-      loadNo: "ML-2025-000906",
-      ticketNo: "TKT-77406",
-      pickUpNo: "PU-77206",
+      loadNo: "ML-2025-000806",
+      ticketNo: "TKT-77306",
+      pickUpNo: "PU-77106",
       customer: "Titan",
       customerContractId: "CTR-TIT-2025-002",
       customerRegion: "South",
       pickup: "234 Construction Ave, San Antonio, TX 78201",
-      pickupDate: "2024-12-04",
+      pickupDate: "2024-11-26",
       pickupContactName: "Kevin Thomas",
       pickupPhone: "(210) 555-1111",
       dropOff: "222 Road Project Site, Corpus Christi, TX 78401",
-      dropOffDate: "2024-12-04",
+      dropOffDate: "2024-11-26",
       dropOffContactName: "Michelle White",
       dropOffPhone: "(361) 555-1212",
       commodity: "Aggregate",
       rates: "$950.00",
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-26 16:45",
+      invoiceNo: "INV-2024-001230",
+      invoiceDate: "2024-11-27",
+      invoiceStatus: "Paid in Full",
     },
     {
       id: 7,
       vehicle: "TRK-6612",
-      loadNo: "ML-2025-000907",
-      ticketNo: "TKT-77407",
-      pickUpNo: "PU-77207",
+      loadNo: "ML-2025-000807",
+      ticketNo: "TKT-77307",
+      pickUpNo: "PU-77107",
       customer: "Ashgrove",
       customerContractId: "CTR-ASH-2025-004",
       customerRegion: "Central",
       pickup: "333 Farm Co-op Rd, Lubbock, TX 79401",
-      pickupDate: "2024-12-04",
+      pickupDate: "2024-11-25",
       pickupContactName: "Brian Harris",
       pickupPhone: "(806) 555-1313",
       dropOff: "444 Grain Elevator St, Amarillo, TX 79101",
-      dropOffDate: "2024-12-04",
+      dropOffDate: "2024-11-25",
       dropOffContactName: "Nicole Clark",
       dropOffPhone: "(806) 555-1414",
       commodity: "Flyash",
       rates: "$800.00",
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-25 14:20",
+      invoiceNo: "INV-2024-001228",
+      invoiceDate: "2024-11-26",
+      invoiceStatus: "Partial",
     },
     {
       id: 8,
       vehicle: "TRK-8845",
-      loadNo: "MT-2025-000908",
-      ticketNo: "TKT-77408",
-      pickUpNo: "PU-77208",
+      loadNo: "MT-2025-000808",
+      ticketNo: "TKT-77308",
+      pickUpNo: "PU-77108",
       customer: "TQL",
       customerContractId: "CTR-TQL-2025-013",
       customerRegion: "East",
       pickup: "1234 Industrial Blvd, Houston, TX 77001",
-      pickupDate: "2024-12-05",
+      pickupDate: "2024-11-24",
       pickupContactName: "Steven Moore",
       pickupPhone: "(713) 555-1515",
       dropOff: "666 Construction Site, New Orleans, LA 70112",
-      dropOffDate: "2024-12-06",
+      dropOffDate: "2024-11-25",
       dropOffContactName: "Rachel King",
       dropOffPhone: "(504) 555-1616",
       commodity: "Sand",
       rates: "$2,800.00",
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-25 17:30",
+      invoiceNo: "INV-2024-001225",
+      invoiceDate: "2024-11-26",
+      invoiceStatus: "Overdue",
     },
     {
       id: 9,
       vehicle: "TRK-2847",
-      loadNo: "ML-2025-000909",
-      ticketNo: "TKT-77409",
-      pickUpNo: "PU-77209",
+      loadNo: "ML-2025-000809",
+      ticketNo: "TKT-77309",
+      pickUpNo: "PU-77109",
       customer: "Titan",
       customerContractId: "CTR-TIT-2025-003",
       customerRegion: "South",
       pickup: "777 Concrete Way, Houston, TX 77002",
-      pickupDate: "2024-12-05",
+      pickupDate: "2024-11-23",
       pickupContactName: "James Wilson",
       pickupPhone: "(713) 555-1717",
       dropOff: "888 Builder Rd, Austin, TX 78702",
-      dropOffDate: "2024-12-05",
+      dropOffDate: "2024-11-23",
       dropOffContactName: "Patricia Lee",
       dropOffPhone: "(512) 555-1818",
       commodity: "Cement",
       rates: "$1,650.00",
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-23 15:45",
+      invoiceNo: "INV-2024-001220",
+      invoiceDate: "2024-11-24",
+      invoiceStatus: "Paid in Full",
     },
     {
       id: 10,
       vehicle: "TRK-1923",
-      loadNo: "MT-2025-000910",
-      ticketNo: "TKT-77410",
-      pickUpNo: "PU-77210",
+      loadNo: "MT-2025-000810",
+      ticketNo: "TKT-77310",
+      pickUpNo: "PU-77110",
       customer: "Coyote",
       customerContractId: "CTR-COY-2025-008",
       customerRegion: "West",
       pickup: "999 Quarry Lane, Phoenix, AZ 85002",
-      pickupDate: "2024-12-06",
+      pickupDate: "2024-11-22",
       pickupContactName: "Daniel Brown",
       pickupPhone: "(602) 555-1919",
       dropOff: "111 Distribution Center, Tucson, AZ 85701",
-      dropOffDate: "2024-12-06",
+      dropOffDate: "2024-11-22",
       dropOffContactName: "Sandra Miller",
       dropOffPhone: "(520) 555-2020",
       commodity: "Gravel",
       rates: "$1,450.00",
-    },
-    {
-      id: 11,
-      vehicle: "TRK-7734",
-      loadNo: "MT-2025-000911",
-      ticketNo: "TKT-77411",
-      pickUpNo: "PU-77211",
-      customer: "CH Robinson",
-      customerContractId: "CTR-CHR-2025-020",
-      customerRegion: "East",
-      pickup: "222 Steel Mill Rd, Birmingham, AL 35201",
-      pickupDate: "2024-12-06",
-      pickupContactName: "Thomas Garcia",
-      pickupPhone: "(205) 555-2121",
-      dropOff: "333 Factory Blvd, Atlanta, GA 30301",
-      dropOffDate: "2024-12-06",
-      dropOffContactName: "Nancy Davis",
-      dropOffPhone: "(404) 555-2222",
-      commodity: "Limestone",
-      rates: "$2,100.00",
-    },
-    {
-      id: 12,
-      vehicle: "TRK-4521",
-      loadNo: "ML-2025-000912",
-      ticketNo: "TKT-77412",
-      pickUpNo: "PU-77212",
-      customer: "Ashgrove",
-      customerContractId: "CTR-ASH-2025-005",
-      customerRegion: "Central",
-      pickup: "444 Cement Plant Dr, Kansas City, MO 64101",
-      pickupDate: "2024-12-07",
-      pickupContactName: "Mark Johnson",
-      pickupPhone: "(816) 555-2323",
-      dropOff: "555 Construction Site, Omaha, NE 68101",
-      dropOffDate: "2024-12-07",
-      dropOffContactName: "Betty Wilson",
-      dropOffPhone: "(402) 555-2424",
-      commodity: "Flyash",
-      rates: "$1,350.00",
+      billingStatus: "Invoiced",
+      validatedAt: "2024-11-22 16:00",
+      invoiceNo: "INV-2024-001218",
+      invoiceDate: "2024-11-23",
+      invoiceStatus: "Paid in Full",
     },
   ];
 
-  // Columns for Complete table
-  const completeColumns = [
+  // Get billing status badge
+  const getBillingStatusBadge = (status, invoiceStatus) => {
+    if (status === "Ready to Bill") {
+      return (
+        <Badge className="bg-amber-500/10 text-amber-700 border-amber-500/50">
+          <Clock className="size-3 mr-1" />
+          Ready to Bill
+        </Badge>
+      );
+    }
+
+    // For invoiced loads, show the invoice status
+    const statusConfig = {
+      Invoiced: {
+        color: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+        icon: <FileText className="size-3 mr-1" />,
+      },
+      "Paid in Full": {
+        color: "bg-green-500/10 text-green-700 border-green-500/50",
+        icon: <CheckCircle2 className="size-3 mr-1" />,
+      },
+      Partial: {
+        color: "bg-amber-500/10 text-amber-700 border-amber-500/50",
+        icon: <Clock className="size-3 mr-1" />,
+      },
+      Overdue: {
+        color: "bg-red-500/10 text-red-700 border-red-500/50",
+        icon: <Clock className="size-3 mr-1" />,
+      },
+    };
+
+    const config = statusConfig[invoiceStatus] || statusConfig.Invoiced;
+    return (
+      <Badge className={config.color}>
+        {config.icon}
+        {invoiceStatus}
+      </Badge>
+    );
+  };
+
+  // Columns for History table
+  const historyColumns = [
     {
       id: "actions",
       header: "Action",
@@ -434,30 +405,32 @@ const Complete = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
+            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
+            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
               <DollarSign className="size-4 mr-2" />
               Additional Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
+            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
-              <History className="size-4 mr-2" />
+            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
+              <HistoryIcon className="size-4 mr-2" />
               Audit Log
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=pod&mode=view`)}>
+            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=pod&mode=view`)}>
               <Receipt className="size-4 mr-2" />
               POD
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleStatusChangeClick(row.original)} className="text-green-600">
-              <CheckCircle className="size-4 mr-2" />
-              Return to Delivered
-            </DropdownMenuItem>
+            {row.original.invoiceNo && (
+              <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${row.original.invoiceNo}`)}>
+                <FileText className="size-4 mr-2" />
+                View Invoice
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -475,6 +448,27 @@ const Complete = () => {
           {row.getValue("loadNo")}
         </button>
       ),
+    },
+    {
+      accessorKey: "invoiceNo",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Invoice No" />
+      ),
+      cell: ({ row }) => {
+        const invoiceNo = row.getValue("invoiceNo");
+        if (!invoiceNo) {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        return (
+          <button
+            onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${invoiceNo}`)}
+            className="font-mono text-sm text-primary underline hover:text-primary/80 cursor-pointer flex items-center gap-1"
+          >
+            {invoiceNo}
+            <ExternalLink className="size-3" />
+          </button>
+        );
+      },
     },
     {
       accessorKey: "ticketNo",
@@ -498,17 +492,6 @@ const Complete = () => {
       ),
     },
     {
-      accessorKey: "pickUpNo",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Pick Up No" />
-      ),
-      cell: ({ row }) => (
-        <span className="font-mono text-sm text-muted-foreground">
-          {row.getValue("pickUpNo")}
-        </span>
-      ),
-    },
-    {
       accessorKey: "customer",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Customer" />
@@ -518,20 +501,9 @@ const Complete = () => {
       ),
     },
     {
-      accessorKey: "customerContractId",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer Contract ID" />
-      ),
-      cell: ({ row }) => (
-        <span className="font-mono text-xs text-muted-foreground">
-          {row.getValue("customerContractId")}
-        </span>
-      ),
-    },
-    {
       accessorKey: "customerRegion",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer Region" />
+        <DataTableColumnHeader column={column} title="Region" />
       ),
       cell: ({ row }) => {
         const region = row.getValue("customerRegion");
@@ -588,18 +560,6 @@ const Complete = () => {
       ),
     },
     {
-      accessorKey: "dropOffDate",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Drop Off Date" />
-      ),
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1 text-sm">
-          <Calendar className="size-3 text-muted-foreground" />
-          {row.getValue("dropOffDate")}
-        </div>
-      ),
-    },
-    {
       accessorKey: "commodity",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Commodity" />
@@ -619,42 +579,6 @@ const Complete = () => {
         </span>
       ),
     },
-    {
-      accessorKey: "validation",
-      header: ({ column }) => (
-        <div className="flex items-center gap-1.5">
-          <SparklesIcon className="size-4 text-purple-500" />
-          <DataTableColumnHeader column={column} title="AI Billing Validation" />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const validation = row.original.validation;
-        if (!validation) {
-          return <span className="text-muted-foreground text-xs">Pending</span>;
-        }
-        if (validation.status === "failed") {
-          return (
-            <button
-              onClick={() => {
-                setSelectedLoadForValidation(row.original);
-                setIsValidationDialogOpen(true);
-              }}
-              className="flex items-center gap-1.5 text-red-600 hover:text-red-700 hover:underline"
-            >
-              <XCircle className="size-4" />
-              <span className="text-xs font-medium">Failed ({validation.failureReasons?.length || 0})</span>
-              <ExternalLink className="size-3" />
-            </button>
-          );
-        }
-        return (
-          <div className="flex items-center gap-1.5 text-green-600">
-            <CheckCircle2 className="size-4" />
-            <span className="text-xs font-medium">Passed</span>
-          </div>
-        );
-      },
-    },
   ];
 
   return (
@@ -666,8 +590,8 @@ const Complete = () => {
         />
       </div>
       <DataTable
-        columns={completeColumns}
-        data={completeData}
+        columns={historyColumns}
+        data={historyData}
         showViewOptions={false}
       />
 
@@ -680,6 +604,48 @@ const Complete = () => {
 
           {selectedLoad && (
             <div className="flex-1 py-2 px-6 space-y-3 overflow-y-auto">
+              {/* Billing Status Card */}
+              <div className="border rounded-sm bg-card">
+                <div className="px-4 py-2 border-b bg-muted">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <FileText className="size-4" />
+                    Billing Information
+                  </h3>
+                </div>
+                <div className="divide-y divide-border">
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Billing Status</p>
+                      <div className="mt-1">
+                        {getBillingStatusBadge(selectedLoad.billingStatus, selectedLoad.invoiceStatus)}
+                      </div>
+                    </div>
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Validated At</p>
+                      <p className="text-sm font-medium text-foreground">{selectedLoad.validatedAt}</p>
+                    </div>
+                  </div>
+                  {selectedLoad.invoiceNo && (
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-1.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Invoice No</p>
+                        <button
+                          onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${selectedLoad.invoiceNo}`)}
+                          className="text-sm font-medium text-primary underline hover:text-primary/80 cursor-pointer flex items-center gap-1 font-mono"
+                        >
+                          {selectedLoad.invoiceNo}
+                          <ExternalLink className="size-3" />
+                        </button>
+                      </div>
+                      <div className="px-4 py-1.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Invoice Date</p>
+                        <p className="text-sm font-medium text-foreground">{selectedLoad.invoiceDate}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Basic Information Card */}
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-2 border-b bg-muted">
@@ -827,134 +793,8 @@ const Complete = () => {
           </SheetFooter>
         </SheetContent>
       </Sheet>
-
-      {/* Status Change Confirmation Modal */}
-      <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Confirm Status Change</DialogTitle>
-          </DialogHeader>
-
-          <div className="py-4">
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <AlertTriangle className="size-6 text-green-600" />
-              </div>
-              <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to change status?</p>
-                <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{statusChangeLoad?.loadNo}</span> to <span className="font-medium text-foreground">Delivered</span> status in the delivered tab.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <div className="flex gap-3 w-full">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setIsStatusModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                onClick={handleConfirmStatusChange}
-              >
-                Confirm
-              </Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Validation Details Dialog */}
-      <Dialog open={isValidationDialogOpen} onOpenChange={setIsValidationDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
-              <XCircle className="size-5" />
-              Validation Failed
-            </DialogTitle>
-          </DialogHeader>
-
-          {selectedLoadForValidation && (
-            <div className="space-y-4">
-              {/* Load Info */}
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground mb-1">Load Number</p>
-                <p className="font-mono font-medium">{selectedLoadForValidation.loadNo}</p>
-              </div>
-
-              {/* Validation Checks */}
-              <div className="space-y-2">
-                <p className="text-sm font-medium">AI Validation Checks</p>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 border rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Scale className="size-4 text-muted-foreground" />
-                      <span className="text-sm">Weight Matches</span>
-                    </div>
-                    {selectedLoadForValidation.validation?.weightMatches ? (
-                      <CheckCircle2 className="size-4 text-green-600" />
-                    ) : (
-                      <XCircle className="size-4 text-red-600" />
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between p-2 border rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="size-4 text-muted-foreground" />
-                      <span className="text-sm">Amount Matches</span>
-                    </div>
-                    {selectedLoadForValidation.validation?.amountMatches ? (
-                      <CheckCircle2 className="size-4 text-green-600" />
-                    ) : (
-                      <XCircle className="size-4 text-red-600" />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Failure Reasons */}
-              {selectedLoadForValidation.validation?.failureReasons?.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-red-600">Failure Reasons</p>
-                  <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg">
-                    <ul className="space-y-1.5">
-                      {selectedLoadForValidation.validation.failureReasons.map((reason, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400">
-                          <span className="mt-1.5 size-1.5 rounded-full bg-red-500 flex-shrink-0" />
-                          {reason}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {/* Checked At */}
-              {selectedLoadForValidation.validation?.checkedAt && (
-                <p className="text-xs text-muted-foreground">
-                  Validated at: {new Date(selectedLoadForValidation.validation.checkedAt).toLocaleString()}
-                </p>
-              )}
-            </div>
-          )}
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsValidationDialogOpen(false)}
-              className="w-full"
-            >
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
 
-export default Complete;
+export default History;

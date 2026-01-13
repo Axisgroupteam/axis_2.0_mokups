@@ -9,6 +9,7 @@ import Planning from "./Planning";
 import Dispatch from "./Dispatch";
 import Delivered from "./Delivered";
 import Complete from "./Complete";
+import History from "./History";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +64,7 @@ import {
   TrendingUp,
   Route,
   Loader2,
+  History as HistoryIcon,
 } from "lucide-react";
 
 // Countdown component for Mega Logistics
@@ -112,6 +114,7 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
     if (path.includes("/dispatch")) return "dispatch";
     if (path.includes("/delivered")) return "delivered";
     if (path.includes("/complete")) return "complete";
+    if (path.includes("/history")) return "history";
     return "inbox";
   };
 
@@ -791,6 +794,10 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
               <CheckCircle2 className="size-4" />
               Complete
             </TabsTrigger>
+            <TabsTrigger value="history" className="h-full">
+              <HistoryIcon className="size-4" />
+              History
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -823,6 +830,10 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
 
           <TabsContent value="complete" className="h-full mt-0">
             <Complete />
+          </TabsContent>
+
+          <TabsContent value="history" className="h-full mt-0">
+            <History />
           </TabsContent>
         </div>
       </Tabs>

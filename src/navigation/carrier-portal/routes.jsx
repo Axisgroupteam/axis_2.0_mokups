@@ -107,6 +107,11 @@ export const carrierPortalRoutes = [
     label: "Complete",
   },
   {
+    path: "orders/bulk/history",
+    element: <BulkOrders />,
+    label: "History",
+  },
+  {
     path: "orders/bulk/inbox/load-details",
     element: <LoadDetails />,
     label: "Load Details",
@@ -128,6 +133,11 @@ export const carrierPortalRoutes = [
   },
   {
     path: "orders/bulk/complete/load-details",
+    element: <LoadDetails />,
+    label: "Load Details",
+  },
+  {
+    path: "orders/bulk/history/load-details",
     element: <LoadDetails />,
     label: "Load Details",
   },
