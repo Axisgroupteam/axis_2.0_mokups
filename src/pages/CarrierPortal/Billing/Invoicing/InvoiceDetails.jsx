@@ -27,13 +27,34 @@ import {
   Settings,
   History,
   CreditCard,
+  BanIcon,
+  RotateCcwIcon,
+  AlertTriangleIcon,
+  SendIcon,
+  MailOpenIcon,
+  MailXIcon,
+  ClockIcon,
+  CheckCheckIcon,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const InvoiceDetails = () => {
   const { invoiceNo } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "general";
+  const [isVoidDialogOpen, setIsVoidDialogOpen] = useState(false);
+  const [voidReason, setVoidReason] = useState("");
+  const [isReInvoiceDialogOpen, setIsReInvoiceDialogOpen] = useState(false);
 
   // Mock invoice data - Industry standard statuses: Invoiced, Paid, Partial, Overdue, Cancelled
   const invoice = {
@@ -66,6 +87,20 @@ const InvoiceDetails = () => {
     qbInvoiceUrl: "https://app.qbo.intuit.com/app/invoice?txnId=10045",
     qbLastSyncAt: "2025-01-05T14:35:00Z",
     qbPdfAttached: true,
+    // Email tracking
+    emailStatus: "delivered", // pending, sent, delivered, opened, bounced, failed
+    emailSentAt: "2025-01-05T15:00:00Z",
+    emailDeliveredAt: "2025-01-05T15:00:15Z",
+    emailOpenedAt: "2025-01-06T09:30:00Z",
+    emailRecipient: "billing@titanconstruction.com",
+    emailCc: ["ap@titanconstruction.com"],
+    // Void/Re-invoice tracking
+    isVoided: false,
+    voidedAt: null,
+    voidedBy: null,
+    voidReason: null,
+    replacedByInvoice: null,
+    replacesInvoice: null,
   };
 
   // Mock attachments
@@ -285,8 +320,64 @@ const InvoiceDetails = () => {
       Partial: "bg-amber-500/10 text-amber-700 border-amber-500/50",
       Overdue: "bg-red-500/10 text-red-700 border-red-500/50",
       Cancelled: "bg-gray-500/10 text-gray-700 border-gray-500/50",
+      Voided: "bg-gray-500/10 text-gray-700 border-gray-500/50 line-through",
     };
     return statusColors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+  };
+
+  const getEmailStatusBadge = (status) => {
+    const statusConfig = {
+      pending: {
+        color: "bg-gray-500/10 text-gray-700 border-gray-500/50",
+        icon: <ClockIcon className="size-3 mr-1" />,
+        label: "Pending",
+      },
+      sent: {
+        color: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+        icon: <SendIcon className="size-3 mr-1" />,
+        label: "Sent",
+      },
+      delivered: {
+        color: "bg-green-500/10 text-green-700 border-green-500/50",
+        icon: <CheckCheckIcon className="size-3 mr-1" />,
+        label: "Delivered",
+      },
+      opened: {
+        color: "bg-purple-500/10 text-purple-700 border-purple-500/50",
+        icon: <MailOpenIcon className="size-3 mr-1" />,
+        label: "Opened",
+      },
+      bounced: {
+        color: "bg-red-500/10 text-red-700 border-red-500/50",
+        icon: <MailXIcon className="size-3 mr-1" />,
+        label: "Bounced",
+      },
+      failed: {
+        color: "bg-red-500/10 text-red-700 border-red-500/50",
+        icon: <MailXIcon className="size-3 mr-1" />,
+        label: "Failed",
+      },
+    };
+    const config = statusConfig[status] || statusConfig.pending;
+    return (
+      <Badge className={config.color}>
+        {config.icon}
+        {config.label}
+      </Badge>
+    );
+  };
+
+  const handleVoidInvoice = () => {
+    console.log("Voiding invoice:", invoice.invoiceNo, "Reason:", voidReason);
+    setIsVoidDialogOpen(false);
+    setVoidReason("");
+    // In real app, would call API and update state
+  };
+
+  const handleReInvoice = () => {
+    console.log("Re-invoicing:", invoice.invoiceNo);
+    setIsReInvoiceDialogOpen(false);
+    // In real app, would create new invoice with same loads
   };
 
   const lineItemColumns = [
@@ -399,12 +490,43 @@ const InvoiceDetails = () => {
                       <MailIcon className="size-4 mr-2" />
                       Send to Customer
                     </Button>
+                    {!invoice.isVoided && invoice.status !== "Paid" && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 border-red-300 hover:bg-red-50"
+                          onClick={() => setIsVoidDialogOpen(true)}
+                        >
+                          <BanIcon className="size-4 mr-2" />
+                          Void Invoice
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsReInvoiceDialogOpen(true)}
+                        >
+                          <RotateCcwIcon className="size-4 mr-2" />
+                          Re-Invoice
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="p-4">
-                  <div className="flex items-center gap-4 mb-4">
-                    <h2 className="text-2xl font-bold">{invoice.invoiceNo}</h2>
-                    {getInvoiceTypeBadge()}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                      <h2 className="text-2xl font-bold">{invoice.invoiceNo}</h2>
+                      {getInvoiceTypeBadge()}
+                      <Badge className={getStatusBadge(invoice.isVoided ? "Voided" : invoice.status)}>
+                        {invoice.isVoided ? "Voided" : invoice.status}
+                      </Badge>
+                    </div>
+                    {invoice.isVoided && invoice.replacedByInvoice && (
+                      <div className="text-sm text-muted-foreground">
+                        Replaced by: <button className="text-primary underline">{invoice.replacedByInvoice}</button>
+                      </div>
+                    )}
                   </div>
                   <div className="grid grid-cols-4 gap-4">
                     <div>
@@ -424,6 +546,49 @@ const InvoiceDetails = () => {
                       <p className="font-medium">{invoice.loadCount} loads</p>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Email Tracking Card */}
+              <div className="border rounded-sm bg-card">
+                <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <MailIcon className="size-4" />
+                    Email Delivery Status
+                  </h3>
+                  {getEmailStatusBadge(invoice.emailStatus)}
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Sent To</p>
+                      <p className="font-medium text-sm">{invoice.emailRecipient}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Sent At</p>
+                      <p className="font-medium text-sm">{invoice.emailSentAt ? formatDateTime(invoice.emailSentAt) : "-"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Delivered At</p>
+                      <p className="font-medium text-sm">{invoice.emailDeliveredAt ? formatDateTime(invoice.emailDeliveredAt) : "-"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Opened At</p>
+                      <p className="font-medium text-sm">
+                        {invoice.emailOpenedAt ? (
+                          <span className="text-purple-600">{formatDateTime(invoice.emailOpenedAt)}</span>
+                        ) : (
+                          <span className="text-muted-foreground">Not yet opened</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  {invoice.emailCc && invoice.emailCc.length > 0 && (
+                    <div className="mt-3 pt-3 border-t">
+                      <p className="text-xs text-muted-foreground">CC Recipients</p>
+                      <p className="text-sm">{invoice.emailCc.join(", ")}</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -721,6 +886,120 @@ const InvoiceDetails = () => {
           </TabsContent>
         </div>
       </Tabs>
+
+      {/* Void Invoice Dialog */}
+      <Dialog open={isVoidDialogOpen} onOpenChange={setIsVoidDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangleIcon className="size-5" />
+              Void Invoice
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to void invoice <span className="font-mono font-bold">{invoice.invoiceNo}</span>?
+              This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4">
+            <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg">
+              <p className="text-sm text-red-700 dark:text-red-400">
+                <strong>Warning:</strong> Voiding this invoice will:
+              </p>
+              <ul className="mt-2 text-sm text-red-600 dark:text-red-400 space-y-1 list-disc list-inside">
+                <li>Mark the invoice as voided in your system</li>
+                <li>Void the corresponding QuickBooks invoice</li>
+                <li>Release {invoice.loadCount} loads for re-invoicing</li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="void-reason">Reason for voiding <span className="text-red-500">*</span></Label>
+              <Textarea
+                id="void-reason"
+                placeholder="Enter reason for voiding this invoice..."
+                value={voidReason}
+                onChange={(e) => setVoidReason(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsVoidDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleVoidInvoice}
+              disabled={!voidReason.trim()}
+            >
+              <BanIcon className="size-4 mr-2" />
+              Void Invoice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Re-Invoice Dialog */}
+      <Dialog open={isReInvoiceDialogOpen} onOpenChange={setIsReInvoiceDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RotateCcwIcon className="size-5 text-blue-600" />
+              Re-Invoice Loads
+            </DialogTitle>
+            <DialogDescription>
+              Create a new invoice with the same loads from <span className="font-mono font-bold">{invoice.invoiceNo}</span>.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4">
+            <div className="p-3 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-lg">
+              <p className="text-sm text-blue-700 dark:text-blue-400">
+                <strong>This action will:</strong>
+              </p>
+              <ul className="mt-2 text-sm text-blue-600 dark:text-blue-400 space-y-1 list-disc list-inside">
+                <li>Void the current invoice ({invoice.invoiceNo})</li>
+                <li>Create a new invoice with the same {invoice.loadCount} loads</li>
+                <li>Generate a new invoice number</li>
+                <li>Sync the new invoice to QuickBooks</li>
+              </ul>
+            </div>
+
+            <div className="border rounded-lg p-3 bg-muted/50">
+              <p className="text-xs text-muted-foreground mb-2">Invoice Summary</p>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Loads:</span> {invoice.loadCount}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Customer:</span> {invoice.customer}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Amount:</span> {formatCurrency(invoice.totalAmount)}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Type:</span> {invoice.invoiceType}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsReInvoiceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={handleReInvoice}
+            >
+              <RotateCcwIcon className="size-4 mr-2" />
+              Void & Re-Invoice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

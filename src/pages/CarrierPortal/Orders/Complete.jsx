@@ -41,6 +41,7 @@ import {
   Scale,
   ExternalLink,
   SparklesIcon,
+  Clock,
 } from "lucide-react";
 
 const Complete = () => {
@@ -298,6 +299,10 @@ const Complete = () => {
       dropOffPhone: "(361) 555-1212",
       commodity: "Aggregate",
       rates: "$950.00",
+      validation: {
+        status: "pending",
+        checkedAt: null,
+      },
     },
     {
       id: 7,
@@ -318,6 +323,10 @@ const Complete = () => {
       dropOffPhone: "(806) 555-1414",
       commodity: "Flyash",
       rates: "$800.00",
+      validation: {
+        status: "pending",
+        checkedAt: null,
+      },
     },
     {
       id: 8,
@@ -338,6 +347,10 @@ const Complete = () => {
       dropOffPhone: "(504) 555-1616",
       commodity: "Sand",
       rates: "$2,800.00",
+      validation: {
+        status: "pending",
+        checkedAt: null,
+      },
     },
     {
       id: 9,
@@ -358,6 +371,14 @@ const Complete = () => {
       dropOffPhone: "(512) 555-1818",
       commodity: "Cement",
       rates: "$1,650.00",
+      validation: {
+        status: "failed",
+        weightMatches: true,
+        amountMatches: true,
+        podUploaded: false,
+        failureReasons: ["POD not uploaded"],
+        checkedAt: "2024-12-05T18:30:00Z",
+      },
     },
     {
       id: 10,
@@ -378,6 +399,10 @@ const Complete = () => {
       dropOffPhone: "(520) 555-2020",
       commodity: "Gravel",
       rates: "$1,450.00",
+      validation: {
+        status: "pending",
+        checkedAt: null,
+      },
     },
     {
       id: 11,
@@ -398,6 +423,15 @@ const Complete = () => {
       dropOffPhone: "(404) 555-2222",
       commodity: "Limestone",
       rates: "$2,100.00",
+      validation: {
+        status: "failed",
+        weightMatches: true,
+        amountMatches: true,
+        podUploaded: true,
+        podLegible: false,
+        failureReasons: ["POD image not legible"],
+        checkedAt: "2024-12-06T14:45:00Z",
+      },
     },
     {
       id: 12,
@@ -418,6 +452,10 @@ const Complete = () => {
       dropOffPhone: "(402) 555-2424",
       commodity: "Flyash",
       rates: "$1,350.00",
+      validation: {
+        status: "pending",
+        checkedAt: null,
+      },
     },
   ];
 
@@ -648,9 +686,9 @@ const Complete = () => {
           );
         }
         return (
-          <div className="flex items-center gap-1.5 text-green-600">
-            <CheckCircle2 className="size-4" />
-            <span className="text-xs font-medium">Passed</span>
+          <div className="flex items-center gap-1.5 text-amber-600">
+            <Clock className="size-4" />
+            <span className="text-xs font-medium">Pending</span>
           </div>
         );
       },

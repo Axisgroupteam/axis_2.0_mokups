@@ -38,7 +38,20 @@ import {
   PencilIcon,
   Trash2,
   Package,
+  ReceiptIcon,
+  CalendarIcon,
+  MailIcon,
+  FileSpreadsheetIcon,
+  CheckIcon,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import {
   DropdownMenu,
   DropdownMenuContent,

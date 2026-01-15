@@ -12,6 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,23 +35,26 @@ import {
   DollarSign,
   TruckIcon,
   UserIcon,
+  WrenchIcon,
   CheckCircle2Icon,
   BanknoteIcon,
+  Building2,
 } from "lucide-react";
 
 const ReadyToSettle = () => {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [showBatchSettleDialog, setShowBatchSettleDialog] = useState(false);
+  const [selectedBU, setSelectedBU] = useState("mega-trucking");
 
-  // Mock data - loads that are complete and ready to be settled with drivers
-  const readyToSettleData = [
+  // Mock data - loads ready to be settled with drivers/technicians (Mega Trucking)
+  const driverReadyToSettleData = [
     {
       id: 1,
       loadNo: "ML-2025-001245",
-      driverId: "DRV-001",
-      driverName: "John Smith",
+      payeeId: "DRV-001",
+      payeeName: "John Smith",
+      payeeType: "Driver",
       deliveryDate: "2025-01-05",
       customer: "Titan Construction",
       origin: "Houston, TX",
@@ -62,8 +72,9 @@ const ReadyToSettle = () => {
     {
       id: 2,
       loadNo: "ML-2025-001246",
-      driverId: "DRV-002",
-      driverName: "Mike Davis",
+      payeeId: "DRV-002",
+      payeeName: "Mike Davis",
+      payeeType: "Driver",
       deliveryDate: "2025-01-05",
       customer: "Titan Construction",
       origin: "Austin, TX",
@@ -81,8 +92,9 @@ const ReadyToSettle = () => {
     {
       id: 3,
       loadNo: "ML-2025-001247",
-      driverId: "DRV-003",
-      driverName: "Sarah Johnson",
+      payeeId: "DRV-003",
+      payeeName: "Sarah Johnson",
+      payeeType: "Driver",
       deliveryDate: "2025-01-06",
       customer: "Ashgrove Cement",
       origin: "San Antonio, TX",
@@ -99,9 +111,30 @@ const ReadyToSettle = () => {
     },
     {
       id: 4,
+      loadNo: "WO-2025-000123",
+      payeeId: "TECH-001",
+      payeeName: "Carlos Martinez",
+      payeeType: "Technician",
+      deliveryDate: "2025-01-05",
+      customer: "Internal",
+      origin: "Houston Yard",
+      destination: "Houston Yard",
+      miles: 0,
+      lineHaulPay: 450.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 50.00,
+      deductions: 0.00,
+      netPay: 500.00,
+      payType: "Hourly",
+      vehicleNo: "-",
+      podVerified: true,
+    },
+    {
+      id: 5,
       loadNo: "ML-2025-001248",
-      driverId: "DRV-001",
-      driverName: "John Smith",
+      payeeId: "DRV-001",
+      payeeName: "John Smith",
+      payeeType: "Driver",
       deliveryDate: "2025-01-06",
       customer: "TQL Logistics",
       origin: "Fort Worth, TX",
@@ -117,44 +150,145 @@ const ReadyToSettle = () => {
       podVerified: true,
     },
     {
-      id: 5,
-      loadNo: "ML-2025-001249",
-      driverId: "DRV-004",
-      driverName: "Robert Wilson",
-      deliveryDate: "2025-01-07",
-      customer: "Ashgrove Cement",
-      origin: "Dallas, TX",
-      destination: "San Antonio, TX",
-      miles: 275,
-      lineHaulPay: 550.00,
-      fuelAdvance: 175.00,
-      accessorialPay: 0.00,
-      deductions: 50.00,
-      netPay: 325.00,
-      payType: "Per Mile",
-      vehicleNo: "TRK-7734",
-      podVerified: false,
-    },
-    {
       id: 6,
-      loadNo: "ML-2025-001250",
-      driverId: "DRV-002",
-      driverName: "Mike Davis",
-      deliveryDate: "2025-01-07",
-      customer: "CH Robinson",
-      origin: "Houston, TX",
-      destination: "Dallas, TX",
-      miles: 240,
-      lineHaulPay: 480.00,
-      fuelAdvance: 150.00,
+      loadNo: "WO-2025-000124",
+      payeeId: "TECH-002",
+      payeeName: "James Wilson",
+      payeeType: "Technician",
+      deliveryDate: "2025-01-06",
+      customer: "Internal",
+      origin: "Dallas Yard",
+      destination: "Dallas Yard",
+      miles: 0,
+      lineHaulPay: 525.00,
+      fuelAdvance: 0.00,
       accessorialPay: 75.00,
-      deductions: 0.00,
-      netPay: 405.00,
-      payType: "Per Mile",
-      vehicleNo: "TRK-1923",
+      deductions: 25.00,
+      netPay: 575.00,
+      payType: "Hourly",
+      vehicleNo: "-",
       podVerified: true,
     },
   ];
+
+  // Mock data - brokerage loads ready to be settled with carriers (Mega Logistics)
+  const carrierReadyToSettleData = [
+    {
+      id: 101,
+      loadNo: "BRK-2025-001289",
+      payeeId: "VND-001",
+      payeeName: "Swift Transport LLC",
+      payeeType: "Carrier",
+      deliveryDate: "2025-01-08",
+      customer: "Titan Construction",
+      origin: "Houston, TX",
+      destination: "Phoenix, AZ",
+      miles: 0,
+      lineHaulPay: 1850.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 100.00,
+      deductions: 0.00,
+      netPay: 1950.00,
+      payType: "Flat Rate",
+      vehicleNo: "-",
+      podVerified: true,
+      invoiceNo: "INV-2025-0920",
+      invoiceStatus: "Paid",
+    },
+    {
+      id: 102,
+      loadNo: "BRK-2025-001290",
+      payeeId: "VND-002",
+      payeeName: "Prime Logistics Inc",
+      payeeType: "Carrier",
+      deliveryDate: "2025-01-08",
+      customer: "TQL Logistics",
+      origin: "Dallas, TX",
+      destination: "Los Angeles, CA",
+      miles: 0,
+      lineHaulPay: 2100.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 75.00,
+      deductions: 0.00,
+      netPay: 2175.00,
+      payType: "Flat Rate",
+      vehicleNo: "-",
+      podVerified: true,
+      invoiceNo: "INV-2025-0921",
+      invoiceStatus: "Paid",
+    },
+    {
+      id: 103,
+      loadNo: "BRK-2025-001291",
+      payeeId: "VND-001",
+      payeeName: "Swift Transport LLC",
+      payeeType: "Carrier",
+      deliveryDate: "2025-01-09",
+      customer: "CH Robinson",
+      origin: "San Antonio, TX",
+      destination: "Denver, CO",
+      miles: 0,
+      lineHaulPay: 1650.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 125.00,
+      deductions: 50.00,
+      netPay: 1725.00,
+      payType: "Flat Rate",
+      vehicleNo: "-",
+      podVerified: true,
+      invoiceNo: "INV-2025-0925",
+      invoiceStatus: "Paid",
+    },
+    {
+      id: 104,
+      loadNo: "BRK-2025-001292",
+      payeeId: "VND-003",
+      payeeName: "Roadrunner Freight",
+      payeeType: "Carrier",
+      deliveryDate: "2025-01-09",
+      customer: "Ashgrove Cement",
+      origin: "Austin, TX",
+      destination: "Albuquerque, NM",
+      miles: 0,
+      lineHaulPay: 1400.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 75.00,
+      deductions: 0.00,
+      netPay: 1475.00,
+      payType: "Flat Rate",
+      vehicleNo: "-",
+      podVerified: true,
+      invoiceNo: "INV-2025-0926",
+      invoiceStatus: "Paid",
+    },
+    {
+      id: 105,
+      loadNo: "BRK-2025-001293",
+      payeeId: "VND-004",
+      payeeName: "Eagle Express Trucking",
+      payeeType: "Carrier",
+      deliveryDate: "2025-01-10",
+      customer: "Coyote Logistics",
+      origin: "Fort Worth, TX",
+      destination: "Tucson, AZ",
+      miles: 0,
+      lineHaulPay: 1750.00,
+      fuelAdvance: 0.00,
+      accessorialPay: 75.00,
+      deductions: 0.00,
+      netPay: 1825.00,
+      payType: "Flat Rate",
+      vehicleNo: "-",
+      podVerified: false,
+      invoiceNo: "INV-2025-0930",
+      invoiceStatus: "Pending",
+    },
+  ];
+
+  // Get data based on selected BU
+  const filteredData = selectedBU === "mega-trucking"
+    ? driverReadyToSettleData
+    : carrierReadyToSettleData;
 
   const filterGroups = [
     {
@@ -168,11 +302,11 @@ const ReadyToSettle = () => {
           placeholder: "Search load number...",
         },
         {
-          key: "driver",
-          label: "Driver",
+          key: "payee",
+          label: selectedBU === "mega-trucking" ? "Payee" : "Carrier",
           type: "input",
           group: "Basic",
-          placeholder: "Search driver...",
+          placeholder: selectedBU === "mega-trucking" ? "Search payee..." : "Search carrier...",
         },
         {
           key: "deliveryDate",
@@ -196,7 +330,7 @@ const ReadyToSettle = () => {
   ];
 
   const handleFiltersChange = useCallback((newFilters) => {
-    setFilters(newFilters);
+    // Filter handling
   }, []);
 
   const formatCurrency = (amount) => {
@@ -224,7 +358,7 @@ const ReadyToSettle = () => {
 
   const handleSelectAll = (checked) => {
     if (checked) {
-      setSelectedRows(readyToSettleData.map((row) => row.id));
+      setSelectedRows(filteredData.map((row) => row.id));
     } else {
       setSelectedRows([]);
     }
@@ -235,12 +369,34 @@ const ReadyToSettle = () => {
     navigate("/app/carrier-portal/billing/settlements");
   };
 
+  const getPayeeTypeBadge = (type) => {
+    const typeColors = {
+      Driver: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      Technician: "bg-purple-500/10 text-purple-700 border-purple-500/50",
+      Carrier: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
+    };
+    return typeColors[type] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+  };
+
+  const getPayeeTypeIcon = (type) => {
+    switch (type) {
+      case "Driver":
+        return <UserIcon className="size-3" />;
+      case "Technician":
+        return <WrenchIcon className="size-3" />;
+      case "Carrier":
+        return <TruckIcon className="size-3" />;
+      default:
+        return null;
+    }
+  };
+
   const columns = [
     {
       id: "select",
       header: ({ table }) => (
         <Checkbox
-          checked={selectedRows.length === readyToSettleData.length}
+          checked={selectedRows.length === filteredData.length && filteredData.length > 0}
           onCheckedChange={handleSelectAll}
           aria-label="Select all"
         />
@@ -286,7 +442,7 @@ const ReadyToSettle = () => {
     {
       accessorKey: "loadNo",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Load No" />
+        <DataTableColumnHeader column={column} title="Load/WO No" />
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm font-medium text-primary">
@@ -295,16 +451,31 @@ const ReadyToSettle = () => {
       ),
     },
     {
-      accessorKey: "driverName",
+      accessorKey: "payeeName",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Driver" />
+        <DataTableColumnHeader column={column} title={selectedBU === "mega-trucking" ? "Payee" : "Carrier"} />
       ),
       cell: ({ row }) => (
         <div className="flex flex-col">
-          <span className="font-medium">{row.getValue("driverName")}</span>
-          <span className="text-xs text-muted-foreground">{row.original.driverId}</span>
+          <span className="font-medium">{row.getValue("payeeName")}</span>
+          <span className="text-xs text-muted-foreground">{row.original.payeeId}</span>
         </div>
       ),
+    },
+    {
+      accessorKey: "payeeType",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Type" />
+      ),
+      cell: ({ row }) => {
+        const payeeType = row.getValue("payeeType");
+        return (
+          <Badge className={`${getPayeeTypeBadge(payeeType)} flex items-center gap-1 w-fit`}>
+            {getPayeeTypeIcon(payeeType)}
+            {payeeType}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: "deliveryDate",
@@ -319,31 +490,36 @@ const ReadyToSettle = () => {
         <DataTableColumnHeader column={column} title="Customer" />
       ),
     },
-    {
+    ...(selectedBU === "mega-trucking" ? [{
       accessorKey: "miles",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Miles" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium">{row.getValue("miles")}</span>
+        <span className="font-medium">{row.getValue("miles") || "-"}</span>
       ),
-    },
+    }] : []),
     {
       accessorKey: "lineHaulPay",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Line Haul" />
+        <DataTableColumnHeader column={column} title={selectedBU === "mega-trucking" ? "Line Haul" : "Carrier Rate"} />
       ),
       cell: ({ row }) => formatCurrency(row.getValue("lineHaulPay")),
     },
-    {
+    ...(selectedBU === "mega-trucking" ? [{
       accessorKey: "fuelAdvance",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Fuel Advance" />
       ),
-      cell: ({ row }) => (
-        <span className="text-amber-600">-{formatCurrency(row.getValue("fuelAdvance"))}</span>
-      ),
-    },
+      cell: ({ row }) => {
+        const fuelAdvance = row.getValue("fuelAdvance");
+        return fuelAdvance > 0 ? (
+          <span className="text-amber-600">-{formatCurrency(fuelAdvance)}</span>
+        ) : (
+          <span className="text-muted-foreground">-</span>
+        );
+      },
+    }] : []),
     {
       accessorKey: "accessorialPay",
       header: ({ column }) => (
@@ -399,26 +575,32 @@ const ReadyToSettle = () => {
   ];
 
   // Calculate totals for selected rows
-  const selectedTotal = readyToSettleData
+  const selectedTotal = filteredData
     .filter((row) => selectedRows.includes(row.id))
     .reduce((sum, row) => sum + row.netPay, 0);
 
-  // Group by driver for batch settlement
-  const selectedByDriver = readyToSettleData
+  // Group by payee for batch settlement
+  const selectedByPayee = filteredData
     .filter((row) => selectedRows.includes(row.id))
     .reduce((acc, row) => {
-      if (!acc[row.driverId]) {
-        acc[row.driverId] = {
-          driver: row.driverName,
-          driverId: row.driverId,
+      if (!acc[row.payeeId]) {
+        acc[row.payeeId] = {
+          payee: row.payeeName,
+          payeeId: row.payeeId,
+          payeeType: row.payeeType,
           loads: [],
           totalNetPay: 0,
         };
       }
-      acc[row.driverId].loads.push(row);
-      acc[row.driverId].totalNetPay += row.netPay;
+      acc[row.payeeId].loads.push(row);
+      acc[row.payeeId].totalNetPay += row.netPay;
       return acc;
     }, {});
+
+  // Calculate stats
+  const uniquePayees = new Set(filteredData.map((r) => r.payeeId)).size;
+  const verifiedPods = filteredData.filter((r) => r.podVerified).length;
+  const totalNetPay = filteredData.reduce((sum, row) => sum + row.netPay, 0);
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -431,10 +613,35 @@ const ReadyToSettle = () => {
               Ready to Settle
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Completed loads ready for driver settlement
+              {selectedBU === "mega-trucking"
+                ? "Completed loads ready for driver/technician settlement"
+                : "Completed brokerage loads ready for carrier settlement"}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {/* Business Unit Selector */}
+            <Select value={selectedBU} onValueChange={(value) => {
+              setSelectedBU(value);
+              setSelectedRows([]);
+            }}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select BU" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mega-trucking">
+                  <div className="flex items-center gap-2">
+                    <TruckIcon className="size-4" />
+                    Mega Trucking
+                  </div>
+                </SelectItem>
+                <SelectItem value="mega-logistics">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="size-4" />
+                    Mega Logistics
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
             {selectedRows.length > 0 && (
               <div className="flex items-center gap-3">
                 <div className="text-sm">
@@ -467,7 +674,7 @@ const ReadyToSettle = () => {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Loads</p>
-                <p className="text-xl font-bold">{readyToSettleData.length}</p>
+                <p className="text-xl font-bold">{filteredData.length}</p>
               </div>
             </div>
           </div>
@@ -479,7 +686,7 @@ const ReadyToSettle = () => {
               <div>
                 <p className="text-xs text-muted-foreground">Total Net Pay</p>
                 <p className="text-xl font-bold text-green-600">
-                  {formatCurrency(readyToSettleData.reduce((sum, row) => sum + row.netPay, 0))}
+                  {formatCurrency(totalNetPay)}
                 </p>
               </div>
             </div>
@@ -487,13 +694,17 @@ const ReadyToSettle = () => {
           <div className="border rounded-lg p-4 bg-card">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-purple-500/10">
-                <UserIcon className="size-5 text-purple-600" />
+                {selectedBU === "mega-trucking" ? (
+                  <UserIcon className="size-5 text-purple-600" />
+                ) : (
+                  <Building2 className="size-5 text-purple-600" />
+                )}
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Unique Drivers</p>
-                <p className="text-xl font-bold">
-                  {new Set(readyToSettleData.map((r) => r.driverId)).size}
+                <p className="text-xs text-muted-foreground">
+                  {selectedBU === "mega-trucking" ? "Unique Payees" : "Unique Carriers"}
                 </p>
+                <p className="text-xl font-bold">{uniquePayees}</p>
               </div>
             </div>
           </div>
@@ -505,7 +716,7 @@ const ReadyToSettle = () => {
               <div>
                 <p className="text-xs text-muted-foreground">POD Verified</p>
                 <p className="text-xl font-bold">
-                  {readyToSettleData.filter((r) => r.podVerified).length}/{readyToSettleData.length}
+                  {verifiedPods}/{filteredData.length}
                 </p>
               </div>
             </div>
@@ -525,7 +736,7 @@ const ReadyToSettle = () => {
           <div className="px-4 pb-3">
             <DataTable
               columns={columns}
-              data={readyToSettleData}
+              data={filteredData}
               showViewOptions={false}
               pageSize={10}
             />
@@ -537,32 +748,38 @@ const ReadyToSettle = () => {
       <AlertDialog open={showBatchSettleDialog} onOpenChange={setShowBatchSettleDialog}>
         <AlertDialogContent className="max-w-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>Create Driver Settlements</AlertDialogTitle>
+            <AlertDialogTitle>Create Settlements</AlertDialogTitle>
             <AlertDialogDescription>
               You are about to create settlements for {selectedRows.length} loads.
-              {Object.keys(selectedByDriver).length > 1 && (
+              {Object.keys(selectedByPayee).length > 1 && (
                 <span className="block mt-2">
-                  This will generate {Object.keys(selectedByDriver).length} separate settlements (one per driver).
+                  This will generate {Object.keys(selectedByPayee).length} separate settlements (one per {selectedBU === "mega-trucking" ? "payee" : "carrier"}).
                 </span>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-3">
-            {Object.values(selectedByDriver).map((group) => (
-              <div key={group.driverId} className="border rounded-lg p-3 bg-muted/50">
+          <div className="py-4 space-y-3 max-h-64 overflow-y-auto">
+            {Object.values(selectedByPayee).map((group) => (
+              <div key={group.payeeId} className="border rounded-lg p-3 bg-muted/50">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{group.driver}</p>
-                    <p className="text-xs text-muted-foreground">{group.loads.length} loads</p>
+                    <p className="font-medium">{group.payee}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge className={`${getPayeeTypeBadge(group.payeeType)} flex items-center gap-1`} style={{ fontSize: '10px', padding: '2px 6px' }}>
+                        {getPayeeTypeIcon(group.payeeType)}
+                        {group.payeeType}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">{group.loads.length} loads</span>
+                    </div>
                   </div>
                   <p className="font-bold text-green-600">{formatCurrency(group.totalNetPay)}</p>
                 </div>
               </div>
             ))}
-            <div className="border-t pt-3 flex items-center justify-between">
-              <span className="font-medium">Grand Total</span>
-              <span className="text-lg font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
-            </div>
+          </div>
+          <div className="border-t pt-3 flex items-center justify-between">
+            <span className="font-medium">Grand Total</span>
+            <span className="text-lg font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -570,7 +787,7 @@ const ReadyToSettle = () => {
               onClick={() => handleCreateSettlement(selectedRows)}
               className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
             >
-              Create {Object.keys(selectedByDriver).length} Settlement(s)
+              Create {Object.keys(selectedByPayee).length} Settlement(s)
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
   Sheet,
   SheetContent,
@@ -33,7 +35,6 @@ import {
   ArrowLeftIcon,
   Wallet,
   DownloadIcon,
-  PrinterIcon,
   DollarSign,
   UserIcon,
   CalendarIcon,
@@ -42,13 +43,28 @@ import {
   FuelIcon,
   MinusCircleIcon,
   PlusIcon,
+  FileText,
+  History,
+  Pencil,
+  LayoutDashboard,
+  CreditCard,
+  Phone,
+  Mail,
+  MapPin,
+  Building2,
+  Clock,
+  CheckCircle2,
 } from "lucide-react";
 
 const SettlementDetails = () => {
   const { settlementNo } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "overview";
+
   const [isDeductionSheetOpen, setIsDeductionSheetOpen] = useState(false);
   const [showProcessPaymentDialog, setShowProcessPaymentDialog] = useState(false);
+  const [loadsFilters, setLoadsFilters] = useState([]);
   const [deductionFormData, setDeductionFormData] = useState({
     type: "",
     amount: "",
@@ -58,24 +74,31 @@ const SettlementDetails = () => {
   // Mock settlement data
   const settlement = {
     settlementNo: settlementNo || "STL-2025-0001",
-    driver: "John Smith",
-    driverId: "DRV-001",
-    driverEmail: "john.smith@email.com",
-    driverPhone: "(713) 555-1234",
+    payee: "John Smith",
+    payeeId: "DRV-001",
+    payeeType: "Driver",
+    payeeEmail: "john.smith@email.com",
+    payeePhone: "(713) 555-1234",
+    payeeAddress: "1234 Main Street, Houston, TX 77001",
     payType: "Per Mile",
-    payRate: "$2.00/mile",
+    payRate: "$0.55/mile",
+    businessUnit: "Mega Trucking",
     periodStart: "2025-01-01",
     periodEnd: "2025-01-07",
     status: "Pending",
     paymentMethod: "Direct Deposit",
+    bankName: "Chase Bank",
     bankAccount: "****4521",
+    routingNumber: "****6789",
+    glAccount: "5100 - Driver Payroll",
     createdDate: "2025-01-08",
+    createdBy: "Sarah Johnson",
     grossPay: 3840.00,
     fuelAdvances: 1200.00,
     accessorialPay: 350.00,
     deductions: 75.00,
     netPay: 2915.00,
-    notes: "Weekly settlement for John Smith. All loads verified.",
+    notes: "Weekly settlement for John Smith. All loads verified and approved.",
   };
 
   // Mock load details for settlement
@@ -193,16 +216,74 @@ const SettlementDetails = () => {
       type: "Insurance",
       description: "Weekly insurance deduction",
       amount: 50.00,
+      glAccount: "5410 - Insurance Deductions",
       date: "2025-01-08",
+      addedBy: "System",
     },
     {
       id: 2,
       type: "Equipment",
-      description: "Truck wash",
+      description: "Truck wash - Houston Terminal",
       amount: 25.00,
+      glAccount: "5400 - Equipment Deductions",
       date: "2025-01-08",
+      addedBy: "Sarah Johnson",
     },
   ];
+
+  // Audit log data
+  const auditLogData = [
+    {
+      id: 1,
+      action: "Settlement created",
+      type: "Create",
+      oldValue: "-",
+      newValue: settlement.settlementNo,
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 08, 2025 09:30:15",
+    },
+    {
+      id: 2,
+      action: "Deduction added",
+      type: "Update",
+      oldValue: "-",
+      newValue: "Insurance - $50.00",
+      actionBy: "System",
+      timestamp: "Jan 08, 2025 09:30:20",
+    },
+    {
+      id: 3,
+      action: "Deduction added",
+      type: "Update",
+      oldValue: "-",
+      newValue: "Equipment - $25.00",
+      actionBy: "Sarah Johnson",
+      timestamp: "Jan 08, 2025 09:35:00",
+    },
+    {
+      id: 4,
+      action: "Settlement approved",
+      type: "Status",
+      oldValue: "Draft",
+      newValue: "Pending",
+      actionBy: "Mike Davis",
+      timestamp: "Jan 08, 2025 10:00:00",
+    },
+  ];
+
+  const loadsFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        { key: "loadNo", label: "Load No", type: "input", group: "Basic", placeholder: "Search load..." },
+        { key: "customer", label: "Customer", type: "input", group: "Basic", placeholder: "Search customer..." },
+      ],
+    },
+  ];
+
+  const handleLoadsFiltersChange = useCallback((newFilters) => {
+    setLoadsFilters(newFilters);
+  }, []);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
@@ -220,23 +301,45 @@ const SettlementDetails = () => {
   };
 
   const getStatusBadge = (status) => {
-    const statusColors = {
-      Pending: "bg-amber-500/10 text-amber-700 border-amber-500/50",
-      Paid: "bg-green-500/10 text-green-700 border-green-500/50",
-      Processing: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+    const statusConfig = {
+      Pending: { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: Clock },
+      Paid: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2 },
+      Processing: { color: "bg-blue-500/10 text-blue-700 border-blue-500/50", icon: Clock },
     };
-    return statusColors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+    const config = statusConfig[status] || statusConfig["Pending"];
+    const Icon = config.icon;
+    return (
+      <Badge className={config.color}>
+        <Icon className="size-3 mr-1" />
+        {status}
+      </Badge>
+    );
+  };
+
+  const getPayeeTypeBadge = (type) => {
+    const typeColors = {
+      Driver: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      Technician: "bg-purple-500/10 text-purple-700 border-purple-500/50",
+      Carrier: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
+    };
+    return typeColors[type] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+  };
+
+  const getAuditTypeBadgeColor = (type) => {
+    const colors = {
+      Create: "bg-green-500/10 text-green-700 border-green-500/50",
+      Update: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      Status: "bg-amber-500/10 text-amber-700 border-amber-500/50",
+      Delete: "bg-red-500/10 text-red-700 border-red-500/50",
+    };
+    return colors[type] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
   };
 
   const handleDeductionSubmit = (e) => {
     e.preventDefault();
     console.log("Deduction submitted:", deductionFormData);
     setIsDeductionSheetOpen(false);
-    setDeductionFormData({
-      type: "",
-      amount: "",
-      description: "",
-    });
+    setDeductionFormData({ type: "", amount: "", description: "" });
   };
 
   const handleProcessPayment = () => {
@@ -248,78 +351,95 @@ const SettlementDetails = () => {
   const loadColumns = [
     {
       accessorKey: "loadNo",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Load No" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Load No" />,
       cell: ({ row }) => (
-        <span className="font-mono text-sm font-medium text-primary">
+        <button
+          onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.getValue("loadNo")}&mode=view`)}
+          className="font-mono text-sm font-medium text-primary hover:underline"
+        >
           {row.getValue("loadNo")}
-        </span>
+        </button>
       ),
     },
     {
       accessorKey: "deliveryDate",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Delivery" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Delivery" />,
       cell: ({ row }) => formatDate(row.getValue("deliveryDate")),
     },
     {
       accessorKey: "origin",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Origin" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Origin" />,
     },
     {
       accessorKey: "destination",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Destination" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Destination" />,
     },
     {
       accessorKey: "customer",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
     },
     {
       accessorKey: "miles",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Miles" />
-      ),
-      cell: ({ row }) => <span className="font-medium">{row.getValue("miles")}</span>,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Miles" />,
+      cell: ({ row }) => <span className="font-medium">{row.getValue("miles").toLocaleString()}</span>,
     },
     {
       accessorKey: "lineHaulPay",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Line Haul" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Line Haul" />,
       cell: ({ row }) => formatCurrency(row.getValue("lineHaulPay")),
     },
     {
       accessorKey: "fuelAdvance",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Fuel Adv" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Fuel Adv" />,
       cell: ({ row }) => (
         <span className="text-amber-600">-{formatCurrency(row.getValue("fuelAdvance"))}</span>
       ),
     },
     {
       accessorKey: "accessorialPay",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Accessorial" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Accessorial" />,
       cell: ({ row }) => formatCurrency(row.getValue("accessorialPay")),
     },
     {
       accessorKey: "netPay",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Net Pay" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Net Pay" />,
       cell: ({ row }) => (
         <span className="font-bold text-green-600">{formatCurrency(row.getValue("netPay"))}</span>
       ),
+    },
+  ];
+
+  const auditLogColumns = [
+    {
+      accessorKey: "action",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Action" />,
+    },
+    {
+      accessorKey: "type",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+      cell: ({ row }) => (
+        <Badge variant="outline" className={getAuditTypeBadgeColor(row.getValue("type"))}>
+          {row.getValue("type")}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: "oldValue",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Old Value" />,
+      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("oldValue")}</span>,
+    },
+    {
+      accessorKey: "newValue",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="New Value" />,
+      cell: ({ row }) => <span className="font-medium">{row.getValue("newValue")}</span>,
+    },
+    {
+      accessorKey: "actionBy",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Modified By" />,
+    },
+    {
+      accessorKey: "timestamp",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Timestamp" />,
     },
   ];
 
@@ -331,185 +451,311 @@ const SettlementDetails = () => {
   const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
 
   return (
-    <div className="flex flex-col h-full bg-background">
-      {/* Header */}
-      <div className="flex-shrink-0 border-b bg-background px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/app/carrier-portal/billing/settlements")}
-            >
-              <ArrowLeftIcon className="size-5" />
-            </Button>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                  <Wallet className="size-6" />
-                  {settlement.settlementNo}
-                </h1>
-                <Badge className={getStatusBadge(settlement.status)}>{settlement.status}</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                Settlement for {settlement.driver}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <PrinterIcon className="size-4 mr-2" />
-              Print
-            </Button>
-            <Button variant="outline" size="sm">
-              <DownloadIcon className="size-4 mr-2" />
-              Download PDF
-            </Button>
-            {settlement.status === "Pending" && (
+    <div className="flex flex-col h-full bg-background overflow-hidden">
+      <Tabs defaultValue={activeTab} className="w-full h-full flex flex-col overflow-hidden">
+        {/* Header with Back Button and Actions */}
+        <div className="flex-shrink-0 px-4 py-3 border-b bg-background">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Button
-                onClick={() => setShowProcessPaymentDialog(true)}
-                className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/app/carrier-portal/billing/settlements")}
               >
-                <BanknoteIcon className="size-4 mr-2" />
-                Process Payment
+                <ArrowLeftIcon className="size-5" />
               </Button>
-            )}
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Wallet className="size-5 text-primary" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-lg font-bold">{settlement.settlementNo}</h1>
+                    {getStatusBadge(settlement.status)}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {settlement.payee} ({settlement.payeeId})
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <DownloadIcon className="size-4 mr-2" />
+                Download PDF
+              </Button>
+              {settlement.status === "Pending" && (
+                <Button
+                  onClick={() => setShowProcessPaymentDialog(true)}
+                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  size="sm"
+                >
+                  <BanknoteIcon className="size-4 mr-2" />
+                  Process Payment
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
-          {/* Driver Info & Settlement Info */}
-          <div className="grid grid-cols-2 gap-6">
-            {/* Driver Info */}
-            <div className="border rounded-lg bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <UserIcon className="size-4" />
-                  Driver Information
-                </h3>
+        {/* Tabs */}
+        <div className="flex-shrink-0 px-4 border-b">
+          <TabsList className="mb-0 rounded-none bg-transparent h-12">
+            <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+              <LayoutDashboard className="size-4 mr-1.5" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="loads" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+              <TruckIcon className="size-4 mr-1.5" />
+              Loads ({loadDetails.length})
+            </TabsTrigger>
+            <TabsTrigger value="deductions" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+              <MinusCircleIcon className="size-4 mr-1.5" />
+              Deductions ({deductions.length})
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
+              <History className="size-4 mr-1.5" />
+              Audit Log
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Tab Content */}
+        <div className="flex-1 overflow-auto">
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="p-4 space-y-4 mt-0 h-full">
+            <div className="grid grid-cols-3 gap-4">
+              {/* Payee Information */}
+              <div className="border rounded-lg bg-card">
+                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <UserIcon className="size-4" />
+                    Payee Information
+                  </h3>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <Pencil className="size-4" />
+                  </button>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <UserIcon className="size-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold">{settlement.payee}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground font-mono">{settlement.payeeId}</span>
+                        <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
+                          {settlement.payeeType}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 pt-2 border-t">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="size-3.5 text-muted-foreground" />
+                      <span>{settlement.payeePhone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail className="size-3.5 text-muted-foreground" />
+                      <span className="text-primary">{settlement.payeeEmail}</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-sm">
+                      <MapPin className="size-3.5 text-muted-foreground mt-0.5" />
+                      <span>{settlement.payeeAddress}</span>
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Pay Type</p>
+                        <p className="text-sm font-medium">{settlement.payType}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Pay Rate</p>
+                        <p className="text-sm font-medium">{settlement.payRate}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="p-4 space-y-2">
-                <p className="font-bold text-lg">{settlement.driver}</p>
-                <p className="text-sm text-muted-foreground font-mono">{settlement.driverId}</p>
-                <p className="text-sm text-muted-foreground">{settlement.driverPhone}</p>
-                <p className="text-sm text-primary">{settlement.driverEmail}</p>
-                <div className="pt-2 border-t mt-3">
-                  <p className="text-xs text-muted-foreground">Pay Type</p>
-                  <p className="font-medium">{settlement.payType} - {settlement.payRate}</p>
+
+              {/* Settlement Details */}
+              <div className="border rounded-lg bg-card">
+                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <CalendarIcon className="size-4" />
+                    Settlement Details
+                  </h3>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <Pencil className="size-4" />
+                  </button>
+                </div>
+                <div className="divide-y">
+                  <div className="grid grid-cols-2 divide-x">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Period Start</p>
+                      <p className="text-sm font-medium">{formatDate(settlement.periodStart)}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Period End</p>
+                      <p className="text-sm font-medium">{formatDate(settlement.periodEnd)}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Business Unit</p>
+                      <p className="text-sm font-medium flex items-center gap-1">
+                        <Building2 className="size-3.5" />
+                        {settlement.businessUnit}
+                      </p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">GL Account</p>
+                      <p className="text-sm font-medium">{settlement.glAccount}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Created Date</p>
+                      <p className="text-sm font-medium">{formatDate(settlement.createdDate)}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Created By</p>
+                      <p className="text-sm font-medium">{settlement.createdBy}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              <div className="border rounded-lg bg-card">
+                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <CreditCard className="size-4" />
+                    Payment Information
+                  </h3>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <Pencil className="size-4" />
+                  </button>
+                </div>
+                <div className="divide-y">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground">Payment Method</p>
+                    <p className="text-sm font-medium">{settlement.paymentMethod}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground">Bank Name</p>
+                    <p className="text-sm font-medium">{settlement.bankName}</p>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Account Number</p>
+                      <p className="text-sm font-medium font-mono">{settlement.bankAccount}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground">Routing Number</p>
+                      <p className="text-sm font-medium font-mono">{settlement.routingNumber}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Settlement Info */}
+            {/* Summary Section */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Settlement Summary */}
+              <div className="border rounded-lg bg-card">
+                <div className="px-4 py-3 border-b bg-muted">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <DollarSign className="size-4" />
+                    Settlement Summary
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Line Haul Pay ({totalMiles.toLocaleString()} miles)</span>
+                    <span>{formatCurrency(totalLineHaul)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Accessorial Pay</span>
+                    <span>{formatCurrency(totalAccessorial)}</span>
+                  </div>
+                  <div className="border-t pt-3 flex justify-between font-medium">
+                    <span>Gross Pay</span>
+                    <span>{formatCurrency(settlement.grossPay)}</span>
+                  </div>
+                  <div className="flex justify-between text-amber-600">
+                    <span className="flex items-center gap-1">
+                      <FuelIcon className="size-3" />
+                      Fuel Advances
+                    </span>
+                    <span>-{formatCurrency(totalFuelAdvance)}</span>
+                  </div>
+                  <div className="flex justify-between text-red-600">
+                    <span className="flex items-center gap-1">
+                      <MinusCircleIcon className="size-3" />
+                      Deductions
+                    </span>
+                    <span>-{formatCurrency(totalDeductions)}</span>
+                  </div>
+                  <div className="border-t pt-3 flex justify-between font-bold text-lg">
+                    <span>Net Pay</span>
+                    <span className="text-green-600">{formatCurrency(settlement.netPay)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div className="border rounded-lg bg-card">
+                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <FileText className="size-4" />
+                    Notes
+                  </h3>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <Pencil className="size-4" />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <p className="text-sm text-muted-foreground">{settlement.notes || "No notes added."}</p>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Loads Tab */}
+          <TabsContent value="loads" className="p-4 mt-0 h-full">
             <div className="border rounded-lg bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <CalendarIcon className="size-4" />
-                  Settlement Details
-                </h3>
+              <div className="flex items-center justify-between px-4 py-3 border-b">
+                <SmartFilter filterGroups={loadsFilterGroups} onFiltersChange={handleLoadsFiltersChange} />
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="text-muted-foreground">Total:</span>
+                  <span className="font-medium">{loadDetails.length} loads</span>
+                  <span className="text-muted-foreground">|</span>
+                  <span className="font-medium">{totalMiles.toLocaleString()} miles</span>
+                  <span className="text-muted-foreground">|</span>
+                  <span className="font-bold text-green-600">{formatCurrency(loadDetails.reduce((sum, l) => sum + l.netPay, 0))}</span>
+                </div>
               </div>
               <div className="p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Period</p>
-                    <p className="font-medium">{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Created Date</p>
-                    <p className="font-medium">{formatDate(settlement.createdDate)}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Payment Method</p>
-                    <p className="font-medium">{settlement.paymentMethod}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Bank Account</p>
-                    <p className="font-medium font-mono">{settlement.bankAccount}</p>
-                  </div>
-                </div>
+                <DataTable columns={loadColumns} data={loadDetails} showViewOptions={false} pageSize={10} />
               </div>
             </div>
-          </div>
+          </TabsContent>
 
-          {/* Load Details */}
-          <div className="border rounded-lg bg-card">
-            <div className="px-4 py-3 border-b bg-muted">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
-                <TruckIcon className="size-4" />
-                Load Details ({loadDetails.length} loads | {totalMiles.toLocaleString()} miles)
-              </h3>
-            </div>
-            <div className="p-4">
-              <DataTable
-                columns={loadColumns}
-                data={loadDetails}
-                showViewOptions={false}
-                pageSize={10}
-              />
-            </div>
-          </div>
-
-          {/* Summary & Deductions */}
-          <div className="grid grid-cols-2 gap-6">
-            {/* Settlement Summary */}
+          {/* Deductions Tab */}
+          <TabsContent value="deductions" className="p-4 mt-0 h-full">
             <div className="border rounded-lg bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <DollarSign className="size-4" />
-                  Settlement Summary
-                </h3>
-              </div>
-              <div className="p-4 space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Line Haul Pay ({totalMiles} miles)</span>
-                  <span>{formatCurrency(totalLineHaul)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Accessorial Pay</span>
-                  <span>{formatCurrency(totalAccessorial)}</span>
-                </div>
-                <div className="border-t pt-3 flex justify-between font-medium">
-                  <span>Gross Pay</span>
-                  <span>{formatCurrency(settlement.grossPay)}</span>
-                </div>
-                <div className="flex justify-between text-amber-600">
-                  <span className="flex items-center gap-1">
-                    <FuelIcon className="size-3" />
-                    Fuel Advances
-                  </span>
-                  <span>-{formatCurrency(totalFuelAdvance)}</span>
-                </div>
-                <div className="flex justify-between text-red-600">
-                  <span className="flex items-center gap-1">
-                    <MinusCircleIcon className="size-3" />
-                    Deductions
-                  </span>
-                  <span>-{formatCurrency(totalDeductions)}</span>
-                </div>
-                <div className="border-t pt-3 flex justify-between font-bold text-lg">
-                  <span>Net Pay</span>
-                  <span className="text-green-600">{formatCurrency(settlement.netPay)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Deductions */}
-            <div className="border rounded-lg bg-card">
-              <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <MinusCircleIcon className="size-4" />
-                  Deductions
-                </h3>
+              <div className="flex items-center justify-between px-4 py-3 border-b">
+                <h3 className="text-sm font-semibold">All Deductions</h3>
                 {settlement.status === "Pending" && (
                   <Button
-                    variant="outline"
                     size="sm"
                     onClick={() => setIsDeductionSheetOpen(true)}
+                    className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
                   >
-                    <PlusIcon className="size-3 mr-1" />
+                    <PlusIcon className="size-4 mr-1" />
                     Add Deduction
                   </Button>
                 )}
@@ -518,37 +764,53 @@ const SettlementDetails = () => {
                 {deductions.length > 0 ? (
                   <div className="space-y-3">
                     {deductions.map((deduction) => (
-                      <div key={deduction.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div>
-                          <p className="font-medium">{deduction.type}</p>
-                          <p className="text-xs text-muted-foreground">{deduction.description}</p>
+                      <div key={deduction.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="p-2 rounded-lg bg-red-500/10">
+                            <MinusCircleIcon className="size-5 text-red-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{deduction.type}</p>
+                            <p className="text-sm text-muted-foreground">{deduction.description}</p>
+                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                              <span>{deduction.glAccount}</span>
+                              <span>|</span>
+                              <span>Added by {deduction.addedBy} on {formatDate(deduction.date)}</span>
+                            </div>
+                          </div>
                         </div>
-                        <span className="font-medium text-red-600">-{formatCurrency(deduction.amount)}</span>
+                        <span className="text-lg font-bold text-red-600">-{formatCurrency(deduction.amount)}</span>
                       </div>
                     ))}
-                    <div className="border-t pt-3 flex justify-between font-medium">
+                    <div className="border-t pt-4 flex justify-between font-bold text-lg">
                       <span>Total Deductions</span>
                       <span className="text-red-600">-{formatCurrency(totalDeductions)}</span>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <MinusCircleIcon className="size-8 mx-auto mb-2 opacity-50" />
-                    <p>No deductions applied</p>
+                  <div className="text-center py-12 text-muted-foreground">
+                    <MinusCircleIcon className="size-12 mx-auto mb-3 opacity-30" />
+                    <p className="font-medium">No deductions applied</p>
+                    <p className="text-sm">Click "Add Deduction" to add one</p>
                   </div>
                 )}
               </div>
             </div>
-          </div>
+          </TabsContent>
 
-          {/* Notes */}
-          {settlement.notes && (
-            <div className="border rounded-lg bg-card p-4">
-              <p className="text-sm text-muted-foreground">{settlement.notes}</p>
+          {/* Audit Log Tab */}
+          <TabsContent value="audit" className="p-4 mt-0 h-full">
+            <div className="border rounded-lg bg-card">
+              <div className="px-4 py-3 border-b">
+                <h3 className="text-sm font-semibold">Audit History</h3>
+              </div>
+              <div className="p-4">
+                <DataTable columns={auditLogColumns} data={auditLogData} showViewOptions={false} pageSize={10} />
+              </div>
             </div>
-          )}
+          </TabsContent>
         </div>
-      </div>
+      </Tabs>
 
       {/* Add Deduction Sheet */}
       <Sheet open={isDeductionSheetOpen} onOpenChange={setIsDeductionSheetOpen}>
@@ -637,8 +899,8 @@ const SettlementDetails = () => {
           <div className="py-4 space-y-3">
             <div className="border rounded-lg p-4 bg-muted/50">
               <div className="flex justify-between mb-2">
-                <span className="text-muted-foreground">Driver</span>
-                <span className="font-medium">{settlement.driver}</span>
+                <span className="text-muted-foreground">Payee</span>
+                <span className="font-medium">{settlement.payee}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-muted-foreground">Payment Method</span>

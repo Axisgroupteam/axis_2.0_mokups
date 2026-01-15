@@ -95,6 +95,7 @@ import {
   CircleDotIcon,
   CircleAlertIcon,
   CircleMinusIcon,
+  ZapIcon,
 } from "lucide-react";
 
 const Invoices = () => {
@@ -107,7 +108,7 @@ const Invoices = () => {
   // ============================================================================
   const [scheduledTodayUIVariant, setScheduledTodayUIVariant] = useState("hidden");
 
-  const [activeTab, setActiveTab] = useState("ready-to-invoice");
+  const [activeTab, setActiveTab] = useState("check-failed");
   const [filters, setFilters] = useState([]);
   const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
   const [selectedInvoiceForPdf, setSelectedInvoiceForPdf] = useState(null);
@@ -501,6 +502,12 @@ const Invoices = () => {
         ],
         checkedAt: "2025-01-07T09:30:00Z",
       },
+      // New fields for resolution workflow
+      subStatus: "Pending Resolution", // "Pending Resolution" | "Awaiting Re-Check"
+      missedScheduledCycle: true,
+      missedCycleCount: 2,
+      scheduledDate: "2025-01-11", // When it was supposed to be invoiced
+      nextScheduledRun: "2025-01-18", // Next cycle date
     },
     {
       id: 102,
@@ -530,6 +537,12 @@ const Invoices = () => {
         failureReasons: ["Weight mismatch: Expected 25,500 lbs, Actual 24,800 lbs"],
         checkedAt: "2025-01-07T10:00:00Z",
       },
+      // New fields for resolution workflow
+      subStatus: "Awaiting Re-Check", // Recently fixed, waiting for auto-validation
+      missedScheduledCycle: true,
+      missedCycleCount: 1,
+      scheduledDate: "2025-01-11",
+      nextScheduledRun: "2025-01-18",
     },
     {
       id: 103,
@@ -562,6 +575,12 @@ const Invoices = () => {
         ],
         checkedAt: "2025-01-08T08:15:00Z",
       },
+      // New fields for resolution workflow
+      subStatus: "Pending Resolution",
+      missedScheduledCycle: false, // Fresh failure, hasn't missed a cycle yet
+      missedCycleCount: 0,
+      scheduledDate: "2025-01-15",
+      nextScheduledRun: "2025-01-15",
     },
   ];
 
@@ -788,6 +807,10 @@ const Invoices = () => {
   ];
 
   // Mock internal/intercompany billing data
+  // When truck belongs to Mega Trucking but customer is Mega Logistics customer:
+  // - External invoice: Mega Logistics → Customer
+  // - Internal invoice: Mega Trucking → Mega Logistics (auto-created when external invoice is created)
+  // - Cadence: Immediate (mirrors external invoice)
   const internalBillingData = [
     {
       id: 1,
@@ -801,6 +824,7 @@ const Invoices = () => {
       externalInvoiceNo: "ML-INV-2025-0001",
       totalAmount: 1850.00,
       status: "Invoiced",
+      cadence: "immediate", // Auto-created when external invoice is created
       qbSyncStatus: "synced",
       qbInvoiceId: "INT-10001",
     },
@@ -816,6 +840,7 @@ const Invoices = () => {
       externalInvoiceNo: "ML-INV-2025-0001",
       totalAmount: 2100.00,
       status: "Paid",
+      cadence: "immediate", // Auto-created when external invoice is created
       qbSyncStatus: "synced",
       qbInvoiceId: "INT-10002",
     },
@@ -1373,6 +1398,17 @@ const Invoices = () => {
                 <RefreshCwIcon className="h-4 w-4 mr-2" />
                 Re-trigger Validation
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  // Manual invoice override - skip validation and invoice immediately
+                  console.log("Manual invoice override for load:", load.loadNo);
+                }}
+                className="text-amber-600"
+              >
+                <ZapIcon className="h-4 w-4 mr-2" />
+                Invoice Now (Override)
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -1383,12 +1419,20 @@ const Invoices = () => {
       accessorKey: "loadNo",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Load No" />,
       cell: ({ row }) => (
-        <button
-          onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.getValue("loadNo")}&mode=view`)}
-          className="font-mono text-sm font-medium text-primary hover:underline"
-        >
-          {row.getValue("loadNo")}
-        </button>
+        <div className="flex flex-col gap-1">
+          <button
+            onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.getValue("loadNo")}&mode=view`)}
+            className="font-mono text-sm font-medium text-primary hover:underline text-left"
+          >
+            {row.getValue("loadNo")}
+          </button>
+          {row.original.missedScheduledCycle && (
+            <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-700 border-amber-500/50 w-fit">
+              <ClockIcon className="size-2.5 mr-1" />
+              Missed {row.original.missedCycleCount} cycle{row.original.missedCycleCount > 1 ? "s" : ""}
+            </Badge>
+          )}
+        </div>
       ),
     },
     {
@@ -1402,19 +1446,38 @@ const Invoices = () => {
       ),
     },
     {
-      accessorKey: "businessUnit",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Business Unit" />,
-      cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <Building2Icon className="size-4 text-muted-foreground" />
-          <span className="text-sm">{row.getValue("businessUnit")}</span>
-        </div>
-      ),
+      accessorKey: "subStatus",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Resolution Status" />,
+      cell: ({ row }) => {
+        const subStatus = row.getValue("subStatus");
+        const statusConfig = {
+          "Pending Resolution": { color: "bg-red-500/10 text-red-700 border-red-500/50", icon: CircleAlertIcon },
+          "Awaiting Re-Check": { color: "bg-blue-500/10 text-blue-700 border-blue-500/50", icon: RotateCwIcon },
+        };
+        const config = statusConfig[subStatus] || statusConfig["Pending Resolution"];
+        const Icon = config.icon;
+        return (
+          <Badge variant="outline" className={`text-xs ${config.color}`}>
+            <Icon className="size-3 mr-1" />
+            {subStatus}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: "completedDate",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Completed" />,
       cell: ({ row }) => formatDate(row.getValue("completedDate")),
+    },
+    {
+      accessorKey: "nextScheduledRun",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Next Cycle" />,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-1.5 text-sm">
+          <CalendarIcon className="size-3.5 text-muted-foreground" />
+          <span>{formatDate(row.getValue("nextScheduledRun"))}</span>
+        </div>
+      ),
     },
     {
       accessorKey: "totalCharges",
@@ -1426,7 +1489,7 @@ const Invoices = () => {
       header: ({ column }) => (
         <div className="flex items-center gap-1.5">
           <SparklesIcon className="size-4 text-purple-500" />
-          <DataTableColumnHeader column={column} title="AI Billing Validation" />
+          <DataTableColumnHeader column={column} title="Validation Issues" />
         </div>
       ),
       cell: ({ row }) => {
@@ -1441,10 +1504,10 @@ const Invoices = () => {
           >
             <Badge variant="outline" className="text-xs bg-red-500/10 text-red-700 border-red-500/50">
               <AlertTriangleIcon className="size-3 mr-1" />
-              Failed
+              {validation.failureReasons.length} issue{validation.failureReasons.length > 1 ? "s" : ""}
             </Badge>
             <span className="text-xs text-blue-600 hover:underline">
-              View {validation.failureReasons.length} issue{validation.failureReasons.length > 1 ? "s" : ""}
+              View
             </span>
           </button>
         );
@@ -1799,6 +1862,19 @@ const Invoices = () => {
       },
     },
     {
+      accessorKey: "cadence",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Cadence" />,
+      cell: ({ row }) => {
+        const cadence = row.getValue("cadence");
+        return (
+          <Badge className="bg-amber-500/10 text-amber-700 border-amber-500/50">
+            <ZapIcon className="size-3 mr-1" />
+            Immediate
+          </Badge>
+        );
+      },
+    },
+    {
       accessorKey: "invoiceDate",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
       cell: ({ row }) => formatDate(row.getValue("invoiceDate")),
@@ -1921,6 +1997,29 @@ const Invoices = () => {
       <div className="flex-shrink-0 px-6 py-4">
         <div className={`grid gap-4 ${scheduledTodayUIVariant === "hidden" ? "grid-cols-4" : "grid-cols-5"}`}>
           {/* Scheduled Today Card - Conditionally rendered */}
+          {/* Check Failed - FIRST (Exception-driven workflow) */}
+          <button
+            onClick={() => setActiveTab("check-failed")}
+            className={`border rounded-lg p-4 bg-card text-left transition-all hover:shadow-md ${activeTab === "check-failed" ? "ring-2 ring-red-500" : ""}`}
+          >
+            <div className="flex items-center gap-2 text-red-600 mb-1">
+              <AlertTriangleIcon className="size-4" />
+              <span className="text-xs font-medium">Check Failed</span>
+            </div>
+            <p className="text-2xl font-bold text-red-600">{checkFailedData.length}</p>
+          </button>
+          {/* Ready to Invoice */}
+          <button
+            onClick={() => setActiveTab("ready-to-invoice")}
+            className={`border rounded-lg p-4 bg-card text-left transition-all hover:shadow-md ${activeTab === "ready-to-invoice" ? "ring-2 ring-orange-500" : ""}`}
+          >
+            <div className="flex items-center gap-2 text-orange-600 mb-1">
+              <PackageIcon className="size-4" />
+              <span className="text-xs font-medium">Ready to Invoice</span>
+            </div>
+            <p className="text-2xl font-bold text-orange-600">{readyToInvoiceData.length}</p>
+          </button>
+          {/* Scheduled Today Card - Conditionally rendered */}
           {scheduledTodayUIVariant !== "hidden" && (
             <button
               onClick={() => setActiveTab("scheduled-today")}
@@ -1933,26 +2032,6 @@ const Invoices = () => {
               <p className="text-2xl font-bold text-emerald-600">{scheduledStats.expected}</p>
             </button>
           )}
-          <button
-            onClick={() => setActiveTab("ready-to-invoice")}
-            className={`border rounded-lg p-4 bg-card text-left transition-all hover:shadow-md ${activeTab === "ready-to-invoice" ? "ring-2 ring-orange-500" : ""}`}
-          >
-            <div className="flex items-center gap-2 text-orange-600 mb-1">
-              <PackageIcon className="size-4" />
-              <span className="text-xs font-medium">Ready to Invoice</span>
-            </div>
-            <p className="text-2xl font-bold text-orange-600">{readyToInvoiceData.length}</p>
-          </button>
-          <button
-            onClick={() => setActiveTab("check-failed")}
-            className={`border rounded-lg p-4 bg-card text-left transition-all hover:shadow-md ${activeTab === "check-failed" ? "ring-2 ring-red-500" : ""}`}
-          >
-            <div className="flex items-center gap-2 text-red-600 mb-1">
-              <AlertTriangleIcon className="size-4" />
-              <span className="text-xs font-medium">Check Failed</span>
-            </div>
-            <p className="text-2xl font-bold text-red-600">{checkFailedData.length}</p>
-          </button>
           <button
             onClick={() => setActiveTab("invoiced")}
             className={`border rounded-lg p-4 bg-card text-left transition-all hover:shadow-md ${activeTab === "invoiced" ? "ring-2 ring-blue-500" : ""}`}
@@ -1993,6 +2072,32 @@ const Invoices = () => {
               </div>
             )}
             <div className="flex border rounded-lg overflow-hidden">
+              {/* Check Failed - FIRST (Exception-driven workflow) */}
+              <Button
+                variant={activeTab === "check-failed" ? "default" : "ghost"}
+                className={`rounded-none text-xs px-3 ${
+                  activeTab === "check-failed"
+                    ? "bg-red-500 text-white hover:bg-red-600"
+                    : "bg-background text-foreground hover:bg-muted"
+                }`}
+                onClick={() => setActiveTab("check-failed")}
+              >
+                <AlertTriangleIcon className="size-3.5 mr-1.5" />
+                Failed
+              </Button>
+              {/* Ready to Invoice */}
+              <Button
+                variant={activeTab === "ready-to-invoice" ? "default" : "ghost"}
+                className={`rounded-none text-xs px-3 ${
+                  activeTab === "ready-to-invoice"
+                    ? "bg-orange-500 text-white hover:bg-orange-600"
+                    : "bg-background text-foreground hover:bg-muted"
+                }`}
+                onClick={() => setActiveTab("ready-to-invoice")}
+              >
+                <PackageIcon className="size-3.5 mr-1.5" />
+                Ready
+              </Button>
               {/* Scheduled Today Tab Button - Conditionally rendered */}
               {scheduledTodayUIVariant !== "hidden" && (
                 <Button
@@ -2008,30 +2113,6 @@ const Invoices = () => {
                   Scheduled
                 </Button>
               )}
-              <Button
-                variant={activeTab === "ready-to-invoice" ? "default" : "ghost"}
-                className={`rounded-none text-xs px-3 ${
-                  activeTab === "ready-to-invoice"
-                    ? "bg-orange-500 text-white hover:bg-orange-600"
-                    : "bg-background text-foreground hover:bg-muted"
-                }`}
-                onClick={() => setActiveTab("ready-to-invoice")}
-              >
-                <PackageIcon className="size-3.5 mr-1.5" />
-                Ready
-              </Button>
-              <Button
-                variant={activeTab === "check-failed" ? "default" : "ghost"}
-                className={`rounded-none text-xs px-3 ${
-                  activeTab === "check-failed"
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : "bg-background text-foreground hover:bg-muted"
-                }`}
-                onClick={() => setActiveTab("check-failed")}
-              >
-                <AlertTriangleIcon className="size-3.5 mr-1.5" />
-                Failed
-              </Button>
               <Button
                 variant={activeTab === "invoiced" ? "default" : "ghost"}
                 className={`rounded-none text-xs px-3 ${
