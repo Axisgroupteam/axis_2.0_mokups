@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
-import SmartFilter from "@/components/SmartFilter";
 import {
   Sheet,
   SheetContent,
@@ -36,36 +35,37 @@ import {
   Wallet,
   DownloadIcon,
   DollarSign,
-  UserIcon,
-  CalendarIcon,
   TruckIcon,
-  BanknoteIcon,
-  FuelIcon,
-  MinusCircleIcon,
   PlusIcon,
-  FileText,
   History,
-  Pencil,
   LayoutDashboard,
   CreditCard,
-  Phone,
-  Mail,
-  MapPin,
-  Building2,
-  Clock,
-  CheckCircle2,
+  CheckCircle2Icon,
+  ClockIcon,
+  PlusCircleIcon,
+  MinusCircleIcon,
+  Trash2Icon,
+  SendIcon,
+  ArrowRightIcon,
 } from "lucide-react";
 
 const SettlementDetails = () => {
   const { settlementNo } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const activeTab = searchParams.get("tab") || "overview";
+  const activeTab = searchParams.get("tab") || "general";
 
-  const [isDeductionSheetOpen, setIsDeductionSheetOpen] = useState(false);
-  const [showProcessPaymentDialog, setShowProcessPaymentDialog] = useState(false);
-  const [loadsFilters, setLoadsFilters] = useState([]);
-  const [deductionFormData, setDeductionFormData] = useState({
+  const [showAddDeductionSheet, setShowAddDeductionSheet] = useState(false);
+  const [showAddReimbursementSheet, setShowAddReimbursementSheet] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+
+  const [deductionForm, setDeductionForm] = useState({
+    type: "",
+    amount: "",
+    description: "",
+  });
+
+  const [reimbursementForm, setReimbursementForm] = useState({
     type: "",
     amount: "",
     description: "",
@@ -75,241 +75,75 @@ const SettlementDetails = () => {
   const settlement = {
     settlementNo: settlementNo || "STL-2025-0001",
     payee: "John Smith",
+    legalName: "John David Smith",
     payeeId: "DRV-001",
     payeeType: "Driver",
     payeeEmail: "john.smith@email.com",
     payeePhone: "(713) 555-1234",
-    payeeAddress: "1234 Main Street, Houston, TX 77001",
+    payeeAddress: "1234 Main Street",
+    payeeCity: "Houston",
+    payeeState: "TX",
+    payeeZip: "77001",
+    taxId: "***-**-1234",
+    settlementCycle: "Weekly",
     payType: "Per Mile",
     payRate: "$0.55/mile",
     businessUnit: "Mega Trucking",
-    periodStart: "2025-01-01",
-    periodEnd: "2025-01-07",
-    status: "Pending",
+    periodStart: "2025-01-08",
+    periodEnd: "2025-01-14",
+    status: "Active",
     paymentMethod: "Direct Deposit",
     bankName: "Chase Bank",
     bankAccount: "****4521",
-    routingNumber: "****6789",
-    glAccount: "5100 - Driver Payroll",
-    createdDate: "2025-01-08",
+    createdDate: "2025-01-15",
     createdBy: "Sarah Johnson",
-    grossPay: 3840.00,
-    fuelAdvances: 1200.00,
-    accessorialPay: 350.00,
-    deductions: 75.00,
-    netPay: 2915.00,
-    notes: "Weekly settlement for John Smith. All loads verified and approved.",
   };
 
-  // Mock load details for settlement
-  const loadDetails = [
-    {
-      id: 1,
-      loadNo: "ML-2025-001245",
-      deliveryDate: "2025-01-02",
-      origin: "Houston, TX",
-      destination: "Dallas, TX",
-      customer: "Titan Construction",
-      miles: 240,
-      lineHaulPay: 480.00,
-      fuelAdvance: 150.00,
-      accessorialPay: 75.00,
-      netPay: 405.00,
-    },
-    {
-      id: 2,
-      loadNo: "ML-2025-001248",
-      deliveryDate: "2025-01-03",
-      origin: "Fort Worth, TX",
-      destination: "Austin, TX",
-      customer: "TQL Logistics",
-      miles: 190,
-      lineHaulPay: 380.00,
-      fuelAdvance: 100.00,
-      accessorialPay: 50.00,
-      netPay: 330.00,
-    },
-    {
-      id: 3,
-      loadNo: "ML-2025-001252",
-      deliveryDate: "2025-01-04",
-      origin: "Dallas, TX",
-      destination: "Houston, TX",
-      customer: "CH Robinson",
-      miles: 240,
-      lineHaulPay: 480.00,
-      fuelAdvance: 150.00,
-      accessorialPay: 75.00,
-      netPay: 405.00,
-    },
-    {
-      id: 4,
-      loadNo: "ML-2025-001255",
-      deliveryDate: "2025-01-05",
-      origin: "San Antonio, TX",
-      destination: "Fort Worth, TX",
-      customer: "Ashgrove Cement",
-      miles: 265,
-      lineHaulPay: 530.00,
-      fuelAdvance: 175.00,
-      accessorialPay: 50.00,
-      netPay: 405.00,
-    },
-    {
-      id: 5,
-      loadNo: "ML-2025-001258",
-      deliveryDate: "2025-01-05",
-      origin: "Houston, TX",
-      destination: "Austin, TX",
-      customer: "Titan Construction",
-      miles: 165,
-      lineHaulPay: 330.00,
-      fuelAdvance: 100.00,
-      accessorialPay: 25.00,
-      netPay: 255.00,
-    },
-    {
-      id: 6,
-      loadNo: "ML-2025-001261",
-      deliveryDate: "2025-01-06",
-      origin: "Dallas, TX",
-      destination: "San Antonio, TX",
-      customer: "TQL Logistics",
-      miles: 275,
-      lineHaulPay: 550.00,
-      fuelAdvance: 175.00,
-      accessorialPay: 25.00,
-      netPay: 400.00,
-    },
-    {
-      id: 7,
-      loadNo: "ML-2025-001264",
-      deliveryDate: "2025-01-06",
-      origin: "Austin, TX",
-      destination: "Houston, TX",
-      customer: "Coyote Logistics",
-      miles: 165,
-      lineHaulPay: 330.00,
-      fuelAdvance: 100.00,
-      accessorialPay: 25.00,
-      netPay: 255.00,
-    },
-    {
-      id: 8,
-      loadNo: "ML-2025-001267",
-      deliveryDate: "2025-01-07",
-      origin: "Fort Worth, TX",
-      destination: "Houston, TX",
-      customer: "CH Robinson",
-      miles: 260,
-      lineHaulPay: 520.00,
-      fuelAdvance: 150.00,
-      accessorialPay: 25.00,
-      netPay: 395.00,
-    },
+  // Mock loads data
+  const loads = [
+    { id: 1, loadNo: "ML-2025-001245", origin: "Houston, TX", destination: "Dallas, TX", deliveredDate: "2025-01-08", revenue: 480.00, fsc: 48.00, accessorials: 75.00, grossPay: 603.00 },
+    { id: 2, loadNo: "ML-2025-001248", origin: "Dallas, TX", destination: "Austin, TX", deliveredDate: "2025-01-09", revenue: 320.00, fsc: 32.00, accessorials: 50.00, grossPay: 402.00 },
+    { id: 3, loadNo: "ML-2025-001252", origin: "Austin, TX", destination: "San Antonio, TX", deliveredDate: "2025-01-10", revenue: 180.00, fsc: 18.00, accessorials: 0.00, grossPay: 198.00 },
+    { id: 4, loadNo: "ML-2025-001256", origin: "San Antonio, TX", destination: "Houston, TX", deliveredDate: "2025-01-11", revenue: 420.00, fsc: 42.00, accessorials: 100.00, grossPay: 562.00 },
+    { id: 5, loadNo: "ML-2025-001260", origin: "Houston, TX", destination: "Fort Worth, TX", deliveredDate: "2025-01-12", revenue: 350.00, fsc: 35.00, accessorials: 0.00, grossPay: 385.00 },
   ];
 
   // Mock deductions
-  const deductions = [
-    {
-      id: 1,
-      type: "Insurance",
-      description: "Weekly insurance deduction",
-      amount: 50.00,
-      glAccount: "5410 - Insurance Deductions",
-      date: "2025-01-08",
-      addedBy: "System",
-    },
-    {
-      id: 2,
-      type: "Equipment",
-      description: "Truck wash - Houston Terminal",
-      amount: 25.00,
-      glAccount: "5400 - Equipment Deductions",
-      date: "2025-01-08",
-      addedBy: "Sarah Johnson",
-    },
-  ];
+  const [deductions, setDeductions] = useState([
+    { id: 1, type: "Insurance", description: "Weekly health insurance premium", amount: 50.00, recurring: true },
+    { id: 2, type: "Fuel Advance", description: "Fuel advance - ML-2025-001245", amount: 150.00, recurring: false },
+  ]);
 
-  // Audit log data
-  const auditLogData = [
-    {
-      id: 1,
-      action: "Settlement created",
-      type: "Create",
-      oldValue: "-",
-      newValue: settlement.settlementNo,
-      actionBy: "Sarah Johnson",
-      timestamp: "Jan 08, 2025 09:30:15",
-    },
-    {
-      id: 2,
-      action: "Deduction added",
-      type: "Update",
-      oldValue: "-",
-      newValue: "Insurance - $50.00",
-      actionBy: "System",
-      timestamp: "Jan 08, 2025 09:30:20",
-    },
-    {
-      id: 3,
-      action: "Deduction added",
-      type: "Update",
-      oldValue: "-",
-      newValue: "Equipment - $25.00",
-      actionBy: "Sarah Johnson",
-      timestamp: "Jan 08, 2025 09:35:00",
-    },
-    {
-      id: 4,
-      action: "Settlement approved",
-      type: "Status",
-      oldValue: "Draft",
-      newValue: "Pending",
-      actionBy: "Mike Davis",
-      timestamp: "Jan 08, 2025 10:00:00",
-    },
-  ];
+  // Mock reimbursements
+  const [reimbursements, setReimbursements] = useState([
+    { id: 1, type: "Tolls", description: "Toll receipts - Dallas trip", amount: 45.00, receipt: "RCP-001" },
+  ]);
 
-  const loadsFilterGroups = [
-    {
-      name: "Basic",
-      filters: [
-        { key: "loadNo", label: "Load No", type: "input", group: "Basic", placeholder: "Search load..." },
-        { key: "customer", label: "Customer", type: "input", group: "Basic", placeholder: "Search customer..." },
-      ],
-    },
+  // Mock activity log
+  const activityLog = [
+    { id: 1, action: "Settlement created", user: "Sarah Johnson", timestamp: "2025-01-15 09:30 AM", details: "Created from 5 loads" },
+    { id: 2, action: "Deduction added", user: "Sarah Johnson", timestamp: "2025-01-15 09:35 AM", details: "Insurance - $50.00" },
+    { id: 3, action: "Deduction added", user: "Sarah Johnson", timestamp: "2025-01-15 09:36 AM", details: "Fuel Advance - $150.00" },
+    { id: 4, action: "Reimbursement added", user: "Sarah Johnson", timestamp: "2025-01-15 09:40 AM", details: "Tolls - $45.00" },
   ];
-
-  const handleLoadsFiltersChange = useCallback((newFilters) => {
-    setLoadsFilters(newFilters);
-  }, []);
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    return new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
   };
 
   const getStatusBadge = (status) => {
-    const statusConfig = {
-      Pending: { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: Clock },
-      Paid: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2 },
-      Processing: { color: "bg-blue-500/10 text-blue-700 border-blue-500/50", icon: Clock },
+    const config = {
+      Active: { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: ClockIcon },
+      Paid: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2Icon },
     };
-    const config = statusConfig[status] || statusConfig["Pending"];
-    const Icon = config.icon;
+    const c = config[status] || config["Active"];
+    const Icon = c.icon;
     return (
-      <Badge className={config.color}>
+      <Badge className={c.color}>
         <Icon className="size-3 mr-1" />
         {status}
       </Badge>
@@ -317,613 +151,579 @@ const SettlementDetails = () => {
   };
 
   const getPayeeTypeBadge = (type) => {
-    const typeColors = {
+    const colors = {
       Driver: "bg-blue-500/10 text-blue-700 border-blue-500/50",
       Technician: "bg-purple-500/10 text-purple-700 border-purple-500/50",
       Carrier: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
     };
-    return typeColors[type] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
+    return colors[type] || "bg-gray-500/10 text-gray-700";
   };
 
-  const getAuditTypeBadgeColor = (type) => {
-    const colors = {
-      Create: "bg-green-500/10 text-green-700 border-green-500/50",
-      Update: "bg-blue-500/10 text-blue-700 border-blue-500/50",
-      Status: "bg-amber-500/10 text-amber-700 border-amber-500/50",
-      Delete: "bg-red-500/10 text-red-700 border-red-500/50",
-    };
-    return colors[type] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
-  };
+  // Calculate totals
+  const grossPay = loads.reduce((sum, l) => sum + l.grossPay, 0);
+  const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
+  const totalReimbursements = reimbursements.reduce((sum, r) => sum + r.amount, 0);
+  const netPay = grossPay - totalDeductions + totalReimbursements;
 
-  const handleDeductionSubmit = (e) => {
-    e.preventDefault();
-    console.log("Deduction submitted:", deductionFormData);
-    setIsDeductionSheetOpen(false);
-    setDeductionFormData({ type: "", amount: "", description: "" });
-  };
+  const isActive = settlement.status === "Active";
 
-  const handleProcessPayment = () => {
-    console.log("Processing payment for:", settlement.settlementNo);
-    setShowProcessPaymentDialog(false);
-    navigate("/app/carrier-portal/billing/settlements");
-  };
-
+  // Table columns
   const loadColumns = [
     {
       accessorKey: "loadNo",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Load No" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Load #" />,
+      cell: ({ row }) => <span className="font-mono text-sm font-medium text-primary">{row.getValue("loadNo")}</span>,
+    },
+    {
+      id: "route",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Route" />,
       cell: ({ row }) => (
-        <button
-          onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.getValue("loadNo")}&mode=view`)}
-          className="font-mono text-sm font-medium text-primary hover:underline"
-        >
-          {row.getValue("loadNo")}
-        </button>
+        <div className="flex items-center gap-1 text-sm">
+          <span>{row.original.origin.split(',')[0]}</span>
+          <ArrowRightIcon className="size-3 text-muted-foreground" />
+          <span>{row.original.destination.split(',')[0]}</span>
+        </div>
       ),
     },
     {
-      accessorKey: "deliveryDate",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Delivery" />,
-      cell: ({ row }) => formatDate(row.getValue("deliveryDate")),
+      accessorKey: "deliveredDate",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Delivered" />,
+      cell: ({ row }) => formatDate(row.getValue("deliveredDate")),
     },
     {
-      accessorKey: "origin",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Origin" />,
+      accessorKey: "revenue",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Revenue" />,
+      cell: ({ row }) => formatCurrency(row.getValue("revenue")),
     },
     {
-      accessorKey: "destination",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Destination" />,
+      accessorKey: "fsc",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="FSC" />,
+      cell: ({ row }) => formatCurrency(row.getValue("fsc")),
     },
     {
-      accessorKey: "customer",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
+      accessorKey: "accessorials",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Accessorials" />,
+      cell: ({ row }) => {
+        const acc = row.getValue("accessorials");
+        return acc > 0 ? formatCurrency(acc) : <span className="text-muted-foreground">-</span>;
+      },
     },
     {
-      accessorKey: "miles",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Miles" />,
-      cell: ({ row }) => <span className="font-medium">{row.getValue("miles").toLocaleString()}</span>,
-    },
-    {
-      accessorKey: "lineHaulPay",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Line Haul" />,
-      cell: ({ row }) => formatCurrency(row.getValue("lineHaulPay")),
-    },
-    {
-      accessorKey: "fuelAdvance",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Fuel Adv" />,
-      cell: ({ row }) => (
-        <span className="text-amber-600">-{formatCurrency(row.getValue("fuelAdvance"))}</span>
-      ),
-    },
-    {
-      accessorKey: "accessorialPay",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Accessorial" />,
-      cell: ({ row }) => formatCurrency(row.getValue("accessorialPay")),
-    },
-    {
-      accessorKey: "netPay",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Net Pay" />,
-      cell: ({ row }) => (
-        <span className="font-bold text-green-600">{formatCurrency(row.getValue("netPay"))}</span>
-      ),
+      accessorKey: "grossPay",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Gross Pay" />,
+      cell: ({ row }) => <span className="font-bold text-green-600">{formatCurrency(row.getValue("grossPay"))}</span>,
     },
   ];
 
-  const auditLogColumns = [
-    {
-      accessorKey: "action",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Action" />,
-    },
+  const deductionColumns = [
     {
       accessorKey: "type",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+      cell: ({ row }) => <span className="font-medium">{row.getValue("type")}</span>,
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+    },
+    {
+      accessorKey: "recurring",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Recurring" />,
+      cell: ({ row }) => row.getValue("recurring") ? <Badge variant="outline">Yes</Badge> : <span className="text-muted-foreground">No</span>,
+    },
+    {
+      accessorKey: "amount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+      cell: ({ row }) => <span className="font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</span>,
+    },
+    ...(isActive ? [{
+      id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
-        <Badge variant="outline" className={getAuditTypeBadgeColor(row.getValue("type"))}>
-          {row.getValue("type")}
-        </Badge>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setDeductions(deductions.filter(d => d.id !== row.original.id))}>
+          <Trash2Icon className="size-4" />
+        </Button>
       ),
-    },
-    {
-      accessorKey: "oldValue",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Old Value" />,
-      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("oldValue")}</span>,
-    },
-    {
-      accessorKey: "newValue",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="New Value" />,
-      cell: ({ row }) => <span className="font-medium">{row.getValue("newValue")}</span>,
-    },
-    {
-      accessorKey: "actionBy",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Modified By" />,
-    },
-    {
-      accessorKey: "timestamp",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Timestamp" />,
-    },
+    }] : []),
   ];
 
-  // Calculate totals
-  const totalMiles = loadDetails.reduce((sum, l) => sum + l.miles, 0);
-  const totalLineHaul = loadDetails.reduce((sum, l) => sum + l.lineHaulPay, 0);
-  const totalFuelAdvance = loadDetails.reduce((sum, l) => sum + l.fuelAdvance, 0);
-  const totalAccessorial = loadDetails.reduce((sum, l) => sum + l.accessorialPay, 0);
-  const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
+  const reimbursementColumns = [
+    {
+      accessorKey: "type",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+      cell: ({ row }) => <span className="font-medium">{row.getValue("type")}</span>,
+    },
+    {
+      accessorKey: "description",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+    },
+    {
+      accessorKey: "receipt",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Receipt" />,
+      cell: ({ row }) => row.getValue("receipt") ? <span className="font-mono text-sm">{row.getValue("receipt")}</span> : <span className="text-muted-foreground">-</span>,
+    },
+    {
+      accessorKey: "amount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+      cell: ({ row }) => <span className="font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</span>,
+    },
+    ...(isActive ? [{
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setReimbursements(reimbursements.filter(r => r.id !== row.original.id))}>
+          <Trash2Icon className="size-4" />
+        </Button>
+      ),
+    }] : []),
+  ];
+
+  const handleAddDeduction = (e) => {
+    e.preventDefault();
+    const newDeduction = {
+      id: deductions.length + 1,
+      type: deductionForm.type,
+      description: deductionForm.description,
+      amount: parseFloat(deductionForm.amount),
+      recurring: false,
+    };
+    setDeductions([...deductions, newDeduction]);
+    setShowAddDeductionSheet(false);
+    setDeductionForm({ type: "", amount: "", description: "" });
+  };
+
+  const handleAddReimbursement = (e) => {
+    e.preventDefault();
+    const newReimbursement = {
+      id: reimbursements.length + 1,
+      type: reimbursementForm.type,
+      description: reimbursementForm.description,
+      amount: parseFloat(reimbursementForm.amount),
+      receipt: null,
+    };
+    setReimbursements([...reimbursements, newReimbursement]);
+    setShowAddReimbursementSheet(false);
+    setReimbursementForm({ type: "", amount: "", description: "" });
+  };
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      <Tabs defaultValue={activeTab} className="w-full h-full flex flex-col overflow-hidden">
-        {/* Header with Back Button and Actions */}
-        <div className="flex-shrink-0 px-4 py-3 border-b bg-background">
-          <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex-shrink-0 px-6 py-4 border-b bg-background">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/app/carrier-portal/billing/settlements")}>
+              <ArrowLeftIcon className="size-5" />
+            </Button>
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/app/carrier-portal/billing/settlements")}
-              >
-                <ArrowLeftIcon className="size-5" />
-              </Button>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Wallet className="size-5 text-primary" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Wallet className="size-5 text-primary" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-bold">{settlement.settlementNo}</h1>
+                  {getStatusBadge(settlement.status)}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-lg font-bold">{settlement.settlementNo}</h1>
-                    {getStatusBadge(settlement.status)}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {settlement.payee} ({settlement.payeeId})
-                  </p>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{settlement.payee}</span>
+                  <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
+                    {settlement.payeeType}
+                  </Badge>
+                  <span className="mx-1">•</span>
+                  <span>{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <DownloadIcon className="size-4 mr-2" />
-                Download PDF
+          </div>
+          <div className="flex items-center gap-2">
+            {isActive && (
+              <Button variant="outline" size="sm" onClick={() => setShowPaymentDialog(true)}>
+                <CreditCard className="size-4 mr-2" />
+                Mark as Paid
               </Button>
-              {settlement.status === "Pending" && (
-                <Button
-                  onClick={() => setShowProcessPaymentDialog(true)}
-                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                  size="sm"
-                >
-                  <BanknoteIcon className="size-4 mr-2" />
-                  Process Payment
-                </Button>
-              )}
-            </div>
+            )}
+            <Button variant="outline" size="sm">
+              <DownloadIcon className="size-4 mr-2" />
+              Download
+            </Button>
+            <Button variant="outline" size="sm">
+              <SendIcon className="size-4 mr-2" />
+              Email
+            </Button>
           </div>
         </div>
+      </div>
 
-        {/* Tabs */}
-        <div className="flex-shrink-0 px-4 border-b">
-          <TabsList className="mb-0 rounded-none bg-transparent h-12">
-            <TabsTrigger value="overview" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <LayoutDashboard className="size-4 mr-1.5" />
-              Overview
+      {/* Tabs */}
+      <Tabs defaultValue={activeTab} className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-shrink-0 px-6">
+          <TabsList className="mb-0 rounded-none">
+            <TabsTrigger value="general" className="h-full">
+              <LayoutDashboard className="size-4" />
+              General
             </TabsTrigger>
-            <TabsTrigger value="loads" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <TruckIcon className="size-4 mr-1.5" />
-              Loads ({loadDetails.length})
+            <TabsTrigger value="loads" className="h-full">
+              <TruckIcon className="size-4" />
+              Loads ({loads.length})
             </TabsTrigger>
-            <TabsTrigger value="deductions" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <MinusCircleIcon className="size-4 mr-1.5" />
+            <TabsTrigger value="deductions" className="h-full">
+              <MinusCircleIcon className="size-4" />
               Deductions ({deductions.length})
             </TabsTrigger>
-            <TabsTrigger value="audit" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none">
-              <History className="size-4 mr-1.5" />
+            <TabsTrigger value="reimbursements" className="h-full">
+              <PlusCircleIcon className="size-4" />
+              Reimbursements ({reimbursements.length})
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="h-full">
+              <History className="size-4" />
               Audit Log
             </TabsTrigger>
           </TabsList>
         </div>
 
-        {/* Tab Content */}
-        <div className="flex-1 overflow-auto">
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="p-4 space-y-4 mt-0 h-full">
-            <div className="grid grid-cols-3 gap-4">
-              {/* Payee Information */}
-              <div className="border rounded-lg bg-card">
-                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <UserIcon className="size-4" />
-                    Payee Information
-                  </h3>
-                  <button className="text-muted-foreground hover:text-foreground">
-                    <Pencil className="size-4" />
-                  </button>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-primary/10">
-                      <UserIcon className="size-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-bold">{settlement.payee}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground font-mono">{settlement.payeeId}</span>
-                        <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
-                          {settlement.payeeType}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-2 pt-2 border-t">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="size-3.5 text-muted-foreground" />
-                      <span>{settlement.payeePhone}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Mail className="size-3.5 text-muted-foreground" />
-                      <span className="text-primary">{settlement.payeeEmail}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-sm">
-                      <MapPin className="size-3.5 text-muted-foreground mt-0.5" />
-                      <span>{settlement.payeeAddress}</span>
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Pay Type</p>
-                        <p className="text-sm font-medium">{settlement.payType}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Pay Rate</p>
-                        <p className="text-sm font-medium">{settlement.payRate}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        {/* General Tab */}
+        <TabsContent value="general" className="flex-1 overflow-auto px-4 py-4 mt-0">
+          <div className="flex gap-4">
+            {/* Payee Information Card */}
+            <div className="flex-1 border rounded-sm bg-card">
+              <div className="px-4 py-3 border-b bg-muted">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <DollarSign className="size-4" />
+                  Payee Information
+                </h3>
               </div>
-
-              {/* Settlement Details */}
-              <div className="border rounded-lg bg-card">
-                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <CalendarIcon className="size-4" />
-                    Settlement Details
-                  </h3>
-                  <button className="text-muted-foreground hover:text-foreground">
-                    <Pencil className="size-4" />
-                  </button>
-                </div>
-                <div className="divide-y">
-                  <div className="grid grid-cols-2 divide-x">
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Period Start</p>
-                      <p className="text-sm font-medium">{formatDate(settlement.periodStart)}</p>
-                    </div>
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Period End</p>
-                      <p className="text-sm font-medium">{formatDate(settlement.periodEnd)}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x">
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Business Unit</p>
-                      <p className="text-sm font-medium flex items-center gap-1">
-                        <Building2 className="size-3.5" />
-                        {settlement.businessUnit}
-                      </p>
-                    </div>
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">GL Account</p>
-                      <p className="text-sm font-medium">{settlement.glAccount}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x">
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Created Date</p>
-                      <p className="text-sm font-medium">{formatDate(settlement.createdDate)}</p>
-                    </div>
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Created By</p>
-                      <p className="text-sm font-medium">{settlement.createdBy}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Information */}
-              <div className="border rounded-lg bg-card">
-                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <CreditCard className="size-4" />
-                    Payment Information
-                  </h3>
-                  <button className="text-muted-foreground hover:text-foreground">
-                    <Pencil className="size-4" />
-                  </button>
-                </div>
-                <div className="divide-y">
+              <div className="divide-y divide-border">
+                <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground">Payment Method</p>
-                    <p className="text-sm font-medium">{settlement.paymentMethod}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Payee Name</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.payee}</p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground">Bank Name</p>
-                    <p className="text-sm font-medium">{settlement.bankName}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Payee ID</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{settlement.payeeId}</p>
                   </div>
-                  <div className="grid grid-cols-2 divide-x">
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Account Number</p>
-                      <p className="text-sm font-medium font-mono">{settlement.bankAccount}</p>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Legal Name</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.legalName}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Tax ID</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{settlement.taxId}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.payeePhone}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Email</p>
+                    <p className="text-sm font-medium text-primary">{settlement.payeeEmail}</p>
+                  </div>
+                </div>
+                <div className="px-4 py-2.5">
+                  <p className="text-xs text-muted-foreground mb-0.5">Address</p>
+                  <p className="text-sm font-medium text-foreground">{settlement.payeeAddress}, {settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Settlement Details Card */}
+            <div className="flex-1 border rounded-sm bg-card">
+              <div className="px-4 py-3 border-b bg-muted">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Wallet className="size-4" />
+                  Settlement Details
+                </h3>
+              </div>
+              <div className="divide-y divide-border">
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Period Start</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodStart)}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Period End</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodEnd)}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Business Unit</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.businessUnit}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Settlement Cycle</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.settlementCycle}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Pay Type</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.payType}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Pay Rate</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.payRate}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Created Date</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.createdDate)}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Created By</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.createdBy}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment & Summary Card */}
+            <div className="flex-1 border rounded-sm bg-card">
+              <div className="px-4 py-3 border-b bg-muted">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <CreditCard className="size-4" />
+                  Payment Information
+                </h3>
+              </div>
+              <div className="divide-y divide-border">
+                <div className="px-4 py-2.5">
+                  <p className="text-xs text-muted-foreground mb-0.5">Payment Method</p>
+                  <p className="text-sm font-medium text-foreground">{settlement.paymentMethod}</p>
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-border">
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Bank</p>
+                    <p className="text-sm font-medium text-foreground">{settlement.bankName}</p>
+                  </div>
+                  <div className="px-4 py-2.5">
+                    <p className="text-xs text-muted-foreground mb-0.5">Account</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{settlement.bankAccount}</p>
+                  </div>
+                </div>
+                <div className="px-4 py-3 bg-muted">
+                  <p className="text-xs text-muted-foreground mb-2 font-semibold">Summary</p>
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between">
+                      <span className="text-xs text-muted-foreground">Loads</span>
+                      <span className="text-sm font-medium">{loads.length}</span>
                     </div>
-                    <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground">Routing Number</p>
-                      <p className="text-sm font-medium font-mono">{settlement.routingNumber}</p>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-muted-foreground">Gross Pay</span>
+                      <span className="text-sm font-medium">{formatCurrency(grossPay)}</span>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Summary Section */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Settlement Summary */}
-              <div className="border rounded-lg bg-card">
-                <div className="px-4 py-3 border-b bg-muted">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <DollarSign className="size-4" />
-                    Settlement Summary
-                  </h3>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Line Haul Pay ({totalMiles.toLocaleString()} miles)</span>
-                    <span>{formatCurrency(totalLineHaul)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Accessorial Pay</span>
-                    <span>{formatCurrency(totalAccessorial)}</span>
-                  </div>
-                  <div className="border-t pt-3 flex justify-between font-medium">
-                    <span>Gross Pay</span>
-                    <span>{formatCurrency(settlement.grossPay)}</span>
-                  </div>
-                  <div className="flex justify-between text-amber-600">
-                    <span className="flex items-center gap-1">
-                      <FuelIcon className="size-3" />
-                      Fuel Advances
-                    </span>
-                    <span>-{formatCurrency(totalFuelAdvance)}</span>
-                  </div>
-                  <div className="flex justify-between text-red-600">
-                    <span className="flex items-center gap-1">
-                      <MinusCircleIcon className="size-3" />
-                      Deductions
-                    </span>
-                    <span>-{formatCurrency(totalDeductions)}</span>
-                  </div>
-                  <div className="border-t pt-3 flex justify-between font-bold text-lg">
-                    <span>Net Pay</span>
-                    <span className="text-green-600">{formatCurrency(settlement.netPay)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="border rounded-lg bg-card">
-                <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <FileText className="size-4" />
-                    Notes
-                  </h3>
-                  <button className="text-muted-foreground hover:text-foreground">
-                    <Pencil className="size-4" />
-                  </button>
-                </div>
-                <div className="p-4">
-                  <p className="text-sm text-muted-foreground">{settlement.notes || "No notes added."}</p>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Loads Tab */}
-          <TabsContent value="loads" className="p-4 mt-0 h-full">
-            <div className="border rounded-lg bg-card">
-              <div className="flex items-center justify-between px-4 py-3 border-b">
-                <SmartFilter filterGroups={loadsFilterGroups} onFiltersChange={handleLoadsFiltersChange} />
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="text-muted-foreground">Total:</span>
-                  <span className="font-medium">{loadDetails.length} loads</span>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="font-medium">{totalMiles.toLocaleString()} miles</span>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="font-bold text-green-600">{formatCurrency(loadDetails.reduce((sum, l) => sum + l.netPay, 0))}</span>
-                </div>
-              </div>
-              <div className="p-4">
-                <DataTable columns={loadColumns} data={loadDetails} showViewOptions={false} pageSize={10} />
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Deductions Tab */}
-          <TabsContent value="deductions" className="p-4 mt-0 h-full">
-            <div className="border rounded-lg bg-card">
-              <div className="flex items-center justify-between px-4 py-3 border-b">
-                <h3 className="text-sm font-semibold">All Deductions</h3>
-                {settlement.status === "Pending" && (
-                  <Button
-                    size="sm"
-                    onClick={() => setIsDeductionSheetOpen(true)}
-                    className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                  >
-                    <PlusIcon className="size-4 mr-1" />
-                    Add Deduction
-                  </Button>
-                )}
-              </div>
-              <div className="p-4">
-                {deductions.length > 0 ? (
-                  <div className="space-y-3">
-                    {deductions.map((deduction) => (
-                      <div key={deduction.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 rounded-lg bg-red-500/10">
-                            <MinusCircleIcon className="size-5 text-red-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{deduction.type}</p>
-                            <p className="text-sm text-muted-foreground">{deduction.description}</p>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                              <span>{deduction.glAccount}</span>
-                              <span>|</span>
-                              <span>Added by {deduction.addedBy} on {formatDate(deduction.date)}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <span className="text-lg font-bold text-red-600">-{formatCurrency(deduction.amount)}</span>
-                      </div>
-                    ))}
-                    <div className="border-t pt-4 flex justify-between font-bold text-lg">
-                      <span>Total Deductions</span>
-                      <span className="text-red-600">-{formatCurrency(totalDeductions)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-muted-foreground">Deductions</span>
+                      <span className="text-sm font-medium text-red-600">-{formatCurrency(totalDeductions)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-xs text-muted-foreground">Reimbursements</span>
+                      <span className="text-sm font-medium text-green-600">+{formatCurrency(totalReimbursements)}</span>
                     </div>
                   </div>
-                ) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <MinusCircleIcon className="size-12 mx-auto mb-3 opacity-30" />
-                    <p className="font-medium">No deductions applied</p>
-                    <p className="text-sm">Click "Add Deduction" to add one</p>
-                  </div>
-                )}
+                </div>
+                <div className="px-4 py-3 flex justify-between items-center bg-green-50 dark:bg-green-950/20">
+                  <span className="text-sm font-semibold text-green-700 dark:text-green-400">Net Pay</span>
+                  <span className="text-lg font-bold text-green-600">{formatCurrency(netPay)}</span>
+                </div>
               </div>
             </div>
-          </TabsContent>
+          </div>
+        </TabsContent>
 
-          {/* Audit Log Tab */}
-          <TabsContent value="audit" className="p-4 mt-0 h-full">
-            <div className="border rounded-lg bg-card">
-              <div className="px-4 py-3 border-b">
-                <h3 className="text-sm font-semibold">Audit History</h3>
+        {/* Loads Tab */}
+        <TabsContent value="loads" className="flex-1 overflow-auto p-6 mt-0">
+          <DataTable columns={loadColumns} data={loads} showViewOptions={false} pageSize={10} />
+          <div className="mt-4 flex justify-end">
+            <div className="border rounded-lg p-4 bg-muted/50 w-64">
+              <div className="flex justify-between mb-2">
+                <span className="text-muted-foreground">Total Revenue</span>
+                <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.revenue, 0))}</span>
               </div>
-              <div className="p-4">
-                <DataTable columns={auditLogColumns} data={auditLogData} showViewOptions={false} pageSize={10} />
+              <div className="flex justify-between mb-2">
+                <span className="text-muted-foreground">Total FSC</span>
+                <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.fsc, 0))}</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-muted-foreground">Total Accessorials</span>
+                <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.accessorials, 0))}</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t">
+                <span className="font-medium">Gross Pay</span>
+                <span className="font-bold text-green-600">{formatCurrency(grossPay)}</span>
               </div>
             </div>
-          </TabsContent>
-        </div>
+          </div>
+        </TabsContent>
+
+        {/* Deductions Tab */}
+        <TabsContent value="deductions" className="flex-1 overflow-auto p-6 mt-0">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-semibold">Deductions</h3>
+            {isActive && (
+              <Button size="sm" onClick={() => setShowAddDeductionSheet(true)}>
+                <PlusIcon className="size-4 mr-2" />
+                Add Deduction
+              </Button>
+            )}
+          </div>
+          <DataTable columns={deductionColumns} data={deductions} showViewOptions={false} pageSize={10} />
+          <div className="mt-4 flex justify-end">
+            <div className="border rounded-lg p-4 bg-red-50 dark:bg-red-950/20 w-64">
+              <div className="flex justify-between">
+                <span className="font-medium text-red-600">Total Deductions</span>
+                <span className="font-bold text-red-600">-{formatCurrency(totalDeductions)}</span>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Reimbursements Tab */}
+        <TabsContent value="reimbursements" className="flex-1 overflow-auto p-6 mt-0">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-semibold">Reimbursements</h3>
+            {isActive && (
+              <Button size="sm" onClick={() => setShowAddReimbursementSheet(true)}>
+                <PlusIcon className="size-4 mr-2" />
+                Add Reimbursement
+              </Button>
+            )}
+          </div>
+          <DataTable columns={reimbursementColumns} data={reimbursements} showViewOptions={false} pageSize={10} />
+          <div className="mt-4 flex justify-end">
+            <div className="border rounded-lg p-4 bg-green-50 dark:bg-green-950/20 w-64">
+              <div className="flex justify-between">
+                <span className="font-medium text-green-600">Total Reimbursements</span>
+                <span className="font-bold text-green-600">+{formatCurrency(totalReimbursements)}</span>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Activity Tab */}
+        <TabsContent value="activity" className="flex-1 overflow-auto p-6 mt-0">
+          <div className="space-y-4">
+            {activityLog.map((activity) => (
+              <div key={activity.id} className="flex items-start gap-4 p-4 border rounded-lg bg-card">
+                <div className="p-2 rounded-full bg-muted">
+                  <History className="size-4 text-muted-foreground" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">{activity.action}</p>
+                  <p className="text-sm text-muted-foreground">{activity.details}</p>
+                  <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                    <span>{activity.user}</span>
+                    <span>•</span>
+                    <span>{activity.timestamp}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* Add Deduction Sheet */}
-      <Sheet open={isDeductionSheetOpen} onOpenChange={setIsDeductionSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader className="pb-4 border-b px-6">
-            <SheetTitle className="text-xl font-bold">Add Deduction</SheetTitle>
+      <Sheet open={showAddDeductionSheet} onOpenChange={setShowAddDeductionSheet}>
+        <SheetContent side="right" className="w-full sm:max-w-md">
+          <SheetHeader className="pb-4 border-b">
+            <SheetTitle>Add Deduction</SheetTitle>
           </SheetHeader>
-
-          <form onSubmit={handleDeductionSubmit} className="space-y-5 mt-4 mb-2 px-6">
+          <form onSubmit={handleAddDeduction} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="type">Deduction Type</Label>
-              <Select
-                value={deductionFormData.type}
-                onValueChange={(value) => setDeductionFormData({ ...deductionFormData, type: value })}
-              >
-                <SelectTrigger className="h-10 w-full">
-                  <SelectValue placeholder="Select deduction type" />
-                </SelectTrigger>
+              <Label>Deduction Type</Label>
+              <Select value={deductionForm.type} onValueChange={(v) => setDeductionForm({ ...deductionForm, type: v })}>
+                <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="insurance">Insurance</SelectItem>
-                  <SelectItem value="equipment">Equipment</SelectItem>
-                  <SelectItem value="escrow">Escrow</SelectItem>
-                  <SelectItem value="cash_advance">Cash Advance</SelectItem>
-                  <SelectItem value="maintenance">Maintenance</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="Insurance">Insurance</SelectItem>
+                  <SelectItem value="Fuel Advance">Fuel Advance</SelectItem>
+                  <SelectItem value="Cash Advance">Cash Advance</SelectItem>
+                  <SelectItem value="Equipment">Equipment</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
+              <Label>Amount</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={deductionFormData.amount}
-                  onChange={(e) => setDeductionFormData({ ...deductionFormData, amount: e.target.value })}
-                  className="h-10 pl-7"
-                />
+                <Input type="number" step="0.01" placeholder="0.00" className="pl-7" value={deductionForm.amount} onChange={(e) => setDeductionForm({ ...deductionForm, amount: e.target.value })} />
               </div>
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Enter description..."
-                value={deductionFormData.description}
-                onChange={(e) => setDeductionFormData({ ...deductionFormData, description: e.target.value })}
-                className="min-h-20 resize-none"
-              />
+              <Label>Description</Label>
+              <Textarea placeholder="Enter description..." value={deductionForm.description} onChange={(e) => setDeductionForm({ ...deductionForm, description: e.target.value })} />
             </div>
-
-            <div className="flex gap-3 pt-6 border-t px-6 -mx-6 mt-8">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDeductionSheetOpen(false)}
-                className="flex-1 h-10"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-              >
-                Add Deduction
-              </Button>
+            <div className="flex gap-3 pt-4 border-t">
+              <Button type="button" variant="outline" onClick={() => setShowAddDeductionSheet(false)} className="flex-1">Cancel</Button>
+              <Button type="submit" className="flex-1">Add Deduction</Button>
             </div>
           </form>
         </SheetContent>
       </Sheet>
 
-      {/* Process Payment Dialog */}
-      <AlertDialog open={showProcessPaymentDialog} onOpenChange={setShowProcessPaymentDialog}>
+      {/* Add Reimbursement Sheet */}
+      <Sheet open={showAddReimbursementSheet} onOpenChange={setShowAddReimbursementSheet}>
+        <SheetContent side="right" className="w-full sm:max-w-md">
+          <SheetHeader className="pb-4 border-b">
+            <SheetTitle>Add Reimbursement</SheetTitle>
+          </SheetHeader>
+          <form onSubmit={handleAddReimbursement} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label>Reimbursement Type</Label>
+              <Select value={reimbursementForm.type} onValueChange={(v) => setReimbursementForm({ ...reimbursementForm, type: v })}>
+                <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tolls">Tolls</SelectItem>
+                  <SelectItem value="Scale Tickets">Scale Tickets</SelectItem>
+                  <SelectItem value="Lumper Fees">Lumper Fees</SelectItem>
+                  <SelectItem value="Detention">Detention</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Amount</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <Input type="number" step="0.01" placeholder="0.00" className="pl-7" value={reimbursementForm.amount} onChange={(e) => setReimbursementForm({ ...reimbursementForm, amount: e.target.value })} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea placeholder="Enter description..." value={reimbursementForm.description} onChange={(e) => setReimbursementForm({ ...reimbursementForm, description: e.target.value })} />
+            </div>
+            <div className="flex gap-3 pt-4 border-t">
+              <Button type="button" variant="outline" onClick={() => setShowAddReimbursementSheet(false)} className="flex-1">Cancel</Button>
+              <Button type="submit" className="flex-1">Add Reimbursement</Button>
+            </div>
+          </form>
+        </SheetContent>
+      </Sheet>
+
+      {/* Mark as Paid Dialog */}
+      <AlertDialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Process Payment</AlertDialogTitle>
+            <AlertDialogTitle>Mark as Paid</AlertDialogTitle>
             <AlertDialogDescription>
-              You are about to process payment for settlement {settlement.settlementNo}.
+              Mark this settlement as paid. This will update the status to Paid.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-3">
-            <div className="border rounded-lg p-4 bg-muted/50">
-              <div className="flex justify-between mb-2">
-                <span className="text-muted-foreground">Payee</span>
-                <span className="font-medium">{settlement.payee}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-muted-foreground">Payment Method</span>
-                <span className="font-medium">{settlement.paymentMethod}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-muted-foreground">Account</span>
-                <span className="font-mono">{settlement.bankAccount}</span>
-              </div>
-              <div className="border-t pt-2 mt-2 flex justify-between">
-                <span className="font-medium">Net Pay</span>
-                <span className="text-lg font-bold text-green-600">{formatCurrency(settlement.netPay)}</span>
-              </div>
+          <div className="py-4">
+            <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
+              <div className="flex justify-between"><span className="text-muted-foreground">Amount</span><span className="font-bold text-green-600">{formatCurrency(netPay)}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Payee</span><span className="font-medium">{settlement.payee}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Method</span><span className="font-medium">{settlement.paymentMethod}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Account</span><span className="font-mono">{settlement.bankAccount}</span></div>
             </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleProcessPayment}
-              className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-            >
-              Process Payment
-            </AlertDialogAction>
+            <AlertDialogAction>Mark as Paid</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
