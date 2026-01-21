@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIS 2.0 Billing Module</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .header .subtitle {
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .nav-tab:hover {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+        }
+
+        .card-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Problem Cards */
+        .problem-card {
+            background: linear-gradient(135deg, #450a0a 0%, #1e293b 100%);
+            border-color: #dc2626;
+        }
+
+        .problem-card:hover {
+            border-color: #ef4444;
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Solution Cards */
+        .solution-card {
+            background: linear-gradient(135deg, #052e16 0%, #1e293b 100%);
+            border-color: #22c55e;
+        }
+
+        .solution-card:hover {
+            border-color: #4ade80;
+            box-shadow: 0 10px 40px rgba(34, 197, 94, 0.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+
+        .stat-card.danger {
+            border-color: #dc2626;
+            background: linear-gradient(135deg, #450a0a 0%, #1e293b 100%);
+        }
+
+        .stat-card.success {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #052e16 0%, #1e293b 100%);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-value.danger { color: #ef4444; }
+        .stat-value.success { color: #4ade80; }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #334155;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .flow-title {
+            font-size: 1.2rem;
+            color: #f1f5f9;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .flow-node {
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .flow-node:hover {
+            transform: scale(1.05);
+        }
+
+        .flow-node.blue {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+        }
+
+        .flow-node.green {
+            background: linear-gradient(135deg, #166534, #22c55e);
+        }
+
+        .flow-node.purple {
+            background: linear-gradient(135deg, #581c87, #a855f7);
+        }
+
+        .flow-node.orange {
+            background: linear-gradient(135deg, #9a3412, #f97316);
+        }
+
+        .flow-node.red {
+            background: linear-gradient(135deg, #991b1b, #ef4444);
+        }
+
+        .flow-node.teal {
+            background: linear-gradient(135deg, #115e59, #14b8a6);
+        }
+
+        .flow-node-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .flow-node-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .flow-arrow {
+            color: #64748b;
+            font-size: 1.5rem;
+        }
+
+        /* Gate Diagram */
+        .gates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .gate {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid;
+            position: relative;
+        }
+
+        .gate-1 { border-color: #3b82f6; }
+        .gate-2 { border-color: #a855f7; }
+        .gate-3 { border-color: #22c55e; }
+
+        .gate-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .gate-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .gate-1 .gate-number { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+        .gate-2 .gate-number { background: linear-gradient(135deg, #581c87, #a855f7); }
+        .gate-3 .gate-number { background: linear-gradient(135deg, #166534, #22c55e); }
+
+        .gate-title {
+            font-size: 1.3rem;
+            color: #f1f5f9;
+        }
+
+        .gate-subtitle {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .gate-checks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #0f172a;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .check-icon.block {
+            background: #dc2626;
+        }
+
+        .check-icon.flag {
+            background: #f59e0b;
+        }
+
+        .gate-connector {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .gate-connector-line {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, #334155, #64748b);
+            border-radius: 2px;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .data-table th {
+            background: #334155;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:hover td {
+            background: #1e293b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge.red { background: #dc2626; color: white; }
+        .badge.green { background: #22c55e; color: white; }
+        .badge.blue { background: #3b82f6; color: white; }
+        .badge.orange { background: #f59e0b; color: white; }
+        .badge.purple { background: #a855f7; color: white; }
+
+        /* Process Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #3b82f6, #a855f7, #22c55e);
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: 3px solid #1e293b;
+        }
+
+        .timeline-item:nth-child(2)::before { background: #8b5cf6; }
+        .timeline-item:nth-child(3)::before { background: #a855f7; }
+        .timeline-item:nth-child(4)::before { background: #d946ef; }
+        .timeline-item:nth-child(5)::before { background: #14b8a6; }
+        .timeline-item:nth-child(6)::before { background: #22c55e; }
+
+        .timeline-content {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .timeline-pain {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            border-radius: 0 8px 8px 0;
+            color: #fca5a5;
+            font-size: 0.85rem;
+        }
+
+        /* Comparison Table */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-box {
+            background: #1e293b;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .comparison-header {
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .comparison-header.before {
+            background: linear-gradient(135deg, #991b1b, #dc2626);
+        }
+
+        .comparison-header.after {
+            background: linear-gradient(135deg, #166534, #22c55e);
+        }
+
+        .comparison-content {
+            padding: 20px;
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-label {
+            color: #94a3b8;
+        }
+
+        .comparison-value {
+            font-weight: 600;
+        }
+
+        .comparison-value.bad { color: #ef4444; }
+        .comparison-value.good { color: #4ade80; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e293b;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: #f1f5f9;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #334155;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section-title {
+            font-size: 1rem;
+            color: #60a5fa;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-section p {
+            color: #94a3b8;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .modal-list li::before {
+            content: '→';
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #3b82f6;
+            margin-bottom: 30px;
+        }
+
+        .info-box-title {
+            font-size: 1.1rem;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box p {
+            color: #94a3b8;
+            line-height: 1.7;
+        }
+
+        /* FSC Table */
+        .fsc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .fsc-card {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+
+        .fsc-card-title {
+            color: #f1f5f9;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fsc-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .fsc-option {
+            background: #1e293b;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Weight Validation */
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .fleet-card {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .fleet-card.required {
+            border-color: #dc2626;
+        }
+
+        .fleet-card.optional {
+            border-color: #334155;
+        }
+
+        .fleet-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .fleet-name {
+            color: #f1f5f9;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .fleet-status {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .fleet-status.blocks {
+            background: #dc2626;
+            color: white;
+        }
+
+        .fleet-status.flags {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-tab {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            .flow-row {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>AXIS 2.0 Billing Module</h1>
+            <h2>Zero-Error Invoicing Through Systematic Validation</h2>
+            <p class="subtitle">Transforming billing from a 10-15% error rate to &lt;2% through automated gates, smart engines, and audit trails</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="current-state">📊 Current State</div>
+            <div class="nav-tab" data-tab="three-gates">🚦 Three Gates</div>
+            <div class="nav-tab" data-tab="rate-engine">💰 Rate Engine</div>
+            <div class="nav-tab" data-tab="fsc-engine">⛽ FSC Engine</div>
+            <div class="nav-tab" data-tab="validation">✅ Validation</div>
+            <div class="nav-tab" data-tab="invoice-flow">📄 Invoice Flow</div>
+            <div class="nav-tab" data-tab="outcomes">🎯 Outcomes</div>
+        </div>
+
+        <!-- CURRENT STATE TAB -->
+        <div id="current-state" class="tab-content active">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #dc2626, #991b1b);">⚠️</div>
+                <div>
+                    <div class="section-title">Current State: The Problem We're Solving</div>
+                    <div class="section-subtitle">Understanding the pain before designing the solution</div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card danger">
+                    <div class="stat-value danger">5,000</div>
+                    <div class="stat-label">Loads Per Week</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value danger">10-15%</div>
+                    <div class="stat-label">Credit/Rebill Rate</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value danger">500-750</div>
+                    <div class="stat-label">Problem Invoices/Week</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value danger">7</div>
+                    <div class="stat-label">FTEs Trapped in Validation</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value danger">2</div>
+                    <div class="stat-label">Systems (Double Entry)</div>
+                </div>
+            </div>
+
+            <!-- The 7 Failures -->
+            <div class="flow-container">
+                <div class="flow-title">🔥 The Seven Billing Failures We Face Daily</div>
+                <div class="card-grid">
+                    <div class="card problem-card" onclick="showModal('duplicate')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">1</div>
+                            <div class="card-title">Duplicate Loads</div>
+                        </div>
+                        <div class="card-desc">Multi-person entry, clone misuse, driver self-entry in TMF/Precast create duplicate invoices.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('wrongbol')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">2</div>
+                            <div class="card-title">Wrong BOL/Tickets</div>
+                        </div>
+                        <div class="card-desc">Driver uploads wrong document, or correct BOL attached to wrong load. No validation catches it.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('wrongrate')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">3</div>
+                            <div class="card-title">Wrong Rates</div>
+                        </div>
+                        <div class="card-desc">Rates live in sticky notes, emails, and heads—not the system. Changes never get updated.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('fscerror')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">4</div>
+                            <div class="card-title">FSC Errors</div>
+                        </div>
+                        <div class="card-desc">Manual updates fall behind. FSC missing, duplicated, or incorrectly calculated.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('missingacc')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">5</div>
+                            <div class="card-title">Missing Accessorials</div>
+                        </div>
+                        <div class="card-desc">Detention, driver assist, and other charges not reported or not entered. Revenue leakage.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('missingstop')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">6</div>
+                            <div class="card-title">Missing Stop-Offs</div>
+                        </div>
+                        <div class="card-desc">TMF drivers self-enter loads, skip extra stops. Dispatch rubber-stamps without checking.</div>
+                    </div>
+                    <div class="card problem-card" onclick="showModal('weight')">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #dc2626;">7</div>
+                            <div class="card-title">Weight Mismatches</div>
+                        </div>
+                        <div class="card-desc">Load weight doesn't match BOL for weight-billed fleets. Direct revenue impact.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Process -->
+            <div class="flow-container">
+                <div class="flow-title">😰 Current Process: A Day in the Life</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 1: Driver Uploads BOL</div>
+                            <div class="timeline-desc">Driver completes delivery and uploads BOL via app. Load auto-moves to "Delivered" status.</div>
+                            <div class="timeline-pain">System has no idea if document is correct, legible, or even related to this load.</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 2: First Validation (Dispatch)</div>
+                            <div class="timeline-desc">4 people manually review each load—checking BOL, rate, weight, locations, stops, internal comments for accessorials.</div>
+                            <div class="timeline-pain">With hundreds of loads per day, corners get cut. Loads get rubber-stamped.</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 3: Second Validation (Billing)</div>
+                            <div class="timeline-desc">3 more people review the same things AGAIN, plus FSC validation and rate hunting through sticky notes and emails.</div>
+                            <div class="timeline-pain">Pure duplication of effort. Two teams checking the same things because neither trusts the other's work.</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 4: Dual System Transfer</div>
+                            <div class="timeline-desc">Data transferred from AXIS 1.0 (operations) to McLeod LoadMaster (billing).</div>
+                            <div class="timeline-pain">Transcription errors, duplicate entries, data loss. Pure chaos.</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 5: Invoice Generation</div>
+                            <div class="timeline-desc">Invoice generated in McLeod, enters rendition queue based on customer preferences.</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-title">Step 6: Wait for Disputes</div>
+                            <div class="timeline-desc">Invoices go out via email. And then we wait to see which ones come back as disputes.</div>
+                            <div class="timeline-pain">500-750 problem invoices per week. Credits, rebills, apologies, damaged relationships.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Human Cost -->
+            <div class="info-box" style="border-color: #dc2626; background: linear-gradient(135deg, #450a0a 0%, #1e293b 100%);">
+                <div class="info-box-title" style="color: #ef4444;">💔 The Human Cost</div>
+                <p><strong>Staff Burnout:</strong> 7 people spend their days chasing errors instead of adding value.<br><br>
+                <strong>Retention Risk:</strong> High-performers don't want to spend their careers fixing preventable mistakes.<br><br>
+                <strong>Goal Distraction:</strong> Instead of growth and customer relationships, the team is trapped in an endless cycle of credits and rebills.<br><br>
+                <strong>Customer Trust:</strong> Every incorrect invoice chips away at our reputation.</p>
+            </div>
+        </div>
+
+        <!-- THREE GATES TAB -->
+        <div id="three-gates" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">🚦</div>
+                <div>
+                    <div class="section-title">Three-Gate Validation System</div>
+                    <div class="section-subtitle">Systematic validation replaces "double-check and hope"</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">🎯 Core Principle</div>
+                <p>Every load must pass through three validation gates before an invoice is generated. Failures at any gate <strong>block the load from progressing</strong> until resolved. No more rubber-stamping. No more hoping someone else catches the error.</p>
+            </div>
+
+            <div class="gates-container">
+                <!-- Gate 1 -->
+                <div class="gate gate-1">
+                    <div class="gate-header">
+                        <div class="gate-number">1</div>
+                        <div>
+                            <div class="gate-title">Pre-Dispatch Validation</div>
+                            <div class="gate-subtitle">Before a load can be dispatched</div>
+                        </div>
+                    </div>
+                    <div class="gate-checks">
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Rate exists</strong> — Must be in customer profile (no sticky notes)</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Rate approved</strong> — Customer approval on file</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Rate not expired</strong> — Within effective date range</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>FSC configured</strong> — Profile defined (applies/doesn't/all-in)</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Customer credit OK</strong> — Not on credit hold</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; color: #60a5fa; font-size: 0.9rem;">
+                        ✅ <strong>Eliminates:</strong> Wrong rates, missing FSC configuration, rate hunting through emails/sticky notes
+                    </div>
+                </div>
+
+                <div class="gate-connector">
+                    <div class="gate-connector-line"></div>
+                </div>
+
+                <!-- Gate 2 -->
+                <div class="gate gate-2">
+                    <div class="gate-header">
+                        <div class="gate-number">2</div>
+                        <div>
+                            <div class="gate-title">Delivery Validation</div>
+                            <div class="gate-subtitle">When driver uploads BOL and marks delivered</div>
+                        </div>
+                    </div>
+                    <div class="gate-checks">
+                        <div class="check-item">
+                            <div class="check-icon flag">⚠️</div>
+                            <span><strong>BOL # extraction</strong> — OCR extracts ticket # from document</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>BOL # match</strong> — Extracted # compared to load record</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon flag">⚠️</div>
+                            <span><strong>Weight extraction</strong> — OCR extracts weight from BOL</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Weight match</strong> — For weight-sensitive fleets only</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon flag">⚠️</div>
+                            <span><strong>Stop count match</strong> — Stops on BOL vs. stops entered</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(168, 85, 247, 0.1); border-radius: 10px; color: #c084fc; font-size: 0.9rem;">
+                        ✅ <strong>Eliminates:</strong> Wrong BOL uploaded, weight mismatches, missing stop-offs
+                    </div>
+                </div>
+
+                <div class="gate-connector">
+                    <div class="gate-connector-line"></div>
+                </div>
+
+                <!-- Gate 3 -->
+                <div class="gate gate-3">
+                    <div class="gate-header">
+                        <div class="gate-number">3</div>
+                        <div>
+                            <div class="gate-title">Pre-Billing Validation</div>
+                            <div class="gate-subtitle">Before invoice generation</div>
+                        </div>
+                    </div>
+                    <div class="gate-checks">
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>All fields complete</strong> — Rate, weight, locations, references</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>BOL attached</strong> — Legible POD document uploaded</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>FSC applied correctly</strong> — Calculated per customer profile</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Accessorials complete</strong> — Applied or waived with reason</span>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-icon block">🛑</div>
+                            <span><strong>Rate verified</strong> — Matches profile for pickup date</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(34, 197, 94, 0.1); border-radius: 10px; color: #4ade80; font-size: 0.9rem;">
+                        ✅ <strong>Eliminates:</strong> Missing accessorials, FSC errors, incomplete loads reaching billing
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RATE ENGINE TAB -->
+        <div id="rate-engine" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">💰</div>
+                <div>
+                    <div class="section-title">Rate Engine</div>
+                    <div class="section-subtitle">No more sticky notes. No more email hunting. No more guessing.</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">🎯 Core Principle</div>
+                <p>Rates must exist in the system with customer approval before any load can be dispatched. Rates are locked at pickup date and cannot be changed without Level 2 Manager approval.</p>
+            </div>
+
+            <!-- Rate Rules -->
+            <div class="flow-container">
+                <div class="flow-title">📋 Rate Rules</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Rule</th>
+                            <th>Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Rate Anchor</strong></td>
+                            <td>Rate locked based on <span class="badge blue">Pickup Date</span> (not creation date)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Lock</strong></td>
+                            <td>Once load picks up, rate won't change even if rate file updates</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Expiration</strong></td>
+                            <td><span class="badge orange">1 Year</span> from effective date — forces annual audit</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Renewal</strong></td>
+                            <td>Manual renewal required unless flagged as auto-renew</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Override</strong></td>
+                            <td><span class="badge purple">Level 2 Manager</span> approval required after pickup</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rate Activation</strong></td>
+                            <td>Requires <span class="badge green">Customer Approval</span> (or Level 3 override)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rate Change Workflow -->
+            <div class="flow-container">
+                <div class="flow-title">🔄 Rate Change Workflow</div>
+                <div class="flow-row">
+                    <div class="flow-node blue">
+                        <div class="flow-node-title">Sales</div>
+                        <div class="flow-node-subtitle">Negotiates new rate</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node purple">
+                        <div class="flow-node-title">Customer Service</div>
+                        <div class="flow-node-subtitle">Jesus's team notified</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node teal">
+                        <div class="flow-node-title">Customer</div>
+                        <div class="flow-node-subtitle">Sends rate confirmation</div>
+                    </div>
+                </div>
+                <div class="flow-row">
+                    <div class="flow-node green">
+                        <div class="flow-node-title">Customer Approves</div>
+                        <div class="flow-node-subtitle">Signature/Email/Portal</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node purple">
+                        <div class="flow-node-title">System Updated</div>
+                        <div class="flow-node-subtitle">Rate + approval attached</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node green">
+                        <div class="flow-node-title">Rate ACTIVE</div>
+                        <div class="flow-node-subtitle">Loads can be created</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box" style="border-color: #f59e0b;">
+                <div class="info-box-title" style="color: #fbbf24;">⚠️ Override Path (Exception Only)</div>
+                <p>If customer is unresponsive or urgent operational need:<br><br>
+                • <strong>Level 3 Manager</strong> can override and activate rate<br>
+                • Rate flagged as <strong>"Pending Customer Confirmation"</strong><br>
+                • Customer approval still required within defined period or rate expires</p>
+            </div>
+        </div>
+
+        <!-- FSC ENGINE TAB -->
+        <div id="fsc-engine" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">⛽</div>
+                <div>
+                    <div class="section-title">FSC Engine</div>
+                    <div class="section-subtitle">Fully configurable, auto-calculating, audit-trailed</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">🎯 Core Principle</div>
+                <p>Every customer can have a completely unique FSC configuration. FSC files are versioned (never deleted), auto-calculate from index sources, and require customer approval for material changes.</p>
+            </div>
+
+            <!-- FSC Profile Fields -->
+            <div class="flow-container">
+                <div class="flow-title">📋 Customer FSC Profile Fields</div>
+                <div class="fsc-grid">
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">📌 FSC Applies</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">Yes</span>
+                            <span class="fsc-option">No</span>
+                            <span class="fsc-option">All-in (baked into rate)</span>
+                        </div>
+                    </div>
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">📊 Index Source</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">DOE National Avg</span>
+                            <span class="fsc-option">DOE Regional</span>
+                            <span class="fsc-option">OPIS</span>
+                            <span class="fsc-option">Custom Table</span>
+                        </div>
+                    </div>
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">🔢 Calculation Method</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">% of linehaul</span>
+                            <span class="fsc-option">Per-mile</span>
+                            <span class="fsc-option">Flat fee</span>
+                            <span class="fsc-option">Customer table</span>
+                        </div>
+                    </div>
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">📅 Update Frequency</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">Weekly</span>
+                            <span class="fsc-option">Monthly</span>
+                            <span class="fsc-option">Quarterly</span>
+                            <span class="fsc-option">Custom</span>
+                        </div>
+                    </div>
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">🗓️ Effective Date Logic</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">Pickup date</span>
+                            <span class="fsc-option">Invoice date</span>
+                            <span class="fsc-option">Week of service</span>
+                            <span class="fsc-option">Customer-specified</span>
+                        </div>
+                    </div>
+                    <div class="fsc-card">
+                        <div class="fsc-card-title">📏 Cap / Floor</div>
+                        <div class="fsc-options">
+                            <span class="fsc-option">None</span>
+                            <span class="fsc-option">Maximum %</span>
+                            <span class="fsc-option">Minimum %</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Index Ingestion -->
+            <div class="flow-container">
+                <div class="flow-title">🔄 Index Data Ingestion</div>
+                <div class="flow-row">
+                    <div class="flow-node blue" style="min-width: 200px;">
+                        <div class="flow-node-title">DOE National/Regional</div>
+                        <div class="flow-node-subtitle">Auto-pull from EIA API</div>
+                        <div class="flow-node-subtitle" style="margin-top: 5px;">Weekly (Monday)</div>
+                    </div>
+                    <div class="flow-node purple" style="min-width: 200px;">
+                        <div class="flow-node-title">OPIS</div>
+                        <div class="flow-node-subtitle">API Integration</div>
+                        <div class="flow-node-subtitle" style="margin-top: 5px;">Per OPIS schedule</div>
+                    </div>
+                    <div class="flow-node teal" style="min-width: 200px;">
+                        <div class="flow-node-title">Custom Tables</div>
+                        <div class="flow-node-subtitle">Manual upload</div>
+                        <div class="flow-node-subtitle" style="margin-top: 5px;">Jesus's Team</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approval Requirements -->
+            <div class="flow-container">
+                <div class="flow-title">✅ Approval Requirements by Change Type</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Change Type</th>
+                            <th>Customer Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Index source change (DOE → OPIS)</td>
+                            <td><span class="badge red">Required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Calculation method change</td>
+                            <td><span class="badge red">Required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Base price or increment change</td>
+                            <td><span class="badge red">Required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Cap/floor added or changed</td>
+                            <td><span class="badge red">Required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Correcting data entry error</td>
+                            <td><span class="badge green">Not Required</span></td>
+                        </tr>
+                        <tr>
+                            <td>Routine index update (auto DOE pull)</td>
+                            <td><span class="badge green">Not Required</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📝 FSC File Versioning</div>
+                <p><strong>FSC files can be edited but NEVER deleted.</strong><br><br>
+                • Every edit logged with: Who, When, What changed (old/new value), Why<br>
+                • Files have Start Date and End Date for version control<br>
+                • Historical loads use the FSC file that was active on their effective date<br>
+                • Full audit trail preserved forever</p>
+            </div>
+        </div>
+
+        <!-- VALIDATION TAB -->
+        <div id="validation" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">✅</div>
+                <div>
+                    <div class="section-title">Validation Rules</div>
+                    <div class="section-subtitle">Weight validation, duplicate detection, accessorial enforcement</div>
+                </div>
+            </div>
+
+            <!-- Weight Validation -->
+            <div class="flow-container">
+                <div class="flow-title">⚖️ Weight Validation by Fleet</div>
+                <p style="color: #94a3b8; margin-bottom: 20px;">Weight validation blocks billing for weight-billed fleets. BOL is the source of truth.</p>
+                <div class="fleet-grid">
+                    <div class="fleet-card required">
+                        <div class="fleet-icon">🚛</div>
+                        <div class="fleet-name">Walking Floor</div>
+                        <div class="fleet-status blocks">BLOCKS BILLING</div>
+                    </div>
+                    <div class="fleet-card required">
+                        <div class="fleet-icon">🪨</div>
+                        <div class="fleet-name">Aggregate</div>
+                        <div class="fleet-status blocks">BLOCKS BILLING</div>
+                    </div>
+                    <div class="fleet-card required">
+                        <div class="fleet-icon">🏗️</div>
+                        <div class="fleet-name">Cement</div>
+                        <div class="fleet-status blocks">BLOCKS BILLING</div>
+                    </div>
+                    <div class="fleet-card optional">
+                        <div class="fleet-icon">🔩</div>
+                        <div class="fleet-name">Heavy Haul</div>
+                        <div class="fleet-status flags">Flag Only</div>
+                    </div>
+                    <div class="fleet-card optional">
+                        <div class="fleet-icon">💨</div>
+                        <div class="fleet-name">Pneumatic</div>
+                        <div class="fleet-status flags">Flag Only</div>
+                    </div>
+                    <div class="fleet-card optional">
+                        <div class="fleet-icon">📦</div>
+                        <div class="fleet-name">Flatbed</div>
+                        <div class="fleet-status flags">Flag Only</div>
+                    </div>
+                    <div class="fleet-card optional">
+                        <div class="fleet-icon">🏢</div>
+                        <div class="fleet-name">Precast</div>
+                        <div class="fleet-status flags">Flag Only</div>
+                    </div>
+                    <div class="fleet-card optional">
+                        <div class="fleet-icon">🧱</div>
+                        <div class="fleet-name">TMF/Block</div>
+                        <div class="fleet-status flags">Flag Only</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicate Detection -->
+            <div class="flow-container">
+                <div class="flow-title">🔍 Duplicate Load Detection</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Match Criteria</th>
+                            <th>System Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Same customer + same pickup date + same delivery location</td>
+                            <td><span class="badge orange">Warning</span> — Require confirmation to proceed</td>
+                        </tr>
+                        <tr>
+                            <td>Same BOL # already exists in system</td>
+                            <td><span class="badge red">Block</span> — Cannot create duplicate BOL #</td>
+                        </tr>
+                        <tr>
+                            <td>Same PO # + same customer within 7 days</td>
+                            <td><span class="badge orange">Warning</span> — Verify this is a new load</td>
+                        </tr>
+                        <tr>
+                            <td>Clone function without updating key fields</td>
+                            <td><span class="badge red">Block</span> — Must update BOL #, trailer #, pickup date</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Accessorials -->
+            <div class="flow-container">
+                <div class="flow-title">📋 Accessorial Types (13 Total)</div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #3b82f6;">⏱️</div>
+                            <div class="card-title">Detention</div>
+                        </div>
+                        <div class="card-desc">Auto (geofence + time) or manual. Per hour after threshold.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #8b5cf6;">🛏️</div>
+                            <div class="card-title">Layover</div>
+                        </div>
+                        <div class="card-desc">Manual. Variable by region/fleet/day.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #14b8a6;">📍</div>
+                            <div class="card-title">Stop Off</div>
+                        </div>
+                        <div class="card-desc">Pre-dispatch. Flat fee + mileage.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #f59e0b;">↩️</div>
+                            <div class="card-title">Diversion</div>
+                        </div>
+                        <div class="card-desc">In-transit. Out-of-route miles + flat fee.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #ef4444;">❌</div>
+                            <div class="card-title">TONU</div>
+                        </div>
+                        <div class="card-desc">Manual. Flat fee.</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #22c55e;">💪</div>
+                            <div class="card-title">Driver Assist</div>
+                        </div>
+                        <div class="card-desc">Manual. Flat fee (varies by fleet/work).</div>
+                    </div>
+                </div>
+                <p style="color: #64748b; margin-top: 15px; font-size: 0.9rem;">+ Tarping, Hazmat, Tolls, Overweight, Out of Route Miles, Re-delivery, Empty Miles</p>
+            </div>
+        </div>
+
+        <!-- INVOICE FLOW TAB -->
+        <div id="invoice-flow" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📄</div>
+                <div>
+                    <div class="section-title">Invoice Generation & Delivery</div>
+                    <div class="section-subtitle">Automated flow from validated load to customer invoice</div>
+                </div>
+            </div>
+
+            <!-- Invoice Flow -->
+            <div class="flow-container">
+                <div class="flow-title">🔄 Invoice Generation Flow</div>
+                <div class="flow-row">
+                    <div class="flow-node green">
+                        <div class="flow-node-title">Gate 3 Passed</div>
+                        <div class="flow-node-subtitle">All validations complete</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node blue">
+                        <div class="flow-node-title">Calculate</div>
+                        <div class="flow-node-subtitle">Linehaul + FSC + Accessorials</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node purple">
+                        <div class="flow-node-title">Format</div>
+                        <div class="flow-node-subtitle">Per customer preferences</div>
+                    </div>
+                </div>
+                <div class="flow-row">
+                    <div class="flow-node teal">
+                        <div class="flow-node-title">Rendition Queue</div>
+                        <div class="flow-node-subtitle">Daily/Weekly/Monthly</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node orange">
+                        <div class="flow-node-title">Deliver</div>
+                        <div class="flow-node-subtitle">Email/EDI/Portal/API</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-node green">
+                        <div class="flow-node-title">Complete</div>
+                        <div class="flow-node-subtitle">Audit trail logged</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rendition Options -->
+            <div class="flow-container">
+                <div class="flow-title">⚙️ Rendition Billing Options</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Billing Frequency</strong></td>
+                            <td>Daily, Weekly, Monthly (per customer)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Invoice Format</strong></td>
+                            <td>Single per load OR Summary with multiple loads</td>
+                        </tr>
+                        <tr>
+                            <td><strong>POD Attachment</strong></td>
+                            <td>Attached / Not attached / Link to portal</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Delivery Method</strong></td>
+                            <td>Email, EDI, Customer Portal, API</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bill-To Codes</strong></td>
+                            <td>Same code OR Separate codes for freight/accessorials</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accessorial Display</strong></td>
+                            <td>Itemized separately OR Combined with freight</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Module Integrations -->
+            <div class="flow-container">
+                <div class="flow-title">🔗 Module Integrations</div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #3b82f6;">🌐</div>
+                            <div class="card-title">Customer Portal</div>
+                        </div>
+                        <div class="card-desc">Load origin, rate confirmation, invoice delivery, POD access</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #8b5cf6;">📱</div>
+                            <div class="card-title">Driver App</div>
+                        </div>
+                        <div class="card-desc">BOL upload, delivery confirmation, accessorial reporting</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #14b8a6;">📋</div>
+                            <div class="card-title">Dispatch Console</div>
+                        </div>
+                        <div class="card-desc">Load creation, rate selection, accessorial entry, sign-off</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #f59e0b;">📍</div>
+                            <div class="card-title">Fleet Tracker</div>
+                        </div>
+                        <div class="card-desc">Geofence triggers for detention, delivery confirmation</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #22c55e;">💰</div>
+                            <div class="card-title">QuickBooks</div>
+                        </div>
+                        <div class="card-desc">Invoice sync, payment tracking, AR aging</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon" style="background: #ef4444;">🛡️</div>
+                            <div class="card-title">Safety Sentinel</div>
+                        </div>
+                        <div class="card-desc">Driver compliance check before dispatch</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OUTCOMES TAB -->
+        <div id="outcomes" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">🎯</div>
+                <div>
+                    <div class="section-title">Expected Outcomes</div>
+                    <div class="section-subtitle">Transforming billing from chaos to confidence</div>
+                </div>
+            </div>
+
+            <!-- Before/After Comparison -->
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <div class="comparison-header before">❌ Current State</div>
+                    <div class="comparison-content">
+                        <div class="comparison-item">
+                            <span class="comparison-label">Credit/Rebill Rate</span>
+                            <span class="comparison-value bad">10-15%</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Problem Invoices/Week</span>
+                            <span class="comparison-value bad">500-750</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Validation FTEs</span>
+                            <span class="comparison-value bad">7 people</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Invoice Generation</span>
+                            <span class="comparison-value bad">Manual/Batch</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Rate Lookup</span>
+                            <span class="comparison-value bad">Minutes (hunting)</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">FSC Updates</span>
+                            <span class="comparison-value bad">Manual/Inconsistent</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Customer Trust</span>
+                            <span class="comparison-value bad">Eroding</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Team Morale</span>
+                            <span class="comparison-value bad">Frustrated</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-header after">✅ Target State</div>
+                    <div class="comparison-content">
+                        <div class="comparison-item">
+                            <span class="comparison-label">Credit/Rebill Rate</span>
+                            <span class="comparison-value good">&lt; 2%</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Problem Invoices/Week</span>
+                            <span class="comparison-value good">&lt; 100</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Validation FTEs</span>
+                            <span class="comparison-value good">2-3 people</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Invoice Generation</span>
+                            <span class="comparison-value good">&lt; 30 sec auto</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Rate Lookup</span>
+                            <span class="comparison-value good">Instant (system)</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">FSC Updates</span>
+                            <span class="comparison-value good">100% automated</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Customer Trust</span>
+                            <span class="comparison-value good">Restored</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="comparison-label">Team Morale</span>
+                            <span class="comparison-value good">Productive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Resolution -->
+            <div class="flow-container">
+                <div class="flow-title">🔧 Problem Resolution Matrix</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Current Issue</th>
+                            <th>Solution</th>
+                            <th>Expected Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Duplicate loads</td>
+                            <td>Duplicate detection + clone validation</td>
+                            <td><span class="badge green">&lt; 0.5% rate</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wrong BOL/tickets</td>
+                            <td>OCR extraction + auto-match</td>
+                            <td><span class="badge green">&lt; 1% mismatch</span></td>
+                        </tr>
+                        <tr>
+                            <td>Wrong rates</td>
+                            <td>Rate files + approval + pickup lock</td>
+                            <td><span class="badge green">&lt; 0.5% errors</span></td>
+                        </tr>
+                        <tr>
+                            <td>FSC errors</td>
+                            <td>Automated FSC engine + auto index</td>
+                            <td><span class="badge green">&lt; 0.5% errors</span></td>
+                        </tr>
+                        <tr>
+                            <td>Missing accessorials</td>
+                            <td>Geofence triggers + pre-bill validation</td>
+                            <td><span class="badge green">&lt; 1% missing</span></td>
+                        </tr>
+                        <tr>
+                            <td>Weight mismatches</td>
+                            <td>OCR weight + block for weight fleets</td>
+                            <td><span class="badge green">0% errors</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Success Stats -->
+            <div class="stats-grid">
+                <div class="stat-card success">
+                    <div class="stat-value success">85%+</div>
+                    <div class="stat-label">Reduction in Problem Invoices</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value success">4-5</div>
+                    <div class="stat-label">FTEs Freed for Value-Add Work</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value success">100%</div>
+                    <div class="stat-label">FSC Automation</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value success">1</div>
+                    <div class="stat-label">Unified System (No More McLeod)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Title</div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                Content
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modal Data
+        const modalData = {
+            duplicate: {
+                title: '🔄 Issue #1: Duplicate Loads',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Primarily Affects</div>
+                        <p>Precast and TMF divisions</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Multi-person entry:</strong> Dispatcher enters from a call, CSR enters from email—neither knows the other already created it.</li>
+                            <li><strong>Clone misuse:</strong> Dispatchers duplicate loads but fail to update BOL#, trailer#, or pickup date.</li>
+                            <li><strong>Driver self-entry (TMF):</strong> Drivers create their own loads, dispatch approves without checking.</li>
+                            <li><strong>Precast repetition:</strong> Same job, same route—only BOL/trailer differ. Easy to lose track.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>Customer receives two invoices for the same delivery. We look incompetent. Time wasted investigating and issuing credits.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>No formal SOP exists.</strong> Load creation is ad-hoc with no duplicate check before entry.</p>
+                        <ul class="modal-list">
+                            <li>Dispatchers create loads from customer calls, emails, or driver requests without searching for existing loads first.</li>
+                            <li>Clone function is used freely without mandatory field updates.</li>
+                            <li>TMF drivers self-dispatch with no secondary validation step.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>Duplicate Detection at Entry:</strong> System automatically checks for same customer + pickup date + delivery location before allowing load creation.</li>
+                            <li><strong>BOL # Uniqueness:</strong> System blocks creation if BOL # already exists.</li>
+                            <li><strong>Clone Enforcement:</strong> Clone function requires mandatory update of BOL #, trailer #, and pickup date before saving.</li>
+                            <li><strong>TMF Validation Gate:</strong> Driver-created loads require dispatcher verification of BOL details before billing.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            wrongbol: {
+                title: '📄 Issue #2: Wrong BOL/Tickets Uploaded',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Affects</div>
+                        <p>All fleets</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Driver error:</strong> Uploads wrong photo—BOL from a different load, wrong file, or illegible image.</li>
+                            <li><strong>System mismatch:</strong> Correct BOL uploaded but attached to the wrong load record.</li>
+                            <li><strong>No validation:</strong> Sign-off checks that "a document exists," not that it's the correct one.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>Invoice goes out with wrong documentation. Customer disputes. We scramble to find the right paperwork. Credit and rebill.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Manual visual check only.</strong> Validator opens the uploaded document and visually confirms it "looks right."</p>
+                        <ul class="modal-list">
+                            <li>Driver uploads BOL via mobile app—no verification that it matches the load.</li>
+                            <li>Dispatcher checks that a document exists and is legible.</li>
+                            <li>No systematic comparison of BOL # on document vs. BOL # in system.</li>
+                            <li>Errors discovered only when customer disputes the invoice.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>OCR Extraction:</strong> System automatically scans uploaded BOL and extracts BOL #, weight, and stop count.</li>
+                            <li><strong>Auto-Match Validation:</strong> Extracted BOL # compared to load record. Mismatch = load blocked from sign-off.</li>
+                            <li><strong>Weight Verification:</strong> For weight-sensitive fleets (Walking Floor, Aggregate, Cement), extracted weight must match load record or billing is blocked.</li>
+                            <li><strong>Stop Count Check:</strong> System flags if stops on BOL differ from stops entered on load.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            wrongrate: {
+                title: '💰 Issue #3: Wrong Rates on Loads',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Affects</div>
+                        <p>All fleets — <strong>MOST COMMON CAUSE OF CREDITS/REBILLS</strong></p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Rate not in system:</strong> Dispatcher enters from memory, old email, or sticky note.</li>
+                            <li><strong>Wrong rate selected:</strong> Customer has multiple rate agreements—wrong one picked.</li>
+                            <li><strong>Rate changed, not updated:</strong> Sales negotiated new rate but system still has old one.</li>
+                            <li><strong>No single source of truth:</strong> Rates live in profiles, sticky notes, emails, and heads.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>The most chaotic billing failure. Customers catch overcharges immediately. Undercharges we discover later—or never. Revenue leakage and trust erosion.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Fragmented rate storage.</strong> No single source of truth.</p>
+                        <ul class="modal-list">
+                            <li>Rates may exist in customer profile, or on sticky notes, or in email threads, or only in someone's memory.</li>
+                            <li>When Sales negotiates a new rate, they communicate verbally or via email—system update is not guaranteed.</li>
+                            <li>Dispatcher selects rate at load creation with no verification that it's current.</li>
+                            <li>Billing team hunts through emails and sticky notes to confirm rates before invoicing.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>Gate 1 Enforcement:</strong> Load cannot be dispatched without a rate in the customer profile.</li>
+                            <li><strong>Customer Approval Required:</strong> Rate must have customer approval on file before it can be used.</li>
+                            <li><strong>Pickup Date Lock:</strong> Rate locks based on pickup date—won't change even if rate file updates later.</li>
+                            <li><strong>1-Year Expiration:</strong> Rates expire after 1 year, forcing annual audit and renewal.</li>
+                            <li><strong>Rate Change Workflow:</strong> Sales → Customer Service → Customer Approval → System Update → Active.</li>
+                            <li><strong>Override Control:</strong> Level 2 Manager approval required to change rate after pickup.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            fscerror: {
+                title: '⛽ Issue #4: Fuel Surcharge Errors',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Affects</div>
+                        <p>All customers with FSC agreements</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Manual updates:</strong> Someone has to remember to check DOE, calculate, and update every customer. Doesn't happen consistently.</li>
+                            <li><strong>FSC missing:</strong> Contract includes FSC but it wasn't applied. Lost revenue.</li>
+                            <li><strong>FSC added incorrectly:</strong> All-in rate but FSC added anyway. Or FSC duplicated.</li>
+                            <li><strong>Customer-specific formulas:</strong> Every customer can have different base, increment, index, timing. Impossible to track manually.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>FSC should protect our margins. Instead, it's a source of constant disputes. We either lose money (missing) or damage relationships (incorrect).</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Manual FSC management.</strong> Jesus's team records FSC at customer onboarding, but updates are inconsistent.</p>
+                        <ul class="modal-list">
+                            <li>FSC rules are recorded during customer onboarding but stored inconsistently.</li>
+                            <li>Weekly DOE updates require manual lookup and calculation for each customer.</li>
+                            <li>Billing team manually checks if FSC should be applied, added, or removed on each load.</li>
+                            <li>No enforcement that FSC matches customer contract—relies on human memory.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>Customer FSC Profile:</strong> Complete FSC configuration stored per customer—index source, calculation method, base, increment, caps, floors, timing.</li>
+                            <li><strong>Auto-Index Pull:</strong> DOE pulled automatically from EIA API weekly. OPIS via API. Custom tables uploaded by Jesus's team.</li>
+                            <li><strong>Auto-Calculation:</strong> FSC calculated automatically based on customer profile—no manual lookup.</li>
+                            <li><strong>Gate 1 Enforcement:</strong> FSC profile must be configured before load can be dispatched.</li>
+                            <li><strong>Versioned Files:</strong> FSC files have start/end dates, are never deleted, and maintain full audit trail.</li>
+                            <li><strong>Approval by Change Type:</strong> Material changes require customer approval; routine index updates do not.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            missingacc: {
+                title: '📋 Issue #5: Missing Accessorials',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Affects</div>
+                        <p>All fleets</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Driver doesn't report:</strong> Detention happened but driver didn't log it or mention it.</li>
+                            <li><strong>Dispatch doesn't add:</strong> Driver mentioned it but dispatch was busy and forgot.</li>
+                            <li><strong>Internal notes missed:</strong> Accessorials communicated via notes that billing has to interpret. Notes get missed.</li>
+                            <li><strong>No validation gate:</strong> No system check asks "are all accessorials accounted for?"</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>Pure revenue leakage. We performed the service but never billed for it. Money left on the table.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Verbal/note-based communication.</strong> Accessorials rely on driver reporting and dispatcher attention.</p>
+                        <ul class="modal-list">
+                            <li>Driver experiences detention, layover, or other event and may or may not report it.</li>
+                            <li>If reported, dispatcher adds internal note to load—or forgets.</li>
+                            <li>Billing reads internal notes and manually interprets which accessorials to add.</li>
+                            <li>No systematic check that all accessorials have been addressed before invoicing.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>Geofence-Triggered Detention:</strong> System automatically detects when driver is inside shipper/receiver geofence beyond threshold and creates detention record.</li>
+                            <li><strong>1-Hour Warning:</strong> Customer notified at 1 hour; charge applies at 2 hours (configurable per customer).</li>
+                            <li><strong>Accessorial Rates in Customer Profile:</strong> All 13 accessorial types with customer-specific rates stored in system.</li>
+                            <li><strong>Gate 3 Enforcement:</strong> Load cannot be invoiced until all detected accessorials are either applied or waived with reason code and approval.</li>
+                            <li><strong>Tiered Approval:</strong> Auto-apply for Tier 1 (detention, tolls), Dispatch Manager for Tier 2, VP Ops for Tier 3 and $500+ charges.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            missingstop: {
+                title: '📍 Issue #6: Missing Stop-Offs',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Primarily Affects</div>
+                        <p>TMF/Block division</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Driver self-entry:</strong> TMF drivers create loads, enter origin and destination, but skip additional stops.</li>
+                            <li><strong>Dispatch rubber-stamps:</strong> "Validates" without checking BOL to verify stop count.</li>
+                            <li><strong>BOL not reviewed:</strong> BOL shows multiple delivery points but nobody compares to load record.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>We delivered to 3 locations but billed for 1. Stop-off charges never recovered. Theft from our own bottom line.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Driver-controlled load creation.</strong> TMF drivers create their own loads because they're at the plant before dispatch knows about the load.</p>
+                        <ul class="modal-list">
+                            <li>Driver creates load in app with origin, destination, and basic details.</li>
+                            <li>Driver often skips entering additional stops—it's extra work with no enforcement.</li>
+                            <li>Dispatcher "validates" the load but doesn't compare BOL to entered stops.</li>
+                            <li>Missing stop-offs discovered only if someone catches it during billing review—rarely happens.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>Customer Portal / EDI Origin:</strong> Loads originate from customer system with all stops pre-populated. Driver confirms, doesn't create.</li>
+                            <li><strong>OCR Stop Count Extraction:</strong> System extracts stop count from BOL and compares to load record.</li>
+                            <li><strong>Mismatch Flag:</strong> If BOL shows more stops than entered, load flagged for dispatch review before sign-off.</li>
+                            <li><strong>Geofence Stop Detection:</strong> If truck stops at unplanned location for extended time, system flags potential unreported stop.</li>
+                            <li><strong>Gate 2 Enforcement:</strong> Stop count discrepancy prevents load from moving to billing until resolved.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            weight: {
+                title: '⚖️ Issue #7: Weight Discrepancies',
+                content: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📍 Affects</div>
+                        <p>Walking Floor, Aggregate, Cement (weight-billed fleets)</p>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title">🔍 Root Causes</div>
+                        <ul class="modal-list">
+                            <li><strong>Manual entry error:</strong> Weight on load doesn't match BOL. Typed wrong, copied wrong, or estimated.</li>
+                            <li><strong>No validation:</strong> Nobody compares system weight to BOL weight before billing.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section">
+                        <div class="modal-section-title" style="color: #ef4444;">💥 Consequence</div>
+                        <p>For weight-billed fleets, this directly impacts revenue. Understate = lost money. Overstate = customer dispute.</p>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; margin-top: 15px;">
+                        <div class="modal-section-title">📘 SOP — Current Process</div>
+                        <p style="margin-bottom: 10px;"><strong>Manual weight entry.</strong> No systematic verification against BOL.</p>
+                        <ul class="modal-list">
+                            <li>Weight entered manually on load record—may be estimated, rounded, or simply wrong.</li>
+                            <li>BOL contains actual weight from scale ticket, but nobody compares it to system.</li>
+                            <li>Invoice generated with system weight, which may differ significantly from BOL weight.</li>
+                            <li>Errors discovered only when customer disputes—or never (revenue leakage).</li>
+                        </ul>
+                    </div>
+                    <div class="modal-section" style="background: linear-gradient(135deg, #052e16 0%, #0f172a 100%); padding: 20px; border-radius: 12px; border: 1px solid #22c55e; margin-top: 15px;">
+                        <div class="modal-section-title" style="color: #4ade80;">✅ SOP — AXIS 2.0 Solution</div>
+                        <ul class="modal-list">
+                            <li><strong>OCR Weight Extraction:</strong> System automatically extracts weight from uploaded BOL/scale ticket.</li>
+                            <li><strong>Auto-Compare:</strong> Extracted weight compared to weight on load record.</li>
+                            <li><strong>Blocking for Weight Fleets:</strong> For Walking Floor, Aggregate, and Cement—weight mismatch BLOCKS billing until corrected.</li>
+                            <li><strong>Flag for Other Fleets:</strong> For non-weight-billed fleets, mismatch is flagged but doesn't block.</li>
+                            <li><strong>Audit Trail:</strong> Original weight, corrected weight, and who approved the change are all logged.</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        function showModal(id) {
+            const data = modalData[id];
+            if (data) {
+                document.getElementById('modal-title').innerHTML = data.title;
+                document.getElementById('modal-body').innerHTML = data.content;
+                document.getElementById('modal-overlay').classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal-overlay')) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
