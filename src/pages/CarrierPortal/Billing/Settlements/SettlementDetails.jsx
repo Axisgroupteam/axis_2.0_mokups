@@ -45,7 +45,6 @@ import {
   ArrowRightIcon,
   UserIcon,
   FileTextIcon,
-  PrinterIcon,
   Edit2Icon,
   ListChecksIcon,
   CheckCircleIcon,
@@ -505,10 +504,6 @@ const SettlementDetails = () => {
             <Button variant="outline" size="sm">
               <DownloadIcon className="size-4 mr-2" />
               Download
-            </Button>
-            <Button variant="outline" size="sm">
-              <PrinterIcon className="size-4 mr-2" />
-              Print
             </Button>
             <Button variant="outline" size="sm">
               <SendIcon className="size-4 mr-2" />
@@ -981,10 +976,6 @@ const SettlementDetails = () => {
               <Button variant="outline">
                 <FileSpreadsheetIcon className="size-4 mr-2" />
                 Download CSV
-              </Button>
-              <Button variant="outline">
-                <PrinterIcon className="size-4 mr-2" />
-                Print
               </Button>
               <Button variant="outline">
                 <SendIcon className="size-4 mr-2" />

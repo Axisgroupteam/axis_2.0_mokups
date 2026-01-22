@@ -45,7 +45,6 @@ import {
   ArrowRightIcon,
   UserIcon,
   WrenchIcon,
-  PrinterIcon,
   CheckCircleIcon,
   CheckCircle2Icon,
   ExternalLinkIcon,
@@ -543,10 +542,6 @@ const WorksheetDetails = () => {
             <Button variant="outline" size="sm">
               <DownloadIcon className="size-4 mr-2" />
               Export
-            </Button>
-            <Button variant="outline" size="sm">
-              <PrinterIcon className="size-4 mr-2" />
-              Print
             </Button>
           </div>
         </div>
