@@ -39,6 +39,7 @@ import InvoiceDetails from "@/pages/CarrierPortal/Billing/Invoicing/InvoiceDetai
 import ReadyToInvoice from "@/pages/CarrierPortal/Billing/Invoicing/ReadyToInvoice";
 import Settlements from "@/pages/CarrierPortal/Billing/Settlements/Settlements";
 import SettlementDetails from "@/pages/CarrierPortal/Billing/Settlements/SettlementDetails";
+import WorksheetDetails from "@/pages/CarrierPortal/Billing/Settlements/WorksheetDetails";
 import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
 import SalesOrders from "@/pages/CarrierPortal/Sales/Orders";
 import PendingValidation from "@/pages/CarrierPortal/Sales/PendingValidation";
@@ -384,6 +385,11 @@ export const carrierPortalRoutes = [
     path: "billing/settlements/:settlementNo",
     element: <SettlementDetails />,
     label: "Settlement Details",
+  },
+  {
+    path: "billing/settlements/inbox/:worksheetNo",
+    element: <WorksheetDetails />,
+    label: "Inbox Details",
   },
   // Settings routes
   {

@@ -31,60 +31,43 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   ArrowLeftIcon,
-  Wallet,
+  FileSpreadsheetIcon,
   DownloadIcon,
-  DollarSign,
   TruckIcon,
   PlusIcon,
   History,
   LayoutDashboard,
-  CreditCard,
-  CheckCircle2Icon,
   ClockIcon,
   PlusCircleIcon,
   MinusCircleIcon,
   Trash2Icon,
-  SendIcon,
   ArrowRightIcon,
   UserIcon,
   WrenchIcon,
-  Building2,
-  FileTextIcon,
   PrinterIcon,
-  Edit2Icon,
-  ListChecksIcon,
   CheckCircleIcon,
-  LockIcon,
-  BanknoteIcon,
-  InfoIcon,
-  AlertTriangleIcon,
-  CalendarIcon,
-  MapPinIcon,
-  ReceiptIcon,
-  FileSpreadsheetIcon,
+  CheckCircle2Icon,
   ExternalLinkIcon,
+  PlayIcon,
+  CreditCard,
 } from "lucide-react";
 
-const SettlementDetails = () => {
-  const { settlementNo } = useParams();
+const WorksheetDetails = () => {
+  const { worksheetNo } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "general";
-  const statusParam = searchParams.get("status") || "Approved";
+  const statusParam = searchParams.get("status"); // "reviewed" or null (defaults to pending)
 
   const [showAddDeductionSheet, setShowAddDeductionSheet] = useState(false);
   const [showAddReimbursementSheet, setShowAddReimbursementSheet] = useState(false);
-  const [showApproveDialog, setShowApproveDialog] = useState(false);
-  const [showPostDialog, setShowPostDialog] = useState(false);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [showMarkApprovedDialog, setShowMarkApprovedDialog] = useState(false);
+  const [showCreateSettlementDialog, setShowCreateSettlementDialog] = useState(false);
+
+  // Local state to track worksheet status (for animation)
+  const [worksheetStatus, setWorksheetStatus] = useState(statusParam === "reviewed" ? "Approved" : "Pending Review");
+  const [reviewedTimestamp, setApprovedTimestamp] = useState(statusParam === "reviewed" ? "2025-01-15T14:30:00" : null);
 
   const [deductionForm, setDeductionForm] = useState({
     type: "",
@@ -98,20 +81,15 @@ const SettlementDetails = () => {
     description: "",
   });
 
-  const [approvalNotes, setApprovalNotes] = useState("");
-  const [paymentForm, setPaymentForm] = useState({
-    method: "ach",
-    date: new Date().toISOString().split('T')[0],
-    reference: "",
-  });
+  // Determine if reviewed based on local state
+  const isApprovedStatus = worksheetStatus === "Approved";
 
-  // Mock settlement data with full workflow info
-  const settlement = {
-    settlementNo: settlementNo || "STL-2025-0001",
-    batchNo: "BATCH-2025-W02",
-    payee: "Smith Trucking LLC",
-    legalName: "Smith Trucking LLC",
+  // Mock worksheet data - uses local state for status
+  const worksheet = {
+    worksheetNo: worksheetNo || "WS-2025-0001",
     payeeId: "PAY-001",
+    payeeName: "Smith Trucking LLC",
+    legalName: "Smith Trucking LLC",
     payeeType: "Owner Operator",
     payeeEmail: "john.smith@smithtrucking.com",
     payeePhone: "(713) 555-1234",
@@ -120,97 +98,94 @@ const SettlementDetails = () => {
     payeeState: "TX",
     payeeZip: "77041",
     taxId: "**-***4567",
-    settlementCycle: "Weekly",
-    payType: "Per Mile",
-    payRate: "$0.58/mile + FSC",
-    businessUnit: "Mega Trucking",
+    cycleType: "Weekly",
     periodStart: "2025-01-08",
     periodEnd: "2025-01-14",
-    status: statusParam, // Approved or Settled
-    paymentMethod: "ACH",
+    status: worksheetStatus,
+    paymentMethod: "Bank Transfer",
     bankName: "Chase Business",
     bankAccount: "****4521",
-    routingNumber: "****1234",
-    // Workflow timestamps
-    createdDate: "2025-01-15",
-    createdBy: "Amanda Wilson",
-    readyDate: "2025-01-15",
-    readyBy: "Amanda Wilson",
-    approvedDate: "2025-01-16",
-    approvedBy: "Robert Chen",
-    approvalNotes: "All load pay verified against rate confirmations. Deductions confirmed.",
-    postedDate: null,
-    postedBy: null,
-    paidDate: null,
-    paidBy: null,
-    paymentRef: null,
-    // Factoring info
-    factoringEnabled: false,
-    factoringCompany: null,
+    generatedDate: "2025-01-15",
+    generatedBy: "System",
+    reviewedDate: reviewedTimestamp,
+    reviewedBy: isApprovedStatus ? "Amanda Wilson" : null,
+    businessUnit: "Mega Trucking",
   };
 
-  // Mock loads data with more detail
-  const loads = [
+  // Mock loads data with driver breakdown
+  const [drivers] = useState([
     {
-      id: 1,
-      loadNo: "ML-2025-001245",
-      origin: "Houston, TX",
-      destination: "Dallas, TX",
-      deliveredDate: "2025-01-08",
-      customer: "Titan Construction",
-      miles: 243,
-      linehaul: 1458.00,
-      fsc: 145.80,
-      stopOffs: 0,
-      detention: 175.00,
-      layover: 0,
-      lumper: 0,
-      accessorials: 175.00,
-      fuelAdvance: 425.00,
-      grossPay: 1778.80,
-      netPay: 1353.80,
+      driverId: "DRV-001",
+      driverName: "John Smith",
+      driverType: "Driver",
+      loads: [
+        {
+          id: 1,
+          loadNo: "ML-2025-001245",
+          deliveredDate: "2025-01-08",
+          customer: "Titan Construction",
+          origin: "Houston, TX",
+          destination: "Dallas, TX",
+          miles: 243,
+          linehaul: 1458.00,
+          fsc: 145.80,
+          accessorials: [{ type: "Detention", amount: 175.00 }],
+          fuelAdvance: 425.00,
+          grossPay: 1778.80,
+          netPay: 1353.80,
+        },
+        {
+          id: 2,
+          loadNo: "ML-2025-001248",
+          deliveredDate: "2025-01-09",
+          customer: "TQL Logistics",
+          origin: "Dallas, TX",
+          destination: "Austin, TX",
+          miles: 195,
+          linehaul: 1170.00,
+          fsc: 117.00,
+          accessorials: [{ type: "Stop-off", amount: 75.00 }],
+          fuelAdvance: 350.00,
+          grossPay: 1362.00,
+          netPay: 1012.00,
+        },
+      ],
     },
     {
-      id: 2,
-      loadNo: "ML-2025-001248",
-      origin: "Dallas, TX",
-      destination: "Austin, TX",
-      customer: "TQL Logistics",
-      deliveredDate: "2025-01-09",
-      miles: 195,
-      linehaul: 1170.00,
-      fsc: 117.00,
-      stopOffs: 75.00,
-      detention: 0,
-      layover: 0,
-      lumper: 0,
-      accessorials: 75.00,
-      fuelAdvance: 350.00,
-      grossPay: 1362.00,
-      netPay: 1012.00,
+      driverId: "DRV-002",
+      driverName: "Mike Davis",
+      driverType: "Driver",
+      loads: [
+        {
+          id: 3,
+          loadNo: "ML-2025-001252",
+          deliveredDate: "2025-01-10",
+          customer: "CH Robinson",
+          origin: "Austin, TX",
+          destination: "El Paso, TX",
+          miles: 578,
+          linehaul: 2312.00,
+          fsc: 231.20,
+          accessorials: [{ type: "Layover", amount: 250.00 }],
+          fuelAdvance: 520.00,
+          grossPay: 2793.20,
+          netPay: 2273.20,
+        },
+      ],
     },
-    {
-      id: 3,
-      loadNo: "ML-2025-001252",
-      origin: "Austin, TX",
-      destination: "El Paso, TX",
-      customer: "CH Robinson",
-      deliveredDate: "2025-01-10",
-      miles: 578,
-      linehaul: 2312.00,
-      fsc: 231.20,
-      stopOffs: 0,
-      detention: 0,
-      layover: 250.00,
-      lumper: 0,
-      accessorials: 250.00,
-      fuelAdvance: 520.00,
-      grossPay: 2793.20,
-      netPay: 2273.20,
-    },
-  ];
+  ]);
 
-  // Mock deductions - categorized
+  // Flatten loads for table display
+  const allLoads = drivers.flatMap(driver =>
+    driver.loads.map(load => ({
+      ...load,
+      driverName: driver.driverName,
+      driverId: driver.driverId,
+      driverType: driver.driverType,
+    }))
+  );
+
+  // Mock deductions
   const [deductions, setDeductions] = useState([
     { id: 1, type: "Equipment Insurance", category: "Recurring", description: "Weekly equipment insurance premium", amount: 275.00 },
     { id: 2, type: "Lease Payment", category: "Recurring", description: "Truck lease - TRK-2847", amount: 875.00 },
@@ -227,17 +202,24 @@ const SettlementDetails = () => {
     { id: 2, type: "Scale Tickets", description: "CAT scale receipts (4 tickets)", amount: 32.00, receipt: "RCP-2025-0143" },
   ]);
 
-  // Enhanced activity log with workflow events
-  const activityLog = [
-    { id: 1, action: "Settlement Created", status: "Draft", user: "Amanda Wilson", timestamp: "2025-01-15 09:30 AM", details: "Created from 3 loads in BATCH-2025-W02 for Smith Trucking LLC", icon: PlusCircleIcon },
-    { id: 2, action: "Recurring Deductions Applied", status: "Draft", user: "System", timestamp: "2025-01-15 09:31 AM", details: "Equipment Insurance ($275), Lease Payment ($875), Escrow ($150)", icon: MinusCircleIcon },
-    { id: 3, action: "Fuel Advances Applied", status: "Draft", user: "System", timestamp: "2025-01-15 09:31 AM", details: "3 fuel advances totaling $1,295.00 from load data", icon: MinusCircleIcon },
-    { id: 4, action: "Reimbursement Added", status: "Draft", user: "Amanda Wilson", timestamp: "2025-01-15 09:45 AM", details: "Tolls - $87.50 (Receipt: RCP-2025-0142)", icon: PlusCircleIcon },
-    { id: 5, action: "Reimbursement Added", status: "Draft", user: "Amanda Wilson", timestamp: "2025-01-15 09:47 AM", details: "Scale Tickets - $32.00 (Receipt: RCP-2025-0143)", icon: PlusCircleIcon },
-    { id: 6, action: "One-Time Deduction Added", status: "Draft", user: "Amanda Wilson", timestamp: "2025-01-15 09:50 AM", details: "Cash Advance - $500.00", icon: MinusCircleIcon },
-    { id: 7, action: "Marked as Ready", status: "Ready", user: "Amanda Wilson", timestamp: "2025-01-15 10:15 AM", details: "Settlement submitted for approval review. Net pay: $3,958.50", icon: ListChecksIcon },
-    { id: 8, action: "Settlement Approved", status: "Approved", user: "Robert Chen", timestamp: "2025-01-16 11:30 AM", details: "All load pay verified against rate confirmations. Deductions confirmed.", icon: CheckCircleIcon },
+  // Activity log - conditional based on status
+  const baseActivityLog = [
+    { id: 1, action: "Worksheet Generated", status: "Pending Review", user: "System", timestamp: "2025-01-15 06:00 AM", details: "Auto-generated from batch job for weekly cycle", icon: FileSpreadsheetIcon },
+    { id: 2, action: "Loads Added", status: "Pending Review", user: "System", timestamp: "2025-01-15 06:00 AM", details: "3 loads from DRV-001 (John Smith), DRV-002 (Mike Davis)", icon: TruckIcon },
+    { id: 3, action: "Recurring Deductions Applied", status: "Pending Review", user: "System", timestamp: "2025-01-15 06:00 AM", details: "Equipment Insurance ($275), Lease Payment ($875), Escrow ($150)", icon: MinusCircleIcon },
+    { id: 4, action: "Fuel Advances Applied", status: "Pending Review", user: "System", timestamp: "2025-01-15 06:00 AM", details: "3 fuel advances totaling $1,295.00 from load data", icon: MinusCircleIcon },
+    { id: 5, action: "Reimbursement Added", status: "Pending Review", user: "Amanda Wilson", timestamp: "2025-01-15 09:45 AM", details: "Tolls - $87.50 (Receipt: RCP-2025-0142)", icon: PlusCircleIcon },
+    { id: 6, action: "Reimbursement Added", status: "Pending Review", user: "Amanda Wilson", timestamp: "2025-01-15 09:47 AM", details: "Scale Tickets - $32.00 (Receipt: RCP-2025-0143)", icon: PlusCircleIcon },
+    { id: 7, action: "One-Time Deduction Added", status: "Pending Review", user: "Amanda Wilson", timestamp: "2025-01-15 09:50 AM", details: "Cash Advance - $500.00", icon: MinusCircleIcon },
   ];
+
+  // Add review activity if worksheet is reviewed
+  const activityLog = isApprovedStatus
+    ? [
+        ...baseActivityLog,
+        { id: 8, action: "Worksheet Approved", status: "Approved", user: "Amanda Wilson", timestamp: "2025-01-15 02:30 PM", details: "All loads, deductions, and reimbursements verified. Ready for settlement.", icon: CheckCircleIcon },
+      ]
+    : baseActivityLog;
 
   // Calculation helpers
   const formatCurrency = (amount) => {
@@ -259,16 +241,13 @@ const SettlementDetails = () => {
 
   const getStatusBadge = (status) => {
     const config = {
-      Draft: { color: "bg-slate-500/10 text-slate-700 border-slate-500/50", icon: Edit2Icon },
-      Ready: { color: "bg-blue-500/10 text-blue-700 border-blue-500/50", icon: ListChecksIcon },
-      Approved: { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: CheckCircleIcon },
-      Posted: { color: "bg-purple-500/10 text-purple-700 border-purple-500/50", icon: LockIcon },
-      Paid: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2Icon },
+      "Pending Review": { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: ClockIcon },
+      "Approved": { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircleIcon },
     };
-    const c = config[status] || config["Draft"];
+    const c = config[status] || config["Pending Review"];
     const Icon = c.icon;
     return (
-      <Badge className={c.color}>
+      <Badge className={`${c.color} transition-all duration-500 ease-in-out`}>
         <Icon className="size-3 mr-1" />
         {status}
       </Badge>
@@ -277,9 +256,9 @@ const SettlementDetails = () => {
 
   const getPayeeTypeBadge = (type) => {
     const colors = {
-      Driver: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      "Owner Operator": "bg-emerald-500/10 text-emerald-700 border-emerald-500/50",
+      "Company Driver": "bg-indigo-500/10 text-indigo-700 border-indigo-500/50",
       Technician: "bg-purple-500/10 text-purple-700 border-purple-500/50",
-      Carrier: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
     };
     return colors[type] || "bg-gray-500/10 text-gray-700";
   };
@@ -294,18 +273,17 @@ const SettlementDetails = () => {
   };
 
   // Calculate totals
-  const grossPay = loads.reduce((sum, l) => sum + l.grossPay, 0);
-  const loadDeductions = loads.reduce((sum, l) => sum + l.fuelAdvance, 0);
+  const grossPay = allLoads.reduce((sum, l) => sum + l.grossPay, 0);
   const recurringDeductions = deductions.filter(d => d.category === "Recurring").reduce((sum, d) => sum + d.amount, 0);
   const oneTimeDeductions = deductions.filter(d => d.category === "One-Time").reduce((sum, d) => sum + d.amount, 0);
   const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
   const totalReimbursements = reimbursements.reduce((sum, r) => sum + r.amount, 0);
   const netPay = grossPay - totalDeductions + totalReimbursements;
 
-  // Status checks (Simplified: Approved → Settled)
-  const isApproved = settlement.status === "Approved";
-  const isSettled = settlement.status === "Settled";
-  const canMarkSettled = isApproved;
+  // Status checks
+  const isPendingReview = worksheet.status === "Pending Review";
+  const isApproved = worksheet.status === "Approved";
+  const canEdit = isPendingReview;
 
   // Table columns
   const loadColumns = [
@@ -320,6 +298,20 @@ const SettlementDetails = () => {
           {row.getValue("loadNo")}
           <ExternalLinkIcon className="size-3" />
         </button>
+      ),
+    },
+    {
+      accessorKey: "driverName",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Driver" />,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          {row.original.driverType === "Technician" ? (
+            <WrenchIcon className="size-3 text-purple-600" />
+          ) : (
+            <UserIcon className="size-3 text-blue-600" />
+          )}
+          <span className="text-sm">{row.getValue("driverName")}</span>
+        </div>
       ),
     },
     {
@@ -359,10 +351,10 @@ const SettlementDetails = () => {
       cell: ({ row }) => formatCurrency(row.getValue("fsc")),
     },
     {
-      accessorKey: "accessorials",
+      id: "accessorials",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Accessorials" />,
       cell: ({ row }) => {
-        const acc = row.getValue("accessorials");
+        const acc = row.original.accessorials.reduce((s, a) => s + a.amount, 0);
         return acc > 0 ? formatCurrency(acc) : <span className="text-muted-foreground">-</span>;
       },
     },
@@ -422,7 +414,7 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <span className="font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</span>,
     },
-    ...(false ? [{
+    ...(canEdit ? [{
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
@@ -460,7 +452,7 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <span className="font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</span>,
     },
-    ...(false ? [{
+    ...(canEdit ? [{
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
@@ -510,44 +502,51 @@ const SettlementDetails = () => {
             </Button>
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-primary/10">
-                <Wallet className="size-5 text-primary" />
+                <FileSpreadsheetIcon className="size-5 text-primary" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-bold">{settlement.settlementNo}</h1>
-                  {getStatusBadge(settlement.status)}
-                  <span className="text-xs text-muted-foreground font-mono">{settlement.batchNo}</span>
+                  <h1 className="text-lg font-bold">{worksheet.worksheetNo}</h1>
+                  {getStatusBadge(worksheet.status)}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>{settlement.payee}</span>
-                  <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
-                    {settlement.payeeType}
+                  <span>{worksheet.payeeName}</span>
+                  <Badge variant="outline" className={getPayeeTypeBadge(worksheet.payeeType)}>
+                    {worksheet.payeeType}
                   </Badge>
                   <span className="mx-1">•</span>
-                  <span>{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</span>
+                  <span>{formatDate(worksheet.periodStart)} - {formatDate(worksheet.periodEnd)}</span>
                 </div>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {/* Status-based action buttons */}
-            {canMarkSettled && (
-              <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => setShowPaymentDialog(true)}>
-                <CheckCircle2Icon className="size-4 mr-2" />
-                Mark as Settled
+            {isPendingReview && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => setShowMarkApprovedDialog(true)}>
+                  <CheckCircleIcon className="size-4 mr-2" />
+                  Mark as Approved
+                </Button>
+                <Button size="sm" className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90" onClick={() => setShowCreateSettlementDialog(true)}>
+                  <PlayIcon className="size-4 mr-2" />
+                  Create Settlement
+                </Button>
+              </>
+            )}
+            {isApproved && (
+              <Button size="sm" className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90" onClick={() => setShowCreateSettlementDialog(true)}>
+                <PlayIcon className="size-4 mr-2" />
+                Create Settlement
               </Button>
             )}
             <Button variant="outline" size="sm">
               <DownloadIcon className="size-4 mr-2" />
-              Download
+              Export
             </Button>
             <Button variant="outline" size="sm">
               <PrinterIcon className="size-4 mr-2" />
               Print
-            </Button>
-            <Button variant="outline" size="sm">
-              <SendIcon className="size-4 mr-2" />
-              Email
             </Button>
           </div>
         </div>
@@ -558,36 +557,36 @@ const SettlementDetails = () => {
         <div className="flex items-center">
           {/* Generated */}
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-full bg-green-500">
+            <div className="p-1.5 rounded-full bg-green-500 transition-all duration-500">
               <FileSpreadsheetIcon className="size-3 text-white" />
             </div>
             <div>
               <p className="text-xs font-medium">Generated</p>
-              <p className="text-[10px] text-muted-foreground">{formatDateTime(settlement.createdDate)}</p>
+              <p className="text-[10px] text-muted-foreground">{formatDateTime(worksheet.generatedDate)}</p>
             </div>
           </div>
-          <div className="flex-1 h-0.5 mx-4 bg-green-500" />
+          <div className={`flex-1 h-0.5 mx-4 transition-all duration-700 ease-in-out ${isApproved ? 'bg-green-500' : 'bg-slate-300'}`} />
 
           {/* Approved */}
           <div className="flex items-center gap-2">
-            <div className={`p-1.5 rounded-full transition-all duration-500 ${isApproved || isSettled ? 'bg-green-500' : 'bg-slate-300'}`}>
-              <CheckCircleIcon className="size-3 text-white" />
+            <div className={`p-1.5 rounded-full transition-all duration-500 ease-in-out ${isApproved ? 'bg-green-500 scale-110' : 'bg-slate-300'}`}>
+              <CheckCircleIcon className={`size-3 transition-all duration-500 ${isApproved ? 'text-white' : 'text-white'}`} />
             </div>
             <div>
-              <p className="text-xs font-medium">Approved</p>
-              <p className="text-[10px] text-muted-foreground">{formatDateTime(settlement.approvedDate)}</p>
+              <p className={`text-xs font-medium transition-colors duration-500 ${isApproved ? 'text-green-600' : ''}`}>Approved</p>
+              <p className="text-[10px] text-muted-foreground transition-all duration-500">{isApproved ? formatDateTime(worksheet.reviewedDate) : '-'}</p>
             </div>
           </div>
-          <div className={`flex-1 h-0.5 mx-4 transition-all duration-700 ${isSettled ? 'bg-green-500' : 'bg-slate-300'}`} />
+          <div className="flex-1 h-0.5 mx-4 bg-slate-300 transition-all duration-700" />
 
           {/* Settled */}
           <div className="flex items-center gap-2">
-            <div className={`p-1.5 rounded-full transition-all duration-500 ${isSettled ? 'bg-green-500' : 'bg-slate-300'}`}>
+            <div className="p-1.5 rounded-full bg-slate-300 transition-all duration-500">
               <CheckCircle2Icon className="size-3 text-white" />
             </div>
             <div>
               <p className="text-xs font-medium">Settled</p>
-              <p className="text-[10px] text-muted-foreground">{isSettled ? formatDateTime(settlement.paidDate || new Date().toISOString()) : '-'}</p>
+              <p className="text-[10px] text-muted-foreground">-</p>
             </div>
           </div>
         </div>
@@ -603,7 +602,7 @@ const SettlementDetails = () => {
             </TabsTrigger>
             <TabsTrigger value="loads" className="h-full">
               <TruckIcon className="size-4" />
-              Loads ({loads.length})
+              Loads ({allLoads.length})
             </TabsTrigger>
             <TabsTrigger value="deductions" className="h-full">
               <MinusCircleIcon className="size-4" />
@@ -613,13 +612,9 @@ const SettlementDetails = () => {
               <PlusCircleIcon className="size-4" />
               Reimbursements ({reimbursements.length})
             </TabsTrigger>
-            <TabsTrigger value="statement" className="h-full">
-              <FileTextIcon className="size-4" />
-              Statement
-            </TabsTrigger>
             <TabsTrigger value="activity" className="h-full">
               <History className="size-4" />
-              Audit Log
+              Activity Log
             </TabsTrigger>
           </TabsList>
         </div>
@@ -639,98 +634,88 @@ const SettlementDetails = () => {
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Payee Name</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payee}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.payeeName}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Payee ID</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.payeeId}</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{worksheet.payeeId}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Legal Name</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.legalName}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.legalName}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Tax ID</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.taxId}</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{worksheet.taxId}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payeePhone}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.payeePhone}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Email</p>
-                    <p className="text-sm font-medium text-primary">{settlement.payeeEmail}</p>
+                    <p className="text-sm font-medium text-primary">{worksheet.payeeEmail}</p>
                   </div>
                 </div>
                 <div className="px-4 py-2.5">
                   <p className="text-xs text-muted-foreground mb-0.5">Address</p>
-                  <p className="text-sm font-medium text-foreground">{settlement.payeeAddress}, {settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
+                  <p className="text-sm font-medium text-foreground">{worksheet.payeeAddress}, {worksheet.payeeCity}, {worksheet.payeeState} {worksheet.payeeZip}</p>
                 </div>
               </div>
             </div>
 
-            {/* Settlement Details Card */}
+            {/* Worksheet Details Card */}
             <div className="flex-1 border rounded-sm bg-card">
               <div className="px-4 py-3 border-b bg-muted">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <Wallet className="size-4" />
-                  Settlement Details
+                  <FileSpreadsheetIcon className="size-4" />
+                  Worksheet Details
                 </h3>
               </div>
               <div className="divide-y divide-border">
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Period Start</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodStart)}</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(worksheet.periodStart)}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Period End</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodEnd)}</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(worksheet.periodEnd)}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Business Unit</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.businessUnit}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.businessUnit}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Settlement Cycle</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.settlementCycle}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.cycleType}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Pay Type</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payType}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Generated Date</p>
+                    <p className="text-sm font-medium text-foreground">{formatDate(worksheet.generatedDate)}</p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Pay Rate</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payRate}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">Generated By</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.generatedBy}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Created Date</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.createdDate)}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Created By</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.createdBy}</p>
-                  </div>
-                </div>
-                {settlement.approvedBy && (
+                {worksheet.reviewedBy && (
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-2.5">
                       <p className="text-xs text-muted-foreground mb-0.5">Approved Date</p>
-                      <p className="text-sm font-medium text-foreground">{formatDate(settlement.approvedDate)}</p>
+                      <p className="text-sm font-medium text-foreground">{formatDate(worksheet.reviewedDate)}</p>
                     </div>
                     <div className="px-4 py-2.5">
                       <p className="text-xs text-muted-foreground mb-0.5">Approved By</p>
-                      <p className="text-sm font-medium text-foreground">{settlement.approvedBy}</p>
+                      <p className="text-sm font-medium text-foreground">{worksheet.reviewedBy}</p>
                     </div>
                   </div>
                 )}
@@ -748,29 +733,23 @@ const SettlementDetails = () => {
               <div className="divide-y divide-border">
                 <div className="px-4 py-2.5">
                   <p className="text-xs text-muted-foreground mb-0.5">Payment Method</p>
-                  <p className="text-sm font-medium text-foreground">{settlement.paymentMethod}</p>
+                  <p className="text-sm font-medium text-foreground">{worksheet.paymentMethod}</p>
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Bank</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.bankName}</p>
+                    <p className="text-sm font-medium text-foreground">{worksheet.bankName}</p>
                   </div>
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Account</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.bankAccount}</p>
+                    <p className="text-sm font-medium text-foreground font-mono">{worksheet.bankAccount}</p>
                   </div>
                 </div>
-                {settlement.factoringEnabled && (
-                  <div className="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/20">
-                    <p className="text-xs text-amber-700 mb-0.5 font-medium">Factoring Company</p>
-                    <p className="text-sm font-medium text-amber-800">{settlement.factoringCompany}</p>
-                  </div>
-                )}
                 <div className="px-4 py-3 bg-muted">
                   <p className="text-xs text-muted-foreground mb-2 font-semibold">Summary</p>
                   <div className="space-y-1.5">
                     <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">Loads ({loads.length})</span>
+                      <span className="text-xs text-muted-foreground">Loads ({allLoads.length})</span>
                       <span className="text-sm font-medium">{formatCurrency(grossPay)}</span>
                     </div>
                     <div className="flex justify-between">
@@ -798,25 +777,58 @@ const SettlementDetails = () => {
 
         {/* Loads Tab */}
         <TabsContent value="loads" className="flex-1 overflow-auto p-6 mt-0">
-          <DataTable columns={loadColumns} data={loads} showViewOptions={false} pageSize={10} />
+          {/* Loads by Driver Summary */}
+          <div className="mb-6 grid grid-cols-3 gap-4">
+            {drivers.map((driver) => (
+              <div key={driver.driverId} className="border rounded-lg p-4 bg-card">
+                <div className="flex items-center gap-2 mb-3">
+                  {driver.driverType === "Technician" ? (
+                    <WrenchIcon className="size-4 text-purple-600" />
+                  ) : (
+                    <UserIcon className="size-4 text-blue-600" />
+                  )}
+                  <span className="font-medium">{driver.driverName}</span>
+                  <Badge variant="secondary" className="ml-auto text-xs">
+                    {driver.loads.length} loads
+                  </Badge>
+                </div>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Gross Pay</span>
+                    <span className="font-medium">{formatCurrency(driver.loads.reduce((s, l) => s + l.grossPay, 0))}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Fuel Advances</span>
+                    <span className="font-medium text-amber-600">-{formatCurrency(driver.loads.reduce((s, l) => s + l.fuelAdvance, 0))}</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t">
+                    <span className="font-medium">Net Pay</span>
+                    <span className="font-bold text-green-600">{formatCurrency(driver.loads.reduce((s, l) => s + l.netPay, 0))}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <DataTable columns={loadColumns} data={allLoads} showViewOptions={false} pageSize={10} />
           <div className="mt-4 flex justify-end">
             <div className="border rounded-lg p-4 bg-muted/50 w-80">
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Linehaul</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.linehaul, 0))}</span>
+                  <span className="font-medium">{formatCurrency(allLoads.reduce((s, l) => s + l.linehaul, 0))}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total FSC</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.fsc, 0))}</span>
+                  <span className="font-medium">{formatCurrency(allLoads.reduce((s, l) => s + l.fsc, 0))}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Accessorials</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.accessorials, 0))}</span>
+                  <span className="font-medium">{formatCurrency(allLoads.reduce((s, l) => s + l.accessorials.reduce((a, c) => a + c.amount, 0), 0))}</span>
                 </div>
                 <div className="flex justify-between text-amber-600">
                   <span>Total Fuel Advances</span>
-                  <span className="font-medium">-{formatCurrency(loads.reduce((s, l) => s + l.fuelAdvance, 0))}</span>
+                  <span className="font-medium">-{formatCurrency(allLoads.reduce((s, l) => s + l.fuelAdvance, 0))}</span>
                 </div>
               </div>
               <div className="flex justify-between pt-3 mt-3 border-t">
@@ -834,7 +846,7 @@ const SettlementDetails = () => {
               <h3 className="font-semibold">Deductions</h3>
               <p className="text-sm text-muted-foreground">Recurring, one-time, and load-based deductions</p>
             </div>
-            {false && (
+            {canEdit && (
               <Button size="sm" onClick={() => setShowAddDeductionSheet(true)}>
                 <PlusIcon className="size-4 mr-2" />
                 Add Deduction
@@ -873,7 +885,7 @@ const SettlementDetails = () => {
               <h3 className="font-semibold">Reimbursements</h3>
               <p className="text-sm text-muted-foreground">Tolls, scale tickets, lumper fees, and other reimbursements</p>
             </div>
-            {false && (
+            {canEdit && (
               <Button size="sm" onClick={() => setShowAddReimbursementSheet(true)}>
                 <PlusIcon className="size-4 mr-2" />
                 Add Reimbursement
@@ -891,156 +903,6 @@ const SettlementDetails = () => {
           </div>
         </TabsContent>
 
-        {/* Statement Tab */}
-        <TabsContent value="statement" className="flex-1 overflow-auto p-6 mt-0">
-          <div className="max-w-4xl mx-auto">
-            {/* Statement Preview */}
-            <div className="border rounded-lg bg-white dark:bg-card shadow-sm">
-              {/* Statement Header */}
-              <div className="p-6 border-b">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-2xl font-bold">Settlement Statement</h2>
-                    <p className="text-muted-foreground">{settlement.settlementNo}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-lg">{settlement.businessUnit}</p>
-                    <p className="text-sm text-muted-foreground">Settlement Period: {formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payee Info */}
-              <div className="p-6 border-b bg-muted/30">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Payee</p>
-                    <p className="font-bold">{settlement.legalName}</p>
-                    <p className="text-sm">{settlement.payeeAddress}</p>
-                    <p className="text-sm">{settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground mb-1">Payment Method</p>
-                    <p className="font-medium">{settlement.paymentMethod}</p>
-                    <p className="text-sm text-muted-foreground">{settlement.bankName} - {settlement.bankAccount}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Loads Summary */}
-              <div className="p-6 border-b">
-                <h3 className="font-semibold mb-4">Load Breakdown</h3>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2">Load #</th>
-                      <th className="text-left py-2">Route</th>
-                      <th className="text-left py-2">Date</th>
-                      <th className="text-right py-2">Miles</th>
-                      <th className="text-right py-2">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loads.map((load) => (
-                      <tr key={load.id} className="border-b">
-                        <td className="py-2 font-mono">{load.loadNo}</td>
-                        <td className="py-2">{load.origin.split(',')[0]} → {load.destination.split(',')[0]}</td>
-                        <td className="py-2">{formatDate(load.deliveredDate)}</td>
-                        <td className="py-2 text-right">{load.miles}</td>
-                        <td className="py-2 text-right font-medium">{formatCurrency(load.grossPay)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="font-semibold">
-                      <td colSpan={3} className="py-2">Total Earnings</td>
-                      <td className="py-2 text-right">{loads.reduce((s, l) => s + l.miles, 0)}</td>
-                      <td className="py-2 text-right">{formatCurrency(grossPay)}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-
-              {/* Deductions */}
-              <div className="p-6 border-b">
-                <h3 className="font-semibold mb-4">Deductions</h3>
-                <table className="w-full text-sm">
-                  <tbody>
-                    {deductions.map((d) => (
-                      <tr key={d.id} className="border-b">
-                        <td className="py-2">{d.type}</td>
-                        <td className="py-2 text-muted-foreground">{d.description}</td>
-                        <td className="py-2 text-right text-red-600">-{formatCurrency(d.amount)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="font-semibold text-red-600">
-                      <td colSpan={2} className="py-2">Total Deductions</td>
-                      <td className="py-2 text-right">-{formatCurrency(totalDeductions)}</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-
-              {/* Reimbursements */}
-              {reimbursements.length > 0 && (
-                <div className="p-6 border-b">
-                  <h3 className="font-semibold mb-4">Reimbursements</h3>
-                  <table className="w-full text-sm">
-                    <tbody>
-                      {reimbursements.map((r) => (
-                        <tr key={r.id} className="border-b">
-                          <td className="py-2">{r.type}</td>
-                          <td className="py-2 text-muted-foreground">{r.description}</td>
-                          <td className="py-2 text-right text-green-600">+{formatCurrency(r.amount)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="font-semibold text-green-600">
-                        <td colSpan={2} className="py-2">Total Reimbursements</td>
-                        <td className="py-2 text-right">+{formatCurrency(totalReimbursements)}</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              )}
-
-              {/* Net Pay */}
-              <div className="p-6 bg-green-50 dark:bg-green-950/20">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-lg font-bold text-green-700">Net Settlement Amount</p>
-                    <p className="text-sm text-muted-foreground">Payment will be processed via {settlement.paymentMethod}</p>
-                  </div>
-                  <p className="text-3xl font-bold text-green-600">{formatCurrency(netPay)}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Statement Actions */}
-            <div className="flex justify-center gap-3 mt-6">
-              <Button variant="outline">
-                <DownloadIcon className="size-4 mr-2" />
-                Download PDF
-              </Button>
-              <Button variant="outline">
-                <FileSpreadsheetIcon className="size-4 mr-2" />
-                Download CSV
-              </Button>
-              <Button variant="outline">
-                <PrinterIcon className="size-4 mr-2" />
-                Print
-              </Button>
-              <Button variant="outline">
-                <SendIcon className="size-4 mr-2" />
-                Email to Payee
-              </Button>
-            </div>
-          </div>
-        </TabsContent>
-
         {/* Activity Tab */}
         <TabsContent value="activity" className="flex-1 overflow-auto p-6 mt-0">
           <div className="max-w-3xl">
@@ -1053,18 +915,12 @@ const SettlementDetails = () => {
                     {/* Timeline line */}
                     <div className="flex flex-col items-center">
                       <div className={`p-2 rounded-full ${
-                        activity.status === "Paid" ? "bg-green-500/10" :
-                        activity.status === "Posted" ? "bg-purple-500/10" :
-                        activity.status === "Approved" ? "bg-amber-500/10" :
-                        activity.status === "Ready" ? "bg-blue-500/10" :
-                        "bg-slate-500/10"
+                        activity.status === "Approved" ? "bg-green-500/10" :
+                        "bg-amber-500/10"
                       }`}>
                         <Icon className={`size-4 ${
-                          activity.status === "Paid" ? "text-green-600" :
-                          activity.status === "Posted" ? "text-purple-600" :
-                          activity.status === "Approved" ? "text-amber-600" :
-                          activity.status === "Ready" ? "text-blue-600" :
-                          "text-slate-600"
+                          activity.status === "Approved" ? "text-green-600" :
+                          "text-amber-600"
                         }`} />
                       </div>
                       {!isLast && <div className="w-0.5 h-full bg-border flex-1 my-2" />}
@@ -1094,7 +950,7 @@ const SettlementDetails = () => {
 
       {/* Add Deduction Sheet */}
       <Sheet open={showAddDeductionSheet} onOpenChange={setShowAddDeductionSheet}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetContent side="right" className="w-full sm:max-w-md px-6">
           <SheetHeader className="pb-4 border-b">
             <SheetTitle>Add Deduction</SheetTitle>
           </SheetHeader>
@@ -1136,7 +992,7 @@ const SettlementDetails = () => {
 
       {/* Add Reimbursement Sheet */}
       <Sheet open={showAddReimbursementSheet} onOpenChange={setShowAddReimbursementSheet}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetContent side="right" className="w-full sm:max-w-md px-6">
           <SheetHeader className="pb-4 border-b">
             <SheetTitle>Add Reimbursement</SheetTitle>
           </SheetHeader>
@@ -1175,202 +1031,86 @@ const SettlementDetails = () => {
         </SheetContent>
       </Sheet>
 
-      {/* Approve Dialog */}
-      <AlertDialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
+      {/* Mark as Approved Dialog */}
+      <AlertDialog open={showMarkApprovedDialog} onOpenChange={setShowMarkApprovedDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Approve Settlement</AlertDialogTitle>
+            <AlertDialogTitle>Mark Worksheet as Approved</AlertDialogTitle>
             <AlertDialogDescription>
-              Approve this settlement for posting. This confirms all amounts are correct and verified.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="py-4 space-y-4">
-            <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Settlement #</span>
-                <span className="font-mono font-medium">{settlement.settlementNo}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Payee</span>
-                <span className="font-medium">{settlement.payee}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Net Pay</span>
-                <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Approval Notes (Optional)</Label>
-              <Textarea
-                placeholder="Add any notes about this approval..."
-                value={approvalNotes}
-                onChange={(e) => setApprovalNotes(e.target.value)}
-              />
-            </div>
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-amber-500 hover:bg-amber-600 text-white">
-              <CheckCircleIcon className="size-4 mr-2" />
-              Approve Settlement
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Post Dialog */}
-      <AlertDialog open={showPostDialog} onOpenChange={setShowPostDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Post & Lock Settlement</AlertDialogTitle>
-            <AlertDialogDescription>
-              Posting will lock this settlement and generate documents. This action cannot be undone.
+              This confirms you have reviewed all loads, deductions, and reimbursements in this worksheet.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4">
             <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Settlement #</span>
-                <span className="font-mono font-medium">{settlement.settlementNo}</span>
+                <span className="text-muted-foreground">Worksheet #</span>
+                <span className="font-mono font-medium">{worksheet.worksheetNo}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Payee</span>
-                <span className="font-medium">{settlement.payee}</span>
+                <span className="font-medium">{worksheet.payeeName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Net Pay</span>
                 <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
               </div>
             </div>
-            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
-              <div className="flex items-start gap-2">
-                <InfoIcon className="size-4 text-amber-600 mt-0.5" />
-                <div className="text-sm text-amber-800 dark:text-amber-200">
-                  <p className="font-medium">Actions on Post:</p>
-                  <ul className="list-disc list-inside mt-1 text-xs">
-                    <li>Status changes to Posted (locked)</li>
-                    <li>Settlement items marked as Settled</li>
-                    <li>Recurring deductions recorded</li>
-                    <li>Escrow buckets updated</li>
-                    <li>Settlement statement generated</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-purple-500 hover:bg-purple-600 text-white">
-              <LockIcon className="size-4 mr-2" />
-              Post & Lock
+            <AlertDialogAction
+              className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+              onClick={() => {
+                // Update local state to trigger animation
+                setWorksheetStatus("Approved");
+                setApprovedTimestamp(new Date().toISOString());
+              }}
+            >
+              <CheckCircleIcon className="size-4 mr-2" />
+              Mark as Approved
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Payment Dialog */}
-      <AlertDialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <AlertDialogContent className="max-w-lg">
+      {/* Create Settlement Dialog */}
+      <AlertDialog open={showCreateSettlementDialog} onOpenChange={setShowCreateSettlementDialog}>
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Process Payment</AlertDialogTitle>
+            <AlertDialogTitle>Create Settlement</AlertDialogTitle>
             <AlertDialogDescription>
-              Execute payment for this settlement. This will mark the settlement as Paid.
+              Create a settlement from this worksheet. The settlement will be created with Pending status, ready for payment processing.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4 space-y-4">
+          <div className="py-4">
             <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Settlement #</span>
-                <span className="font-mono font-medium">{settlement.settlementNo}</span>
+                <span className="text-muted-foreground">Worksheet #</span>
+                <span className="font-mono font-medium">{worksheet.worksheetNo}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Payee</span>
-                <span className="font-medium">{settlement.payee}</span>
+                <span className="font-medium">{worksheet.payeeName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Amount</span>
+                <span className="text-muted-foreground">Period</span>
+                <span className="font-medium">{formatDate(worksheet.periodStart)} - {formatDate(worksheet.periodEnd)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Loads</span>
+                <span className="font-medium">{allLoads.length}</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t">
+                <span className="text-muted-foreground">Net Pay</span>
                 <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
               </div>
             </div>
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label>Payment Method</Label>
-                <Select value={paymentForm.method} onValueChange={(v) => setPaymentForm({ ...paymentForm, method: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ach">ACH Transfer</SelectItem>
-                    <SelectItem value="direct-deposit">Direct Deposit</SelectItem>
-                    <SelectItem value="check">Check</SelectItem>
-                    <SelectItem value="manual">Mark as Paid (Manual)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Payment Date</Label>
-                <Input type="date" value={paymentForm.date} onChange={(e) => setPaymentForm({ ...paymentForm, date: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label>Reference # (Optional)</Label>
-                <Input placeholder="ACH-123456 or Check #" value={paymentForm.reference} onChange={(e) => setPaymentForm({ ...paymentForm, reference: e.target.value })} />
-              </div>
-            </div>
-            <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-start gap-2">
-                <InfoIcon className="size-4 text-blue-600 mt-0.5" />
-                <div className="text-sm text-blue-800 dark:text-blue-200">
-                  <p className="font-medium">Payment Details:</p>
-                  <p className="text-xs mt-1">
-                    {settlement.bankName} - Account ending in {settlement.bankAccount?.slice(-4)}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-green-500 hover:bg-green-600 text-white">
-              <CreditCard className="size-4 mr-2" />
-              Process Payment
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Reject Dialog */}
-      <AlertDialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Reject Settlement</AlertDialogTitle>
-            <AlertDialogDescription>
-              Reject this settlement and send it back to Draft status for corrections.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="py-4 space-y-4">
-            <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Settlement #</span>
-                <span className="font-mono font-medium">{settlement.settlementNo}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Payee</span>
-                <span className="font-medium">{settlement.payee}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Rejection Reason (Required)</Label>
-              <Textarea
-                placeholder="Please provide a reason for rejection..."
-                className="min-h-[100px]"
-              />
-            </div>
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-500 hover:bg-red-600 text-white">
-              <AlertTriangleIcon className="size-4 mr-2" />
-              Reject Settlement
+            <AlertDialogAction className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90">
+              <PlayIcon className="size-4 mr-2" />
+              Create Settlement
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1379,4 +1119,4 @@ const SettlementDetails = () => {
   );
 };
 
-export default SettlementDetails;
+export default WorksheetDetails;
