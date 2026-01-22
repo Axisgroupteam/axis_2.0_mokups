@@ -45,6 +45,14 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
   MoreHorizontal,
   Eye,
   MapPin,
@@ -68,6 +76,7 @@ import {
   Phone,
   ChevronDown,
   ChevronUp,
+  XCircle,
 } from "lucide-react";
 
 const Planning = () => {
@@ -95,6 +104,11 @@ const Planning = () => {
   const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
   const [selectedLoadsForDispatch, setSelectedLoadsForDispatch] = useState([]);
   const [locationTypeToAdd, setLocationTypeToAdd] = useState(null); // 'pickup' or 'dropoff'
+
+  // Decline order state
+  const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
+  const [declineNotes, setDeclineNotes] = useState("");
   const [newLocationData, setNewLocationData] = useState({
     code: "",
     name: "",
@@ -304,6 +318,28 @@ const Planning = () => {
     // Handle save logic
     console.log("Saving:", formData);
     setIsDetailSheetOpen(false);
+  };
+
+  const handleDecline = (load) => {
+    // Set selected load and open decline dialog
+    setSelectedLoad(load);
+    setIsDeclineDialogOpen(true);
+  };
+
+  const handleDeclineSubmit = () => {
+    // Handle decline submission logic
+    console.log("Declined:", selectedLoad?.loadNo, "Reason:", declineReason, "Notes:", declineNotes);
+    setIsDeclineDialogOpen(false);
+    setIsDetailSheetOpen(false);
+    setSelectedLoad(null);
+    setDeclineReason("");
+    setDeclineNotes("");
+  };
+
+  const handleDeclineCancel = () => {
+    setIsDeclineDialogOpen(false);
+    setDeclineReason("");
+    setDeclineNotes("");
   };
 
   const handleOpenAddLocationModal = (type) => {
@@ -863,6 +899,13 @@ const Planning = () => {
             <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=history`)}>
               <History className="size-4 mr-2" />
               History
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleDecline(row.original)}
+              className="text-rose-600 focus:text-rose-600 focus:bg-rose-50"
+            >
+              <XCircle className="size-4 mr-2" />
+              Decline Order
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -1721,6 +1764,75 @@ const Planning = () => {
           </SheetFooter>
         </SheetContent>
       </Sheet>
+
+      {/* Decline Order Dialog */}
+      <Dialog open={isDeclineDialogOpen} onOpenChange={setIsDeclineDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-600">
+              <XCircle className="size-5" />
+              Decline Order
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {selectedLoad && (
+              <div className="p-3 bg-muted rounded-md">
+                <p className="text-sm font-mono font-medium">{selectedLoad.loadNo}</p>
+                <p className="text-xs text-muted-foreground">
+                  {selectedLoad.pickup?.split(',')[0]} → {selectedLoad.dropOff?.split(',')[0]}
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="declineReason">Reason for Declining <span className="text-rose-500">*</span></Label>
+              <Select value={declineReason} onValueChange={setDeclineReason}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a reason..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no-driver">No Driver Available</SelectItem>
+                  <SelectItem value="no-equipment">No Equipment Available</SelectItem>
+                  <SelectItem value="rate-too-low">Rate Too Low</SelectItem>
+                  <SelectItem value="route-not-serviceable">Route Not Serviceable</SelectItem>
+                  <SelectItem value="time-constraint">Cannot Meet Time Requirements</SelectItem>
+                  <SelectItem value="capacity-full">At Full Capacity</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="declineNotes">Additional Notes</Label>
+              <Textarea
+                id="declineNotes"
+                placeholder="Provide any additional details about why this order is being declined..."
+                value={declineNotes}
+                onChange={(e) => setDeclineNotes(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={handleDeclineCancel}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeclineSubmit}
+              disabled={!declineReason}
+              className="flex-1 bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              Confirm Decline
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Add New Location Modal */}
       <Dialog
