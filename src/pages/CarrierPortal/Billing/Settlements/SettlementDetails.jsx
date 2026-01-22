@@ -31,43 +31,27 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   ArrowLeftIcon,
   Wallet,
   DownloadIcon,
-  DollarSign,
   TruckIcon,
-  PlusIcon,
   History,
   LayoutDashboard,
   CreditCard,
   CheckCircle2Icon,
-  ClockIcon,
   PlusCircleIcon,
   MinusCircleIcon,
-  Trash2Icon,
   SendIcon,
   ArrowRightIcon,
   UserIcon,
-  WrenchIcon,
-  Building2,
   FileTextIcon,
   PrinterIcon,
   Edit2Icon,
   ListChecksIcon,
   CheckCircleIcon,
   LockIcon,
-  BanknoteIcon,
   InfoIcon,
   AlertTriangleIcon,
-  CalendarIcon,
-  MapPinIcon,
-  ReceiptIcon,
   FileSpreadsheetIcon,
   ExternalLinkIcon,
 } from "lucide-react";
@@ -295,7 +279,6 @@ const SettlementDetails = () => {
 
   // Calculate totals
   const grossPay = loads.reduce((sum, l) => sum + l.grossPay, 0);
-  const loadDeductions = loads.reduce((sum, l) => sum + l.fuelAdvance, 0);
   const recurringDeductions = deductions.filter(d => d.category === "Recurring").reduce((sum, d) => sum + d.amount, 0);
   const oneTimeDeductions = deductions.filter(d => d.category === "One-Time").reduce((sum, d) => sum + d.amount, 0);
   const totalDeductions = deductions.reduce((sum, d) => sum + d.amount, 0);
@@ -422,15 +405,6 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <span className="font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</span>,
     },
-    ...(false ? [{
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setDeductions(deductions.filter(d => d.id !== row.original.id))}>
-          <Trash2Icon className="size-4" />
-        </Button>
-      ),
-    }] : []),
   ];
 
   const reimbursementColumns = [
@@ -460,15 +434,6 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <span className="font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</span>,
     },
-    ...(false ? [{
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setReimbursements(reimbursements.filter(r => r.id !== row.original.id))}>
-          <Trash2Icon className="size-4" />
-        </Button>
-      ),
-    }] : []),
   ];
 
   const handleAddDeduction = (e) => {
@@ -834,12 +799,6 @@ const SettlementDetails = () => {
               <h3 className="font-semibold">Deductions</h3>
               <p className="text-sm text-muted-foreground">Recurring, one-time, and load-based deductions</p>
             </div>
-            {false && (
-              <Button size="sm" onClick={() => setShowAddDeductionSheet(true)}>
-                <PlusIcon className="size-4 mr-2" />
-                Add Deduction
-              </Button>
-            )}
           </div>
           <DataTable columns={deductionColumns} data={deductions} showViewOptions={false} pageSize={10} />
           <div className="mt-4 flex justify-end">
@@ -873,12 +832,6 @@ const SettlementDetails = () => {
               <h3 className="font-semibold">Reimbursements</h3>
               <p className="text-sm text-muted-foreground">Tolls, scale tickets, lumper fees, and other reimbursements</p>
             </div>
-            {false && (
-              <Button size="sm" onClick={() => setShowAddReimbursementSheet(true)}>
-                <PlusIcon className="size-4 mr-2" />
-                Add Reimbursement
-              </Button>
-            )}
           </div>
           <DataTable columns={reimbursementColumns} data={reimbursements} showViewOptions={false} pageSize={10} />
           <div className="mt-4 flex justify-end">
