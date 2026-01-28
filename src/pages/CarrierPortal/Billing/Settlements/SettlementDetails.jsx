@@ -55,6 +55,7 @@ import {
   FileSpreadsheetIcon,
   UsersIcon,
   ClockIcon,
+  Trash2Icon,
 } from "lucide-react";
 
 const SettlementDetails = () => {
@@ -788,6 +789,26 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <div className="py-1 font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</div>,
     },
+    ...(isWorksheetMode ? [{
+      id: "actions",
+      header: "Actions",
+      size: 100,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+            <Edit2Icon className="size-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+            onClick={() => setDeductions(deductions.filter(d => d.id !== row.original.id))}
+          >
+            <Trash2Icon className="size-3.5" />
+          </Button>
+        </div>
+      ),
+    }] : []),
   ];
 
   const reimbursementColumns = [
@@ -822,6 +843,26 @@ const SettlementDetails = () => {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
       cell: ({ row }) => <div className="py-1 font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</div>,
     },
+    ...(isWorksheetMode ? [{
+      id: "actions",
+      header: "Actions",
+      size: 100,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+            <Edit2Icon className="size-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+            onClick={() => setReimbursements(reimbursements.filter(r => r.id !== row.original.id))}
+          >
+            <Trash2Icon className="size-3.5" />
+          </Button>
+        </div>
+      ),
+    }] : []),
   ];
 
   const handleAddDeduction = (e) => {
@@ -1112,6 +1153,14 @@ const SettlementDetails = () => {
 
         {/* Deductions Tab */}
         <TabsContent value="deductions" className="p-6 mt-0">
+          {isWorksheetMode && (
+            <div className="flex justify-end mb-4">
+              <Button size="sm" onClick={() => setShowAddDeductionSheet(true)}>
+                <PlusCircleIcon className="size-4 mr-2" />
+                Add Deduction
+              </Button>
+            </div>
+          )}
           <div className="mb-4">
             <SmartFilter
               filterGroups={deductionFilterGroups}
@@ -1149,6 +1198,14 @@ const SettlementDetails = () => {
 
         {/* Reimbursements Tab */}
         <TabsContent value="reimbursements" className="p-6 mt-0">
+          {isWorksheetMode && (
+            <div className="flex justify-end mb-4">
+              <Button size="sm" onClick={() => setShowAddReimbursementSheet(true)}>
+                <PlusCircleIcon className="size-4 mr-2" />
+                Add Reimbursement
+              </Button>
+            </div>
+          )}
           <div className="mb-4">
             <SmartFilter
               filterGroups={reimbursementFilterGroups}
@@ -1391,10 +1448,10 @@ const SettlementDetails = () => {
       {/* Add Deduction Sheet */}
       <Sheet open={showAddDeductionSheet} onOpenChange={setShowAddDeductionSheet}>
         <SheetContent side="right" className="w-full sm:max-w-md">
-          <SheetHeader className="pb-4 border-b">
+          <SheetHeader className="pb-4 border-b px-4">
             <SheetTitle>Add Deduction</SheetTitle>
           </SheetHeader>
-          <form onSubmit={handleAddDeduction} className="space-y-4 mt-4">
+          <form onSubmit={handleAddDeduction} className="space-y-4 mt-4 px-4">
             <div className="space-y-2">
               <Label>Deduction Type</Label>
               <Select value={deductionForm.type} onValueChange={(v) => setDeductionForm({ ...deductionForm, type: v })}>
@@ -1433,10 +1490,10 @@ const SettlementDetails = () => {
       {/* Add Reimbursement Sheet */}
       <Sheet open={showAddReimbursementSheet} onOpenChange={setShowAddReimbursementSheet}>
         <SheetContent side="right" className="w-full sm:max-w-md">
-          <SheetHeader className="pb-4 border-b">
+          <SheetHeader className="pb-4 border-b px-4">
             <SheetTitle>Add Reimbursement</SheetTitle>
           </SheetHeader>
-          <form onSubmit={handleAddReimbursement} className="space-y-4 mt-4">
+          <form onSubmit={handleAddReimbursement} className="space-y-4 mt-4 px-4">
             <div className="space-y-2">
               <Label>Reimbursement Type</Label>
               <Select value={reimbursementForm.type} onValueChange={(v) => setReimbursementForm({ ...reimbursementForm, type: v })}>
