@@ -42,6 +42,9 @@ import {
   ExternalLink,
   SparklesIcon,
   Clock,
+  CreditCard,
+  AlertCircle,
+  FileCheck,
 } from "lucide-react";
 
 const Complete = () => {
@@ -165,7 +168,13 @@ const Complete = () => {
         status: "failed",
         weightMatches: false,
         amountMatches: true,
-        failureReasons: ["Weight mismatch: Expected 24,500 lbs, Actual 23,200 lbs"],
+        fuelCardValid: true,
+        noDispute: true,
+        accessorialCleared: false,
+        failureReasons: [
+          "Weight mismatch: Expected 24,500 lbs, Actual 23,200 lbs",
+          "Pending accessorial: Detention charge awaiting approval"
+        ],
         checkedAt: "2024-12-01T16:30:00Z",
       },
     },
@@ -192,7 +201,13 @@ const Complete = () => {
         status: "failed",
         weightMatches: true,
         amountMatches: false,
-        failureReasons: ["Amount mismatch: Expected $1,200.00, Actual $1,050.00"],
+        fuelCardValid: false,
+        noDispute: true,
+        accessorialCleared: true,
+        failureReasons: [
+          "Amount mismatch: Expected $1,200.00, Actual $1,050.00",
+          "Invalid fuel card: Card #4532 reported as stolen"
+        ],
         checkedAt: "2024-12-01T17:15:00Z",
       },
     },
@@ -219,7 +234,13 @@ const Complete = () => {
         status: "failed",
         weightMatches: false,
         amountMatches: true,
-        failureReasons: ["Weight mismatch: Expected 25,000 lbs, Actual 23,500 lbs"],
+        fuelCardValid: true,
+        noDispute: false,
+        accessorialCleared: true,
+        failureReasons: [
+          "Weight mismatch: Expected 25,000 lbs, Actual 23,500 lbs",
+          "Disputed load: Customer claims partial delivery"
+        ],
         checkedAt: "2024-12-02T14:45:00Z",
       },
     },
@@ -246,7 +267,13 @@ const Complete = () => {
         status: "failed",
         weightMatches: true,
         amountMatches: false,
-        failureReasons: ["Amount mismatch: Expected $3,100.00, Actual $2,850.00"],
+        fuelCardValid: true,
+        noDispute: true,
+        accessorialCleared: false,
+        failureReasons: [
+          "Amount mismatch: Expected $3,100.00, Actual $2,850.00",
+          "Pending accessorial: Lumper fee receipt pending"
+        ],
         checkedAt: "2024-12-03T10:20:00Z",
       },
     },
@@ -273,9 +300,13 @@ const Complete = () => {
         status: "failed",
         weightMatches: false,
         amountMatches: false,
+        fuelCardValid: true,
+        noDispute: false,
+        accessorialCleared: true,
         failureReasons: [
           "Weight mismatch: Expected 24,000 lbs, Actual 22,800 lbs",
-          "Amount mismatch: Expected $2,200.00, Actual $2,050.00"
+          "Amount mismatch: Expected $2,200.00, Actual $2,050.00",
+          "Disputed load: Incorrect Fuel Surcharge"
         ],
         checkedAt: "2024-12-03T11:30:00Z",
       },
@@ -375,8 +406,14 @@ const Complete = () => {
         status: "failed",
         weightMatches: true,
         amountMatches: true,
+        fuelCardValid: false,
+        noDispute: true,
+        accessorialCleared: true,
         podUploaded: false,
-        failureReasons: ["POD not uploaded"],
+        failureReasons: [
+          "POD not uploaded",
+          "Invalid fuel card: Transaction declined at pump"
+        ],
         checkedAt: "2024-12-05T18:30:00Z",
       },
     },
@@ -427,9 +464,15 @@ const Complete = () => {
         status: "failed",
         weightMatches: true,
         amountMatches: true,
+        fuelCardValid: true,
+        noDispute: true,
+        accessorialCleared: false,
         podUploaded: true,
         podLegible: false,
-        failureReasons: ["POD image not legible"],
+        failureReasons: [
+          "POD image not legible",
+          "Pending accessorial: Scale ticket reimbursement pending"
+        ],
         checkedAt: "2024-12-06T14:45:00Z",
       },
     },
@@ -946,6 +989,39 @@ const Complete = () => {
                       <span className="text-sm">Amount Matches</span>
                     </div>
                     {selectedLoadForValidation.validation?.amountMatches ? (
+                      <CheckCircle2 className="size-4 text-green-600" />
+                    ) : (
+                      <XCircle className="size-4 text-red-600" />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between p-2 border rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="size-4 text-muted-foreground" />
+                      <span className="text-sm">Fuel Card Valid</span>
+                    </div>
+                    {selectedLoadForValidation.validation?.fuelCardValid !== false ? (
+                      <CheckCircle2 className="size-4 text-green-600" />
+                    ) : (
+                      <XCircle className="size-4 text-red-600" />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between p-2 border rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="size-4 text-muted-foreground" />
+                      <span className="text-sm">No Dispute</span>
+                    </div>
+                    {selectedLoadForValidation.validation?.noDispute !== false ? (
+                      <CheckCircle2 className="size-4 text-green-600" />
+                    ) : (
+                      <XCircle className="size-4 text-red-600" />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between p-2 border rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <FileCheck className="size-4 text-muted-foreground" />
+                      <span className="text-sm">Accessorial Cleared</span>
+                    </div>
+                    {selectedLoadForValidation.validation?.accessorialCleared !== false ? (
                       <CheckCircle2 className="size-4 text-green-600" />
                     ) : (
                       <XCircle className="size-4 text-red-600" />

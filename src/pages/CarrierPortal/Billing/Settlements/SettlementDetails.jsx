@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DataTable, DataTableColumnHeader } from "@/components/data-table";
+import SmartFilter from "@/components/SmartFilter";
 import {
   Sheet,
   SheetContent,
@@ -31,7 +32,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  ArrowLeftIcon,
   Wallet,
   DownloadIcon,
   TruckIcon,
@@ -49,18 +49,29 @@ import {
   ListChecksIcon,
   CheckCircleIcon,
   LockIcon,
+  ExternalLinkIcon,
   InfoIcon,
   AlertTriangleIcon,
   FileSpreadsheetIcon,
-  ExternalLinkIcon,
+  UsersIcon,
+  ClockIcon,
+  PlayIcon,
+  WrenchIcon,
+  PlusIcon,
+  Trash2Icon,
 } from "lucide-react";
 
 const SettlementDetails = () => {
   const { settlementNo } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "general";
   const statusParam = searchParams.get("status") || "Approved";
+
+  // Determine mode based on URL path - "inbox" for worksheets, "history" for settlements
+  const isWorksheetMode = location.pathname.includes("/inbox/");
+  const isSettlementMode = !isWorksheetMode;
 
   const [showAddDeductionSheet, setShowAddDeductionSheet] = useState(false);
   const [showAddReimbursementSheet, setShowAddReimbursementSheet] = useState(false);
@@ -68,6 +79,14 @@ const SettlementDetails = () => {
   const [showPostDialog, setShowPostDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
+
+  // Worksheet-specific state
+  const [showMarkApprovedDialog, setShowMarkApprovedDialog] = useState(false);
+  const [showCreateSettlementDialog, setShowCreateSettlementDialog] = useState(false);
+  const [showDriverModal, setShowDriverModal] = useState(false);
+  const [selectedDriver, setSelectedDriver] = useState(null);
+  const [worksheetStatus, setWorksheetStatus] = useState(statusParam === "reviewed" ? "Approved" : "Pending Review");
+  const [reviewedTimestamp, setReviewedTimestamp] = useState(statusParam === "reviewed" ? "2026-01-15T14:30:00" : null);
 
   const [deductionForm, setDeductionForm] = useState({
     type: "",
@@ -83,20 +102,162 @@ const SettlementDetails = () => {
 
   const [approvalNotes, setApprovalNotes] = useState("");
   const [paymentForm, setPaymentForm] = useState({
-    method: "ach",
+    method: "bank-transfer",
     date: new Date().toISOString().split('T')[0],
     reference: "",
   });
 
-  // Mock settlement data with full workflow info
+  // Filter states
+  const [loadFilters, setLoadFilters] = useState([]);
+  const [deductionFilters, setDeductionFilters] = useState([]);
+  const [reimbursementFilters, setReimbursementFilters] = useState([]);
+
+  // Data mapping for different payee types - works for both worksheet and settlement modes
+  const dataMap = {
+    "WS-2026-0001": { payeeType: "Owner Operator", payeeName: "Smith Trucking LLC", payeeId: "PAY-001" },
+    "WS-2026-0002": { payeeType: "Company Driver", payeeName: "Sarah Johnson", payeeId: "PAY-002" },
+    "WS-2026-0003": { payeeType: "Technician", payeeName: "Carlos Martinez", payeeId: "PAY-003" },
+    "WS-2026-0008": { payeeType: "Vendor", payeeName: "Texas Fleet Services", payeeId: "VND-001" },
+    "STL-2026-0001": { payeeType: "Owner Operator", payeeName: "Smith Trucking LLC", payeeId: "PAY-001" },
+    "STL-2026-0002": { payeeType: "Company Driver", payeeName: "Sarah Johnson", payeeId: "PAY-002" },
+    "STL-2026-0006": { payeeType: "Vendor", payeeName: "Texas Fleet Services", payeeId: "VND-001" },
+    "STL-2026-0007": { payeeType: "Vendor", payeeName: "Metro Fleet Services", payeeId: "VND-002" },
+    "STL-2026-0008": { payeeType: "Vendor", payeeName: "Texas Fleet Services", payeeId: "VND-001" },
+  };
+
+  // Get payee info from data map or use defaults
+  const currentId = settlementNo || (isWorksheetMode ? "WS-2026-0001" : "STL-2026-0001");
+  const payeeInfo = dataMap[currentId] || { payeeType: "Owner Operator", payeeName: "Smith Trucking LLC", payeeId: "PAY-001" };
+
+  // Filter configurations - dynamic based on settlement
+  const loadFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "driver",
+          label: "Driver",
+          type: "select",
+          group: "Basic",
+          options: currentId === "STL-2026-0007" ? [
+            { value: "David Martinez", label: "David Martinez" },
+            { value: "Lisa Chen", label: "Lisa Chen" },
+          ] : [
+            { value: "John Smith", label: "John Smith" },
+            { value: "Mike Johnson", label: "Mike Johnson" },
+            { value: "Carlos Rodriguez", label: "Carlos Rodriguez" },
+          ],
+        },
+        {
+          key: "customer",
+          label: "Customer",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Titan Construction", label: "Titan Construction" },
+            { value: "TQL Logistics", label: "TQL Logistics" },
+            { value: "CH Robinson", label: "CH Robinson" },
+            { value: "XPO Logistics", label: "XPO Logistics" },
+            { value: "Echo Global", label: "Echo Global" },
+            { value: "Coyote Logistics", label: "Coyote Logistics" },
+            { value: "Landstar", label: "Landstar" },
+          ],
+        },
+        {
+          key: "origin",
+          label: "Origin",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Houston, TX", label: "Houston, TX" },
+            { value: "Dallas, TX", label: "Dallas, TX" },
+            { value: "Austin, TX", label: "Austin, TX" },
+            { value: "San Antonio, TX", label: "San Antonio, TX" },
+            { value: "Corpus Christi, TX", label: "Corpus Christi, TX" },
+            { value: "Oklahoma City, OK", label: "Oklahoma City, OK" },
+            { value: "Amarillo, TX", label: "Amarillo, TX" },
+            { value: "Lubbock, TX", label: "Lubbock, TX" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const deductionFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "type",
+          label: "Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Equipment Insurance", label: "Equipment Insurance" },
+            { value: "Lease Payment", label: "Lease Payment" },
+            { value: "Maintenance Escrow", label: "Maintenance Escrow" },
+            { value: "Fuel Advance", label: "Fuel Advance" },
+            { value: "Cash Advance", label: "Cash Advance" },
+          ],
+        },
+        {
+          key: "category",
+          label: "Category",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Recurring", label: "Recurring" },
+            { value: "One-Time", label: "One-Time" },
+            { value: "Load", label: "Load" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const reimbursementFilterGroups = [
+    {
+      name: "Basic",
+      filters: [
+        {
+          key: "type",
+          label: "Type",
+          type: "select",
+          group: "Basic",
+          options: [
+            { value: "Tolls", label: "Tolls" },
+            { value: "Scale Tickets", label: "Scale Tickets" },
+            { value: "Lumper Fees", label: "Lumper Fees" },
+            { value: "Detention", label: "Detention" },
+            { value: "Layover", label: "Layover" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const handleLoadFiltersChange = useCallback((newFilters) => {
+    setLoadFilters(newFilters);
+  }, []);
+
+  const handleDeductionFiltersChange = useCallback((newFilters) => {
+    setDeductionFilters(newFilters);
+  }, []);
+
+  const handleReimbursementFiltersChange = useCallback((newFilters) => {
+    setReimbursementFilters(newFilters);
+  }, []);
+
+  // Mock settlement/worksheet data with full workflow info
   const settlement = {
-    settlementNo: settlementNo || "STL-2025-0001",
-    batchNo: "BATCH-2025-W02",
-    payee: "Smith Trucking LLC",
-    legalName: "Smith Trucking LLC",
-    payeeId: "PAY-001",
-    payeeType: "Owner Operator",
-    payeeEmail: "john.smith@smithtrucking.com",
+    settlementNo: currentId,
+    worksheetNo: isWorksheetMode ? currentId : null,
+    batchNo: isSettlementMode ? "BATCH-2026-W02" : null,
+    payee: payeeInfo.payeeName,
+    legalName: payeeInfo.payeeName + (payeeInfo.payeeType === "Vendor" ? " LLC" : ""),
+    payeeId: payeeInfo.payeeId,
+    payeeType: payeeInfo.payeeType,
+    payeeEmail: payeeInfo.payeeName.toLowerCase().replace(/\s+/g, '.') + "@example.com",
     payeePhone: "(713) 555-1234",
     payeeAddress: "4521 Industrial Blvd, Suite 200",
     payeeCity: "Houston",
@@ -104,24 +265,29 @@ const SettlementDetails = () => {
     payeeZip: "77041",
     taxId: "**-***4567",
     settlementCycle: "Weekly",
+    cycleType: "Weekly",
     payType: "Per Mile",
     payRate: "$0.58/mile + FSC",
     businessUnit: "Mega Trucking",
-    periodStart: "2025-01-08",
-    periodEnd: "2025-01-14",
-    status: statusParam, // Approved or Settled
+    periodStart: "2026-01-08",
+    periodEnd: "2026-01-14",
+    status: isWorksheetMode ? worksheetStatus : statusParam,
     paymentMethod: "ACH",
     bankName: "Chase Business",
     bankAccount: "****4521",
     routingNumber: "****1234",
     // Workflow timestamps
-    createdDate: "2025-01-15",
+    createdDate: "2026-01-15",
     createdBy: "Amanda Wilson",
-    readyDate: "2025-01-15",
-    readyBy: "Amanda Wilson",
-    approvedDate: "2025-01-16",
-    approvedBy: "Robert Chen",
-    approvalNotes: "All load pay verified against rate confirmations. Deductions confirmed.",
+    generatedDate: "2026-01-15",
+    generatedBy: "System",
+    readyDate: isSettlementMode ? "2026-01-15" : null,
+    readyBy: isSettlementMode ? "Amanda Wilson" : null,
+    approvedDate: isSettlementMode ? "2026-01-16" : null,
+    approvedBy: isSettlementMode ? "Robert Chen" : null,
+    reviewedDate: isWorksheetMode ? reviewedTimestamp : null,
+    reviewedBy: isWorksheetMode && worksheetStatus === "Approved" ? "Amanda Wilson" : null,
+    approvalNotes: isSettlementMode ? "All load pay verified against rate confirmations. Deductions confirmed." : null,
     postedDate: null,
     postedBy: null,
     paidDate: null,
@@ -130,13 +296,131 @@ const SettlementDetails = () => {
     // Factoring info
     factoringEnabled: false,
     factoringCompany: null,
+    // Vendor info - drivers under this vendor (only for Vendor type)
+    vendorDrivers: payeeInfo.payeeType === "Vendor" ? (
+      currentId === "STL-2026-0007" ? [
+        { id: "DRV-010", name: "David Martinez", loadsCount: 4, earnings: 6200.00 },
+        { id: "DRV-011", name: "Lisa Chen", loadsCount: 2, earnings: 3650.00 },
+      ] : [
+        { id: "DRV-001", name: "John Smith", loadsCount: 3, earnings: 5934.00 },
+        { id: "DRV-002", name: "Mike Johnson", loadsCount: 3, earnings: 3761.60 },
+        { id: "DRV-003", name: "Carlos Rodriguez", loadsCount: 2, earnings: 3232.20 },
+      ]
+    ) : null,
   };
 
-  // Mock loads data with more detail
-  const loads = [
+  // Mock loads data with multiple drivers - dynamic based on settlement
+  const metroFleetLoads = [
+    {
+      id: 1,
+      loadNo: "ML-2025-001300",
+      driver: "David Martinez",
+      driverId: "DRV-010",
+      origin: "Houston, TX",
+      destination: "Dallas, TX",
+      deliveredDate: "2025-01-02",
+      customer: "Titan Construction",
+      miles: 243,
+      linehaul: 1458.00,
+      fsc: 145.80,
+      accessorials: 175.00,
+      fuelAdvance: 400.00,
+      grossPay: 1778.80,
+      netPay: 1378.80,
+    },
+    {
+      id: 2,
+      loadNo: "ML-2025-001305",
+      driver: "David Martinez",
+      driverId: "DRV-010",
+      origin: "Dallas, TX",
+      destination: "San Antonio, TX",
+      customer: "TQL Logistics",
+      deliveredDate: "2025-01-03",
+      miles: 275,
+      linehaul: 1650.00,
+      fsc: 165.00,
+      accessorials: 100.00,
+      fuelAdvance: 380.00,
+      grossPay: 1915.00,
+      netPay: 1535.00,
+    },
+    {
+      id: 3,
+      loadNo: "ML-2025-001310",
+      driver: "David Martinez",
+      driverId: "DRV-010",
+      origin: "San Antonio, TX",
+      destination: "Austin, TX",
+      customer: "CH Robinson",
+      deliveredDate: "2025-01-04",
+      miles: 82,
+      linehaul: 492.00,
+      fsc: 49.20,
+      accessorials: 50.00,
+      fuelAdvance: 200.00,
+      grossPay: 591.20,
+      netPay: 391.20,
+    },
+    {
+      id: 4,
+      loadNo: "ML-2025-001315",
+      driver: "David Martinez",
+      driverId: "DRV-010",
+      origin: "Austin, TX",
+      destination: "Houston, TX",
+      customer: "XPO Logistics",
+      deliveredDate: "2025-01-05",
+      miles: 165,
+      linehaul: 1650.00,
+      fsc: 165.00,
+      accessorials: 100.00,
+      fuelAdvance: 320.00,
+      grossPay: 1915.00,
+      netPay: 1595.00,
+    },
+    {
+      id: 5,
+      loadNo: "ML-2025-001320",
+      driver: "Lisa Chen",
+      driverId: "DRV-011",
+      origin: "Houston, TX",
+      destination: "Corpus Christi, TX",
+      customer: "Echo Global",
+      deliveredDate: "2025-01-03",
+      miles: 211,
+      linehaul: 1266.00,
+      fsc: 126.60,
+      accessorials: 125.00,
+      fuelAdvance: 350.00,
+      grossPay: 1517.60,
+      netPay: 1167.60,
+    },
+    {
+      id: 6,
+      loadNo: "ML-2025-001325",
+      driver: "Lisa Chen",
+      driverId: "DRV-011",
+      origin: "Corpus Christi, TX",
+      destination: "Houston, TX",
+      customer: "Coyote Logistics",
+      deliveredDate: "2025-01-05",
+      miles: 211,
+      linehaul: 1899.00,
+      fsc: 189.90,
+      accessorials: 75.00,
+      fuelAdvance: 350.00,
+      grossPay: 2163.90,
+      netPay: 1813.90,
+    },
+  ];
+
+  const texasFleetLoads = [
     {
       id: 1,
       loadNo: "ML-2025-001245",
+      driver: "John Smith",
+      driverId: "DRV-001",
       origin: "Houston, TX",
       destination: "Dallas, TX",
       deliveredDate: "2025-01-08",
@@ -144,10 +428,6 @@ const SettlementDetails = () => {
       miles: 243,
       linehaul: 1458.00,
       fsc: 145.80,
-      stopOffs: 0,
-      detention: 175.00,
-      layover: 0,
-      lumper: 0,
       accessorials: 175.00,
       fuelAdvance: 425.00,
       grossPay: 1778.80,
@@ -156,6 +436,8 @@ const SettlementDetails = () => {
     {
       id: 2,
       loadNo: "ML-2025-001248",
+      driver: "John Smith",
+      driverId: "DRV-001",
       origin: "Dallas, TX",
       destination: "Austin, TX",
       customer: "TQL Logistics",
@@ -163,10 +445,6 @@ const SettlementDetails = () => {
       miles: 195,
       linehaul: 1170.00,
       fsc: 117.00,
-      stopOffs: 75.00,
-      detention: 0,
-      layover: 0,
-      lumper: 0,
       accessorials: 75.00,
       fuelAdvance: 350.00,
       grossPay: 1362.00,
@@ -175,6 +453,8 @@ const SettlementDetails = () => {
     {
       id: 3,
       loadNo: "ML-2025-001252",
+      driver: "John Smith",
+      driverId: "DRV-001",
       origin: "Austin, TX",
       destination: "El Paso, TX",
       customer: "CH Robinson",
@@ -182,16 +462,100 @@ const SettlementDetails = () => {
       miles: 578,
       linehaul: 2312.00,
       fsc: 231.20,
-      stopOffs: 0,
-      detention: 0,
-      layover: 250.00,
-      lumper: 0,
       accessorials: 250.00,
       fuelAdvance: 520.00,
       grossPay: 2793.20,
       netPay: 2273.20,
     },
+    {
+      id: 4,
+      loadNo: "ML-2025-001260",
+      driver: "Mike Johnson",
+      driverId: "DRV-002",
+      origin: "Houston, TX",
+      destination: "San Antonio, TX",
+      customer: "XPO Logistics",
+      deliveredDate: "2025-01-08",
+      miles: 197,
+      linehaul: 1182.00,
+      fsc: 118.20,
+      accessorials: 0,
+      fuelAdvance: 380.00,
+      grossPay: 1300.20,
+      netPay: 920.20,
+    },
+    {
+      id: 5,
+      loadNo: "ML-2025-001263",
+      driver: "Mike Johnson",
+      driverId: "DRV-002",
+      origin: "San Antonio, TX",
+      destination: "Corpus Christi, TX",
+      customer: "Titan Construction",
+      deliveredDate: "2025-01-09",
+      miles: 143,
+      linehaul: 858.00,
+      fsc: 85.80,
+      accessorials: 125.00,
+      fuelAdvance: 290.00,
+      grossPay: 1068.80,
+      netPay: 778.80,
+    },
+    {
+      id: 6,
+      loadNo: "ML-2025-001267",
+      driver: "Mike Johnson",
+      driverId: "DRV-002",
+      origin: "Corpus Christi, TX",
+      destination: "Houston, TX",
+      customer: "Echo Global",
+      deliveredDate: "2025-01-10",
+      miles: 211,
+      linehaul: 1266.00,
+      fsc: 126.60,
+      accessorials: 0,
+      fuelAdvance: 400.00,
+      grossPay: 1392.60,
+      netPay: 992.60,
+    },
+    {
+      id: 7,
+      loadNo: "ML-2025-001275",
+      driver: "Carlos Rodriguez",
+      driverId: "DRV-003",
+      origin: "Dallas, TX",
+      destination: "Oklahoma City, OK",
+      customer: "Coyote Logistics",
+      deliveredDate: "2025-01-08",
+      miles: 208,
+      linehaul: 1248.00,
+      fsc: 124.80,
+      accessorials: 150.00,
+      fuelAdvance: 410.00,
+      grossPay: 1522.80,
+      netPay: 1112.80,
+    },
+    {
+      id: 8,
+      loadNo: "ML-2025-001278",
+      driver: "Carlos Rodriguez",
+      driverId: "DRV-003",
+      origin: "Oklahoma City, OK",
+      destination: "Amarillo, TX",
+      customer: "TQL Logistics",
+      deliveredDate: "2025-01-09",
+      miles: 259,
+      linehaul: 1554.00,
+      fsc: 155.40,
+      accessorials: 0,
+      fuelAdvance: 480.00,
+      grossPay: 1709.40,
+      netPay: 1229.40,
+    },
   ];
+
+  // Select loads based on settlement
+  const loads = currentId === "STL-2026-0007" ? metroFleetLoads : texasFleetLoads;
 
   // Mock deductions - categorized
   const [deductions, setDeductions] = useState([
@@ -232,21 +596,15 @@ const SettlementDetails = () => {
     return new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
   };
 
-  const formatDateTime = (dateString) => {
-    if (!dateString) return "-";
-    return new Date(dateString).toLocaleString("en-US", {
-      year: "numeric", month: "short", day: "numeric",
-      hour: "numeric", minute: "2-digit"
-    });
-  };
-
   const getStatusBadge = (status) => {
     const config = {
       Draft: { color: "bg-slate-500/10 text-slate-700 border-slate-500/50", icon: Edit2Icon },
       Ready: { color: "bg-blue-500/10 text-blue-700 border-blue-500/50", icon: ListChecksIcon },
-      Approved: { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: CheckCircleIcon },
+      "Pending Review": { color: "bg-amber-500/10 text-amber-700 border-amber-500/50", icon: ClockIcon },
+      Approved: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircleIcon },
       Posted: { color: "bg-purple-500/10 text-purple-700 border-purple-500/50", icon: LockIcon },
       Paid: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2Icon },
+      Settled: { color: "bg-green-500/10 text-green-700 border-green-500/50", icon: CheckCircle2Icon },
     };
     const c = config[status] || config["Draft"];
     const Icon = c.icon;
@@ -261,8 +619,11 @@ const SettlementDetails = () => {
   const getPayeeTypeBadge = (type) => {
     const colors = {
       Driver: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      "Company Driver": "bg-blue-500/10 text-blue-700 border-blue-500/50",
       Technician: "bg-purple-500/10 text-purple-700 border-purple-500/50",
       Carrier: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
+      Vendor: "bg-orange-500/10 text-orange-700 border-orange-500/50",
+      "Owner Operator": "bg-emerald-500/10 text-emerald-700 border-emerald-500/50",
     };
     return colors[type] || "bg-gray-500/10 text-gray-700";
   };
@@ -286,7 +647,6 @@ const SettlementDetails = () => {
 
   // Status checks (Simplified: Approved → Settled)
   const isApproved = settlement.status === "Approved";
-  const isSettled = settlement.status === "Settled";
   const canMarkSettled = isApproved;
 
   // Table columns
@@ -303,6 +663,38 @@ const SettlementDetails = () => {
           <ExternalLinkIcon className="size-3" />
         </button>
       ),
+    },
+    {
+      accessorKey: "driver",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Driver" />,
+      cell: ({ row }) => {
+        const isVendor = settlement.payeeType === "Vendor";
+        const driverData = isVendor && settlement.vendorDrivers
+          ? settlement.vendorDrivers.find(d => d.id === row.original.driverId)
+          : null;
+
+        if (isVendor && driverData) {
+          return (
+            <button
+              onClick={() => {
+                setSelectedDriver(driverData);
+                setShowDriverModal(true);
+              }}
+              className="text-left hover:text-primary"
+            >
+              <p className="text-sm font-medium hover:underline">{row.getValue("driver")}</p>
+              <p className="text-xs text-muted-foreground">{row.original.driverId}</p>
+            </button>
+          );
+        }
+
+        return (
+          <div>
+            <p className="text-sm font-medium">{row.getValue("driver")}</p>
+            <p className="text-xs text-muted-foreground">{row.original.driverId}</p>
+          </div>
+        );
+      },
     },
     {
       id: "route",
@@ -371,15 +763,17 @@ const SettlementDetails = () => {
     {
       accessorKey: "type",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
-      cell: ({ row }) => <span className="font-medium">{row.getValue("type")}</span>,
+      cell: ({ row }) => <div className="py-1 font-medium">{row.getValue("type")}</div>,
     },
     {
       accessorKey: "category",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
       cell: ({ row }) => (
-        <Badge className={getCategoryBadge(row.getValue("category"))}>
-          {row.getValue("category")}
-        </Badge>
+        <div className="py-1">
+          <Badge className={getCategoryBadge(row.getValue("category"))}>
+            {row.getValue("category")}
+          </Badge>
+        </div>
       ),
     },
     {
@@ -388,7 +782,7 @@ const SettlementDetails = () => {
       cell: ({ row }) => {
         const loadNo = row.original.loadNo;
         return (
-          <div>
+          <div className="py-1">
             <span>{row.getValue("description")}</span>
             {loadNo && (
               <button className="ml-2 text-xs text-primary hover:underline">
@@ -402,7 +796,7 @@ const SettlementDetails = () => {
     {
       accessorKey: "amount",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
-      cell: ({ row }) => <span className="font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</span>,
+      cell: ({ row }) => <div className="py-1 font-bold text-red-600">-{formatCurrency(row.getValue("amount"))}</div>,
     },
   ];
 
@@ -410,28 +804,33 @@ const SettlementDetails = () => {
     {
       accessorKey: "type",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
-      cell: ({ row }) => <span className="font-medium">{row.getValue("type")}</span>,
+      cell: ({ row }) => <div className="py-1 font-medium">{row.getValue("type")}</div>,
     },
     {
       accessorKey: "description",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+      cell: ({ row }) => <div className="py-1">{row.getValue("description")}</div>,
     },
     {
       accessorKey: "receipt",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Receipt" />,
-      cell: ({ row }) => row.getValue("receipt") ? (
-        <button className="font-mono text-sm text-primary hover:underline flex items-center gap-1">
-          {row.getValue("receipt")}
-          <ExternalLinkIcon className="size-3" />
-        </button>
-      ) : (
-        <span className="text-muted-foreground">-</span>
+      cell: ({ row }) => (
+        <div className="py-1">
+          {row.getValue("receipt") ? (
+            <button className="font-mono text-sm text-primary hover:underline flex items-center gap-1">
+              {row.getValue("receipt")}
+              <ExternalLinkIcon className="size-3" />
+            </button>
+          ) : (
+            <span className="text-muted-foreground">-</span>
+          )}
+        </div>
       ),
     },
     {
       accessorKey: "amount",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
-      cell: ({ row }) => <span className="font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</span>,
+      cell: ({ row }) => <div className="py-1 font-bold text-green-600">+{formatCurrency(row.getValue("amount"))}</div>,
     },
   ];
 
@@ -465,96 +864,8 @@ const SettlementDetails = () => {
 
   return (
     <div className="flex flex-col h-full bg-background overflow-hidden">
-      {/* Header */}
-      <div className="flex-shrink-0 px-6 py-4 border-b bg-background">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/app/carrier-portal/billing/settlements")}>
-              <ArrowLeftIcon className="size-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Wallet className="size-5 text-primary" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-bold">{settlement.settlementNo}</h1>
-                  {getStatusBadge(settlement.status)}
-                  <span className="text-xs text-muted-foreground font-mono">{settlement.batchNo}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>{settlement.payee}</span>
-                  <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
-                    {settlement.payeeType}
-                  </Badge>
-                  <span className="mx-1">•</span>
-                  <span>{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Status-based action buttons */}
-            {canMarkSettled && (
-              <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => setShowPaymentDialog(true)}>
-                <CheckCircle2Icon className="size-4 mr-2" />
-                Mark as Settled
-              </Button>
-            )}
-            <Button variant="outline" size="sm">
-              <DownloadIcon className="size-4 mr-2" />
-              Download
-            </Button>
-            <Button variant="outline" size="sm">
-              <SendIcon className="size-4 mr-2" />
-              Email
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Workflow Progress Bar */}
-      <div className="flex-shrink-0 px-6 py-3 border-b bg-muted/30">
-        <div className="flex items-center">
-          {/* Generated */}
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-full bg-green-500">
-              <FileSpreadsheetIcon className="size-3 text-white" />
-            </div>
-            <div>
-              <p className="text-xs font-medium">Generated</p>
-              <p className="text-[10px] text-muted-foreground">{formatDateTime(settlement.createdDate)}</p>
-            </div>
-          </div>
-          <div className="flex-1 h-0.5 mx-4 bg-green-500" />
-
-          {/* Approved */}
-          <div className="flex items-center gap-2">
-            <div className={`p-1.5 rounded-full transition-all duration-500 ${isApproved || isSettled ? 'bg-green-500' : 'bg-slate-300'}`}>
-              <CheckCircleIcon className="size-3 text-white" />
-            </div>
-            <div>
-              <p className="text-xs font-medium">Approved</p>
-              <p className="text-[10px] text-muted-foreground">{formatDateTime(settlement.approvedDate)}</p>
-            </div>
-          </div>
-          <div className={`flex-1 h-0.5 mx-4 transition-all duration-700 ${isSettled ? 'bg-green-500' : 'bg-slate-300'}`} />
-
-          {/* Settled */}
-          <div className="flex items-center gap-2">
-            <div className={`p-1.5 rounded-full transition-all duration-500 ${isSettled ? 'bg-green-500' : 'bg-slate-300'}`}>
-              <CheckCircle2Icon className="size-3 text-white" />
-            </div>
-            <div>
-              <p className="text-xs font-medium">Settled</p>
-              <p className="text-[10px] text-muted-foreground">{isSettled ? formatDateTime(settlement.paidDate || new Date().toISOString()) : '-'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <Tabs defaultValue={activeTab} className="flex-1 flex flex-col overflow-hidden">
+      <Tabs defaultValue={activeTab} className="w-full h-full flex flex-col overflow-hidden">
+        {/* Tabs Header */}
         <div className="flex-shrink-0">
           <TabsList className="mb-0 rounded-none">
             <TabsTrigger value="general" className="h-full">
@@ -573,10 +884,12 @@ const SettlementDetails = () => {
               <PlusCircleIcon className="size-4" />
               Reimbursements ({reimbursements.length})
             </TabsTrigger>
-            <TabsTrigger value="statement" className="h-full">
-              <FileTextIcon className="size-4" />
-              Statement
-            </TabsTrigger>
+            {isSettlementMode && (
+              <TabsTrigger value="statement" className="h-full">
+                <FileTextIcon className="size-4" />
+                Statement
+              </TabsTrigger>
+            )}
             <TabsTrigger value="activity" className="h-full">
               <History className="size-4" />
               Audit Log
@@ -584,263 +897,311 @@ const SettlementDetails = () => {
           </TabsList>
         </div>
 
-        {/* General Tab */}
-        <TabsContent value="general" className="flex-1 overflow-auto px-4 py-4 mt-0">
-          <div className="flex gap-4">
-            {/* Payee Information Card */}
-            <div className="flex-1 border rounded-sm bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <UserIcon className="size-4" />
-                  Payee Information
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Payee Name</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payee}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Payee ID</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.payeeId}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Legal Name</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.legalName}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Tax ID</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.taxId}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payeePhone}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Email</p>
-                    <p className="text-sm font-medium text-primary">{settlement.payeeEmail}</p>
+        <div className="flex-1 overflow-auto">
+          {/* General Tab */}
+          <TabsContent value="general" className="h-full mt-0 p-4">
+            <div className="space-y-4">
+              {/* Settlement/Worksheet Header Card */}
+              <div className="border rounded-sm bg-card">
+                <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    {isWorksheetMode ? <FileSpreadsheetIcon className="size-4" /> : <Wallet className="size-4" />}
+                    {isWorksheetMode ? "Worksheet Details" : "Settlement Details"}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    {/* Worksheet mode buttons */}
+                    {isWorksheetMode && worksheetStatus === "Pending Review" && (
+                      <Button size="sm" variant="outline" onClick={() => setShowMarkApprovedDialog(true)}>
+                        <CheckCircleIcon className="size-4 mr-2" />
+                        Mark as Approved
+                      </Button>
+                    )}
+                    {isWorksheetMode && worksheetStatus === "Approved" && (
+                      <Button size="sm" className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90" onClick={() => setShowCreateSettlementDialog(true)}>
+                        <PlayIcon className="size-4 mr-2" />
+                        Create Settlement
+                      </Button>
+                    )}
+                    {/* Settlement mode buttons */}
+                    {isSettlementMode && canMarkSettled && (
+                      <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => setShowPaymentDialog(true)}>
+                        <CheckCircle2Icon className="size-4 mr-2" />
+                        Mark as Settled
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <div className="px-4 py-2.5">
-                  <p className="text-xs text-muted-foreground mb-0.5">Address</p>
-                  <p className="text-sm font-medium text-foreground">{settlement.payeeAddress}, {settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Settlement Details Card */}
-            <div className="flex-1 border rounded-sm bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <Wallet className="size-4" />
-                  Settlement Details
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Period Start</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodStart)}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Period End</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodEnd)}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Business Unit</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.businessUnit}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Settlement Cycle</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.settlementCycle}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Pay Type</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payType}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Pay Rate</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.payRate}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Created Date</p>
-                    <p className="text-sm font-medium text-foreground">{formatDate(settlement.createdDate)}</p>
-                  </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Created By</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.createdBy}</p>
-                  </div>
-                </div>
-                {settlement.approvedBy && (
-                  <div className="grid grid-cols-2 divide-x divide-border">
+                <div className="divide-y divide-border">
+                  <div className="grid grid-cols-4 divide-x divide-border">
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Approved Date</p>
-                      <p className="text-sm font-medium text-foreground">{formatDate(settlement.approvedDate)}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">{isWorksheetMode ? "Worksheet #" : "Settlement #"}</p>
+                      <p className="text-sm font-medium text-foreground font-mono">{settlement.settlementNo}</p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Approved By</p>
-                      <p className="text-sm font-medium text-foreground">{settlement.approvedBy}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">Status</p>
+                      <div className="mt-0.5">{getStatusBadge(settlement.status)}</div>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Period</p>
+                      <p className="text-sm font-medium text-foreground">{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Business Unit</p>
+                      <p className="text-sm font-medium text-foreground">{settlement.businessUnit}</p>
                     </div>
                   </div>
-                )}
+                  <div className="grid grid-cols-4 divide-x divide-border">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Payee</p>
+                      <p className="text-sm font-medium text-foreground">{settlement.payee}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Payee Type</p>
+                      <Badge variant="outline" className={getPayeeTypeBadge(settlement.payeeType)}>
+                        {settlement.payeeType}
+                      </Badge>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Settlement Cycle</p>
+                      <p className="text-sm font-medium text-foreground">{settlement.settlementCycle || settlement.cycleType}</p>
+                    </div>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">{isWorksheetMode ? "Generated" : "Batch #"}</p>
+                      <p className="text-sm font-medium text-foreground font-mono">{isWorksheetMode ? formatDate(settlement.generatedDate) : settlement.batchNo}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Payment & Summary Card */}
-            <div className="flex-1 border rounded-sm bg-card">
-              <div className="px-4 py-3 border-b bg-muted">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <CreditCard className="size-4" />
-                  Payment Information
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="px-4 py-2.5">
-                  <p className="text-xs text-muted-foreground mb-0.5">Payment Method</p>
-                  <p className="text-sm font-medium text-foreground">{settlement.paymentMethod}</p>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border">
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Bank</p>
-                    <p className="text-sm font-medium text-foreground">{settlement.bankName}</p>
+              <div className="flex gap-4">
+                {/* Payee Information Card */}
+                <div className="flex-1 border rounded-sm bg-card">
+                  <div className="px-4 py-3 border-b bg-muted">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <UserIcon className="size-4" />
+                      Payee Information
+                    </h3>
                   </div>
-                  <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Account</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{settlement.bankAccount}</p>
-                  </div>
-                </div>
-                {settlement.factoringEnabled && (
-                  <div className="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/20">
-                    <p className="text-xs text-amber-700 mb-0.5 font-medium">Factoring Company</p>
-                    <p className="text-sm font-medium text-amber-800">{settlement.factoringCompany}</p>
-                  </div>
-                )}
-                <div className="px-4 py-3 bg-muted">
-                  <p className="text-xs text-muted-foreground mb-2 font-semibold">Summary</p>
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">Loads ({loads.length})</span>
-                      <span className="text-sm font-medium">{formatCurrency(grossPay)}</span>
+                  <div className="divide-y divide-border">
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Payee Name</p>
+                        <p className="text-sm font-medium text-foreground">{settlement.payee}</p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Payee ID</p>
+                        <p className="text-sm font-medium text-foreground font-mono">{settlement.payeeId}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">Recurring Deductions</span>
-                      <span className="text-sm font-medium text-red-600">-{formatCurrency(recurringDeductions)}</span>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Legal Name</p>
+                        <p className="text-sm font-medium text-foreground">{settlement.legalName}</p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Tax ID</p>
+                        <p className="text-sm font-medium text-foreground font-mono">{settlement.taxId}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">One-Time Deductions</span>
-                      <span className="text-sm font-medium text-red-600">-{formatCurrency(oneTimeDeductions)}</span>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
+                        <p className="text-sm font-medium text-foreground">{settlement.payeePhone}</p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Email</p>
+                        <p className="text-sm font-medium text-primary">{settlement.payeeEmail}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">Reimbursements</span>
-                      <span className="text-sm font-medium text-green-600">+{formatCurrency(totalReimbursements)}</span>
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Address</p>
+                      <p className="text-sm font-medium text-foreground">{settlement.payeeAddress}, {settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
                     </div>
                   </div>
                 </div>
-                <div className="px-4 py-3 flex justify-between items-center bg-green-50 dark:bg-green-950/20">
-                  <span className="text-sm font-semibold text-green-700 dark:text-green-400">Net Pay</span>
-                  <span className="text-xl font-bold text-green-600">{formatCurrency(netPay)}</span>
+
+                {/* Payment & Summary Card */}
+                <div className="flex-1 border rounded-sm bg-card">
+                  <div className="px-4 py-3 border-b bg-muted">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <CreditCard className="size-4" />
+                      Payment Information
+                    </h3>
+                  </div>
+                  <div className="divide-y divide-border">
+                    <div className="px-4 py-2.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">Payment Method</p>
+                      <p className="text-sm font-medium text-foreground">{settlement.paymentMethod}</p>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Bank</p>
+                        <p className="text-sm font-medium text-foreground">{settlement.bankName}</p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Account</p>
+                        <p className="text-sm font-medium text-foreground font-mono">{settlement.bankAccount}</p>
+                      </div>
+                    </div>
+                    {settlement.factoringEnabled && (
+                      <div className="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/20">
+                        <p className="text-xs text-amber-700 mb-0.5 font-medium">Factoring Company</p>
+                        <p className="text-sm font-medium text-amber-800">{settlement.factoringCompany}</p>
+                      </div>
+                    )}
+                    <div className="px-4 py-3 bg-muted">
+                      <p className="text-xs text-muted-foreground mb-2 font-semibold">Summary</p>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between">
+                          <span className="text-xs text-muted-foreground">Loads ({loads.length})</span>
+                          <span className="text-sm font-medium">{formatCurrency(grossPay)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-muted-foreground">Recurring Deductions</span>
+                          <span className="text-sm font-medium text-red-600">-{formatCurrency(recurringDeductions)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-muted-foreground">One-Time Deductions</span>
+                          <span className="text-sm font-medium text-red-600">-{formatCurrency(oneTimeDeductions)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-xs text-muted-foreground">Reimbursements</span>
+                          <span className="text-sm font-medium text-green-600">+{formatCurrency(totalReimbursements)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-4 py-3 flex justify-between items-center bg-green-50 dark:bg-green-950/20">
+                      <span className="text-sm font-semibold text-green-700 dark:text-green-400">Net Pay</span>
+                      <span className="text-xl font-bold text-green-600">{formatCurrency(netPay)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
 
         {/* Loads Tab */}
-        <TabsContent value="loads" className="flex-1 overflow-auto p-6 mt-0">
-          <DataTable columns={loadColumns} data={loads} showViewOptions={false} pageSize={10} />
-          <div className="mt-4 flex justify-end">
-            <div className="border rounded-lg p-4 bg-muted/50 w-80">
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Linehaul</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.linehaul, 0))}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total FSC</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.fsc, 0))}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Accessorials</span>
-                  <span className="font-medium">{formatCurrency(loads.reduce((s, l) => s + l.accessorials, 0))}</span>
-                </div>
-                <div className="flex justify-between text-amber-600">
-                  <span>Total Fuel Advances</span>
-                  <span className="font-medium">-{formatCurrency(loads.reduce((s, l) => s + l.fuelAdvance, 0))}</span>
-                </div>
+        <TabsContent value="loads" className="p-6 mt-0">
+          {/* Filter */}
+          <div className="mb-4">
+            <SmartFilter
+              filterGroups={loadFilterGroups}
+              activeFilters={loadFilters}
+              onFiltersChange={handleLoadFiltersChange}
+            />
+          </div>
+
+          {/* Table */}
+          <div className="[&_td]:py-2 [&_th]:py-2">
+            <DataTable columns={loadColumns} data={loads} showViewOptions={false} pageSize={10} />
+          </div>
+
+          {/* Earnings Breakdown - Full Width */}
+          <div className="mt-4 border rounded-sm bg-card">
+            <div className="px-4 py-2.5 border-b bg-muted">
+              <h4 className="text-sm font-semibold">Earnings Breakdown</h4>
+            </div>
+            <div className="grid grid-cols-5 divide-x divide-border">
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Linehaul</p>
+                <p className="text-sm font-semibold">{formatCurrency(loads.reduce((s, l) => s + l.linehaul, 0))}</p>
               </div>
-              <div className="flex justify-between pt-3 mt-3 border-t">
-                <span className="font-semibold">Total Gross Pay</span>
-                <span className="font-bold text-green-600">{formatCurrency(grossPay)}</span>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Fuel Surcharge</p>
+                <p className="text-sm font-semibold">{formatCurrency(loads.reduce((s, l) => s + l.fsc, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Accessorials</p>
+                <p className="text-sm font-semibold">{formatCurrency(loads.reduce((s, l) => s + l.accessorials, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center bg-amber-50 dark:bg-amber-950/20">
+                <p className="text-xs text-amber-700 dark:text-amber-400 mb-1">Fuel Advances</p>
+                <p className="text-sm font-semibold text-amber-600">-{formatCurrency(loads.reduce((s, l) => s + l.fuelAdvance, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center bg-green-50 dark:bg-green-950/20">
+                <p className="text-xs text-green-700 dark:text-green-400 mb-1">Total Gross Pay</p>
+                <p className="text-lg font-bold text-green-600">{formatCurrency(grossPay)}</p>
               </div>
             </div>
           </div>
         </TabsContent>
 
         {/* Deductions Tab */}
-        <TabsContent value="deductions" className="flex-1 overflow-auto p-6 mt-0">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h3 className="font-semibold">Deductions</h3>
-              <p className="text-sm text-muted-foreground">Recurring, one-time, and load-based deductions</p>
-            </div>
+        <TabsContent value="deductions" className="p-6 mt-0">
+          <div className="mb-4">
+            <SmartFilter
+              filterGroups={deductionFilterGroups}
+              activeFilters={deductionFilters}
+              onFiltersChange={handleDeductionFiltersChange}
+            />
           </div>
           <DataTable columns={deductionColumns} data={deductions} showViewOptions={false} pageSize={10} />
-          <div className="mt-4 flex justify-end">
-            <div className="border rounded-lg p-4 bg-red-50 dark:bg-red-950/20 w-80">
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Recurring</span>
-                  <span className="font-medium text-red-600">-{formatCurrency(recurringDeductions)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">One-Time</span>
-                  <span className="font-medium text-red-600">-{formatCurrency(oneTimeDeductions)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Load-Based (Advances)</span>
-                  <span className="font-medium text-red-600">-{formatCurrency(deductions.filter(d => d.category === "Load").reduce((s, d) => s + d.amount, 0))}</span>
-                </div>
+
+          {/* Deductions Breakdown - Full Width */}
+          <div className="mt-4 border rounded-sm bg-card">
+            <div className="px-4 py-2.5 border-b bg-muted">
+              <h4 className="text-sm font-semibold">Deductions Breakdown</h4>
+            </div>
+            <div className="grid grid-cols-4 divide-x divide-border">
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Recurring</p>
+                <p className="text-sm font-semibold text-red-600">-{formatCurrency(recurringDeductions)}</p>
               </div>
-              <div className="flex justify-between pt-3 mt-3 border-t border-red-200">
-                <span className="font-semibold text-red-700">Total Deductions</span>
-                <span className="font-bold text-red-600">-{formatCurrency(totalDeductions)}</span>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">One-Time</p>
+                <p className="text-sm font-semibold text-red-600">-{formatCurrency(oneTimeDeductions)}</p>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Load-Based (Advances)</p>
+                <p className="text-sm font-semibold text-red-600">-{formatCurrency(deductions.filter(d => d.category === "Load").reduce((s, d) => s + d.amount, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center bg-red-50 dark:bg-red-950/20">
+                <p className="text-xs text-red-700 dark:text-red-400 mb-1">Total Deductions</p>
+                <p className="text-lg font-bold text-red-600">-{formatCurrency(totalDeductions)}</p>
               </div>
             </div>
           </div>
         </TabsContent>
 
         {/* Reimbursements Tab */}
-        <TabsContent value="reimbursements" className="flex-1 overflow-auto p-6 mt-0">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h3 className="font-semibold">Reimbursements</h3>
-              <p className="text-sm text-muted-foreground">Tolls, scale tickets, lumper fees, and other reimbursements</p>
-            </div>
+        <TabsContent value="reimbursements" className="p-6 mt-0">
+          <div className="mb-4">
+            <SmartFilter
+              filterGroups={reimbursementFilterGroups}
+              activeFilters={reimbursementFilters}
+              onFiltersChange={handleReimbursementFiltersChange}
+            />
           </div>
           <DataTable columns={reimbursementColumns} data={reimbursements} showViewOptions={false} pageSize={10} />
-          <div className="mt-4 flex justify-end">
-            <div className="border rounded-lg p-4 bg-green-50 dark:bg-green-950/20 w-64">
-              <div className="flex justify-between">
-                <span className="font-semibold text-green-700">Total Reimbursements</span>
-                <span className="font-bold text-green-600">+{formatCurrency(totalReimbursements)}</span>
+
+          {/* Reimbursements Breakdown - Full Width */}
+          <div className="mt-4 border rounded-sm bg-card">
+            <div className="px-4 py-2.5 border-b bg-muted">
+              <h4 className="text-sm font-semibold">Reimbursements Breakdown</h4>
+            </div>
+            <div className="grid grid-cols-4 divide-x divide-border">
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Tolls</p>
+                <p className="text-sm font-semibold text-green-600">+{formatCurrency(reimbursements.filter(r => r.type === "Tolls").reduce((s, r) => s + r.amount, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Scale Tickets</p>
+                <p className="text-sm font-semibold text-green-600">+{formatCurrency(reimbursements.filter(r => r.type === "Scale Tickets").reduce((s, r) => s + r.amount, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground mb-1">Other</p>
+                <p className="text-sm font-semibold text-green-600">+{formatCurrency(reimbursements.filter(r => r.type !== "Tolls" && r.type !== "Scale Tickets").reduce((s, r) => s + r.amount, 0))}</p>
+              </div>
+              <div className="px-4 py-3 text-center bg-green-50 dark:bg-green-950/20">
+                <p className="text-xs text-green-700 dark:text-green-400 mb-1">Total Reimbursements</p>
+                <p className="text-lg font-bold text-green-600">+{formatCurrency(totalReimbursements)}</p>
               </div>
             </div>
           </div>
         </TabsContent>
 
         {/* Statement Tab */}
-        <TabsContent value="statement" className="flex-1 overflow-auto p-6 mt-0">
+        <TabsContent value="statement" className="p-6 mt-0">
           <div className="max-w-4xl mx-auto">
             {/* Statement Preview */}
             <div className="border rounded-lg bg-white dark:bg-card shadow-sm">
@@ -866,6 +1227,12 @@ const SettlementDetails = () => {
                     <p className="font-bold">{settlement.legalName}</p>
                     <p className="text-sm">{settlement.payeeAddress}</p>
                     <p className="text-sm">{settlement.payeeCity}, {settlement.payeeState} {settlement.payeeZip}</p>
+                    {settlement.payeeType === "Vendor" && (
+                      <Badge className="mt-2 bg-orange-500/10 text-orange-700 border-orange-500/50">
+                        <UsersIcon className="size-3 mr-1" />
+                        Vendor ({settlement.vendorDrivers?.length || 0} Drivers)
+                      </Badge>
+                    )}
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-muted-foreground mb-1">Payment Method</p>
@@ -986,7 +1353,7 @@ const SettlementDetails = () => {
         </TabsContent>
 
         {/* Activity Tab */}
-        <TabsContent value="activity" className="flex-1 overflow-auto p-6 mt-0">
+        <TabsContent value="activity" className="p-6 mt-0">
           <div className="max-w-3xl">
             <div className="space-y-0">
               {activityLog.map((activity, index) => {
@@ -1032,6 +1399,7 @@ const SettlementDetails = () => {
             </div>
           </div>
         </TabsContent>
+        </div>
       </Tabs>
 
       {/* ============ DIALOGS AND SHEETS ============ */}
@@ -1244,10 +1612,8 @@ const SettlementDetails = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ach">ACH Transfer</SelectItem>
-                    <SelectItem value="direct-deposit">Direct Deposit</SelectItem>
+                    <SelectItem value="bank-transfer">Bank Transfer</SelectItem>
                     <SelectItem value="check">Check</SelectItem>
-                    <SelectItem value="manual">Mark as Paid (Manual)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1319,6 +1685,127 @@ const SettlementDetails = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Worksheet-specific dialogs */}
+      {isWorksheetMode && (
+        <>
+          {/* Mark as Approved Dialog */}
+          <AlertDialog open={showMarkApprovedDialog} onOpenChange={setShowMarkApprovedDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Mark Worksheet as Approved</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will mark the worksheet as approved. Once approved, no further changes can be made to loads, deductions, or reimbursements.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    setWorksheetStatus("Approved");
+                    setReviewedTimestamp(new Date().toISOString());
+                    setShowMarkApprovedDialog(false);
+                  }}
+                >
+                  <CheckCircleIcon className="size-4 mr-2" />
+                  Mark as Approved
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Create Settlement Dialog */}
+          <AlertDialog open={showCreateSettlementDialog} onOpenChange={setShowCreateSettlementDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Create Settlement</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will create a settlement from this approved worksheet. The settlement will be ready for payment processing.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="py-4">
+                <div className="border rounded-sm bg-muted/50 p-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Payee</span>
+                    <span className="font-medium">{settlement.payee}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Period</span>
+                    <span className="font-medium">{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Net Pay</span>
+                    <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
+                  </div>
+                </div>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  onClick={() => {
+                    // Navigate to settlement detail after creating
+                    navigate(`/app/carrier-portal/billing/settlements/STL-2026-0001?status=Approved`);
+                  }}
+                >
+                  <PlayIcon className="size-4 mr-2" />
+                  Create Settlement
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+        </>
+      )}
+
+      {/* Driver Details Modal - Available for Vendor type in both modes */}
+      {settlement.payeeType === "Vendor" && (
+        <AlertDialog open={showDriverModal} onOpenChange={setShowDriverModal}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{selectedDriver?.name}</AlertDialogTitle>
+              <AlertDialogDescription>
+                Driver performance for this settlement period
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            {selectedDriver && (() => {
+              const driverLoads = loads.filter(l => l.driverId === selectedDriver.id);
+              const totalGross = driverLoads.reduce((sum, l) => sum + l.grossPay, 0);
+              const totalFuelAdvance = driverLoads.reduce((sum, l) => sum + (l.fuelAdvance || 0), 0);
+
+              return (
+                <div className="py-4 space-y-4">
+                  <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Driver ID</span>
+                      <span className="font-mono font-medium">{selectedDriver.id}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Loads</span>
+                      <span className="font-medium">{selectedDriver.loadsCount}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Gross Pay</span>
+                      <span className="font-medium">{formatCurrency(totalGross)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Fuel Advances</span>
+                      <span className="font-medium text-orange-600">-{formatCurrency(totalFuelAdvance)}</span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t">
+                      <span className="font-medium">Net Pay</span>
+                      <span className="font-bold text-green-600">{formatCurrency(totalGross - totalFuelAdvance)}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+            <AlertDialogFooter>
+              <AlertDialogCancel>Close</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };
