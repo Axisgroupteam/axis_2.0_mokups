@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -67,8 +67,10 @@ import {
 
 const Settlements = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
   const [selectedBU, setSelectedBU] = useState("mega-trucking");
-  const [activeTab, setActiveTab] = useState("inbox");
+  const [activeTab, setActiveTab] = useState(tabParam || "inbox");
 
 
   // Worksheet state
@@ -1872,10 +1874,6 @@ const Settlements = () => {
                 <CheckCircleIcon className="h-4 w-4 mr-2" />
                 Mark as Reviewed
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <PlayIcon className="h-4 w-4 mr-2" />
-                Create Settlement
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -2339,14 +2337,7 @@ const Settlements = () => {
                     <span className="text-sm text-muted-foreground">{selectedWorksheetItems.length} selected</span>
                     <Button variant="outline" size="sm">
                       <CheckCircleIcon className="size-4 mr-2" />
-                      Mark Reviewed
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                    >
-                      <PlayIcon className="size-4 mr-2" />
-                      Create Settlements
+                      Mark as Reviewed
                     </Button>
                   </>
                 )}
@@ -2480,34 +2471,34 @@ const Settlements = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Mark as Settled</AlertDialogTitle>
             <AlertDialogDescription>
-              Mark settlement {selectedSettlement?.settlementNo} as settled.
-              Amount: {selectedSettlement && formatCurrency(selectedSettlement.netPay)}
+              Confirm payment has been processed for this settlement.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4 space-y-4">
-            <div className="space-y-2">
-              <Label>Payment Method</Label>
-              <Select defaultValue={selectedSettlement?.paymentMethod?.toLowerCase().replace(' ', '-')}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="direct-deposit">Direct Deposit</SelectItem>
-                  <SelectItem value="bank-transfer">Bank Transfer</SelectItem>
-                  <SelectItem value="check">Check</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Settlement #</span>
+                <span className="font-mono font-medium">{selectedSettlement?.settlementNo}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Payee</span>
+                <span className="font-medium">{selectedSettlement?.payee}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Net Pay</span>
+                <span className="font-bold text-green-600">{selectedSettlement && formatCurrency(selectedSettlement.netPay)}</span>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Settlement Date</Label>
-              <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} />
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Settlement Date</span>
+              <span className="font-medium">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
             </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90">
               <CheckCircle2Icon className="size-4 mr-2" />
-              Mark as Settled
+              Process Payment
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

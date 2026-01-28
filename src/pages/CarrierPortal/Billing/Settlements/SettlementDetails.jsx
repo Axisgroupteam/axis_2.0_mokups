@@ -55,10 +55,6 @@ import {
   FileSpreadsheetIcon,
   UsersIcon,
   ClockIcon,
-  PlayIcon,
-  WrenchIcon,
-  PlusIcon,
-  Trash2Icon,
 } from "lucide-react";
 
 const SettlementDetails = () => {
@@ -82,7 +78,6 @@ const SettlementDetails = () => {
 
   // Worksheet-specific state
   const [showMarkApprovedDialog, setShowMarkApprovedDialog] = useState(false);
-  const [showCreateSettlementDialog, setShowCreateSettlementDialog] = useState(false);
   const [showDriverModal, setShowDriverModal] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [worksheetStatus, setWorksheetStatus] = useState(statusParam === "reviewed" ? "Approved" : "Pending Review");
@@ -101,11 +96,6 @@ const SettlementDetails = () => {
   });
 
   const [approvalNotes, setApprovalNotes] = useState("");
-  const [paymentForm, setPaymentForm] = useState({
-    method: "bank-transfer",
-    date: new Date().toISOString().split('T')[0],
-    reference: "",
-  });
 
   // Filter states
   const [loadFilters, setLoadFilters] = useState([]);
@@ -916,12 +906,6 @@ const SettlementDetails = () => {
                         Mark as Approved
                       </Button>
                     )}
-                    {isWorksheetMode && worksheetStatus === "Approved" && (
-                      <Button size="sm" className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90" onClick={() => setShowCreateSettlementDialog(true)}>
-                        <PlayIcon className="size-4 mr-2" />
-                        Create Settlement
-                      </Button>
-                    )}
                     {/* Settlement mode buttons */}
                     {isSettlementMode && canMarkSettled && (
                       <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => setShowPaymentDialog(true)}>
@@ -1582,66 +1566,43 @@ const SettlementDetails = () => {
 
       {/* Payment Dialog */}
       <AlertDialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <AlertDialogContent className="max-w-lg">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Process Payment</AlertDialogTitle>
+            <AlertDialogTitle>Mark as Settled</AlertDialogTitle>
             <AlertDialogDescription>
-              Execute payment for this settlement. This will mark the settlement as Paid.
+              Confirm payment has been processed for this settlement.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-4 space-y-4">
             <div className="border rounded-lg p-4 bg-muted/50 space-y-2">
-              <div className="flex justify-between">
+              <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Settlement #</span>
                 <span className="font-mono font-medium">{settlement.settlementNo}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Payee</span>
                 <span className="font-medium">{settlement.payee}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Amount</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Net Pay</span>
                 <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
               </div>
             </div>
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label>Payment Method</Label>
-                <Select value={paymentForm.method} onValueChange={(v) => setPaymentForm({ ...paymentForm, method: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bank-transfer">Bank Transfer</SelectItem>
-                    <SelectItem value="check">Check</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Payment Date</Label>
-                <Input type="date" value={paymentForm.date} onChange={(e) => setPaymentForm({ ...paymentForm, date: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label>Reference # (Optional)</Label>
-                <Input placeholder="ACH-123456 or Check #" value={paymentForm.reference} onChange={(e) => setPaymentForm({ ...paymentForm, reference: e.target.value })} />
-              </div>
-            </div>
-            <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-start gap-2">
-                <InfoIcon className="size-4 text-blue-600 mt-0.5" />
-                <div className="text-sm text-blue-800 dark:text-blue-200">
-                  <p className="font-medium">Payment Details:</p>
-                  <p className="text-xs mt-1">
-                    {settlement.bankName} - Account ending in {settlement.bankAccount?.slice(-4)}
-                  </p>
-                </div>
-              </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Settlement Date</span>
+              <span className="font-medium">{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
             </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-green-500 hover:bg-green-600 text-white">
-              <CreditCard className="size-4 mr-2" />
+            <AlertDialogAction
+              className="bg-green-500 hover:bg-green-600 text-white"
+              onClick={() => {
+                setShowPaymentDialog(false);
+                navigate("/app/carrier-portal/billing/settlements?tab=history");
+              }}
+            >
+              <CheckCircle2Icon className="size-4 mr-2" />
               Process Payment
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1705,51 +1666,12 @@ const SettlementDetails = () => {
                     setWorksheetStatus("Approved");
                     setReviewedTimestamp(new Date().toISOString());
                     setShowMarkApprovedDialog(false);
+                    // Redirect to History tab
+                    navigate("/app/carrier-portal/billing/settlements?tab=history");
                   }}
                 >
                   <CheckCircleIcon className="size-4 mr-2" />
                   Mark as Approved
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          {/* Create Settlement Dialog */}
-          <AlertDialog open={showCreateSettlementDialog} onOpenChange={setShowCreateSettlementDialog}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Create Settlement</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will create a settlement from this approved worksheet. The settlement will be ready for payment processing.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="py-4">
-                <div className="border rounded-sm bg-muted/50 p-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Payee</span>
-                    <span className="font-medium">{settlement.payee}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Period</span>
-                    <span className="font-medium">{formatDate(settlement.periodStart)} - {formatDate(settlement.periodEnd)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Net Pay</span>
-                    <span className="font-bold text-green-600">{formatCurrency(netPay)}</span>
-                  </div>
-                </div>
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                  onClick={() => {
-                    // Navigate to settlement detail after creating
-                    navigate(`/app/carrier-portal/billing/settlements/STL-2026-0001?status=Approved`);
-                  }}
-                >
-                  <PlayIcon className="size-4 mr-2" />
-                  Create Settlement
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
