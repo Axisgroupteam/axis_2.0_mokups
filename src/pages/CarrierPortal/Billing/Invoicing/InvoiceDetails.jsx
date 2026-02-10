@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useInvoicePdfGenerator } from "../InvoiceTemplates/InvoicePdfRenderer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,13 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const InvoiceDetails = () => {
   const { invoiceNo } = useParams();
@@ -55,6 +63,29 @@ const InvoiceDetails = () => {
   const [isVoidDialogOpen, setIsVoidDialogOpen] = useState(false);
   const [voidReason, setVoidReason] = useState("");
   const [isReInvoiceDialogOpen, setIsReInvoiceDialogOpen] = useState(false);
+
+  // PDF Template state
+  const [templates, setTemplates] = useState([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState("");
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const { generatePdf } = useInvoicePdfGenerator();
+
+  // Load templates from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("axis-invoice-templates");
+      if (stored) {
+        const parsedTemplates = JSON.parse(stored);
+        const activeTemplates = parsedTemplates.filter((t) => t.status === "Active");
+        setTemplates(activeTemplates);
+        if (activeTemplates.length > 0 && !selectedTemplateId) {
+          setSelectedTemplateId(activeTemplates[0].templateId);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load templates:", error);
+    }
+  }, []);
 
   // Mock invoice data - Industry standard statuses: Invoiced, Paid, Partial, Overdue, Cancelled
   const invoice = {
@@ -380,6 +411,50 @@ const InvoiceDetails = () => {
     // In real app, would create new invoice with same loads
   };
 
+  const handleGeneratePdf = async () => {
+    if (!selectedTemplateId) {
+      alert("Please select a template first");
+      return;
+    }
+
+    const selectedTemplate = templates.find((t) => t.templateId === selectedTemplateId);
+    if (!selectedTemplate) {
+      alert("Template not found");
+      return;
+    }
+
+    setIsGeneratingPdf(true);
+
+    // Prepare invoice data for PDF
+    const invoiceDataForPdf = {
+      invoiceNo: invoice.invoiceNo,
+      invoiceDate: invoice.invoiceDate,
+      dueDate: invoice.dueDate,
+      paymentTerms: invoice.paymentTerms,
+      customer: invoice.customer,
+      customerAddress: invoice.customerAddress,
+      customerEmail: invoice.customerEmail,
+      customerContact: invoice.customerPhone,
+      businessUnit: invoice.businessUnit,
+      subtotal: invoice.subtotal,
+      taxRate: "0%",
+      taxAmount: 0,
+      totalAmount: invoice.totalAmount,
+      paidAmount: invoice.paidAmount,
+      balanceDue: invoice.balanceDue,
+      lineItems: lineItems,
+    };
+
+    try {
+      await generatePdf(selectedTemplate, invoiceDataForPdf, `${invoice.invoiceNo}.pdf`);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      alert("PDF generation failed: " + error.message);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   const lineItemColumns = [
     {
       accessorKey: "loadNo",
@@ -482,9 +557,28 @@ const InvoiceDetails = () => {
                     Invoice Details
                   </h3>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
+                    {templates.length > 0 && (
+                      <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
+                        <SelectTrigger className="w-[180px] h-8">
+                          <SelectValue placeholder="Select Template" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {templates.map((template) => (
+                            <SelectItem key={template.templateId} value={template.templateId}>
+                              {template.templateName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleGeneratePdf}
+                      disabled={isGeneratingPdf || templates.length === 0}
+                    >
                       <DownloadIcon className="size-4 mr-2" />
-                      Download PDF
+                      {isGeneratingPdf ? "Generating..." : "Generate PDF"}
                     </Button>
                     <Button variant="outline" size="sm">
                       <MailIcon className="size-4 mr-2" />
