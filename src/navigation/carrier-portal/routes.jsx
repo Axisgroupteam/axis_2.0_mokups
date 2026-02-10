@@ -39,6 +39,8 @@ import InvoiceDetails from "@/pages/CarrierPortal/Billing/Invoicing/InvoiceDetai
 import ReadyToInvoice from "@/pages/CarrierPortal/Billing/Invoicing/ReadyToInvoice";
 import Settlements from "@/pages/CarrierPortal/Billing/Settlements/Settlements";
 import SettlementDetails from "@/pages/CarrierPortal/Billing/Settlements/SettlementDetails";
+import TemplateList from "@/pages/CarrierPortal/Billing/InvoiceTemplates/TemplateList";
+import TemplateBuilder from "@/pages/CarrierPortal/Billing/InvoiceTemplates/TemplateBuilder";
 import BusinessUnit from "@/pages/CarrierPortal/BusinessUnit";
 import SalesOrders from "@/pages/CarrierPortal/Sales/Orders";
 import PendingValidation from "@/pages/CarrierPortal/Sales/PendingValidation";
@@ -389,6 +391,22 @@ export const carrierPortalRoutes = [
     path: "billing/settlements/inbox/:settlementNo",
     element: <SettlementDetails />,
     label: "Worksheet Details",
+  },
+  // Billing routes - Invoice Templates
+  {
+    path: "billing/invoice-templates",
+    element: <TemplateList />,
+    label: "Invoice Templates",
+  },
+  {
+    path: "billing/invoice-templates/builder",
+    element: <TemplateBuilder />,
+    label: "Template Builder",
+  },
+  {
+    path: "billing/invoice-templates/builder/:templateId",
+    element: <TemplateBuilder />,
+    label: "Edit Template",
   },
   // Settings routes
   {

@@ -65,6 +65,7 @@ import {
   FileTextIcon,
   SettingsIcon,
   NetworkIcon,
+  LayoutTemplateIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
@@ -253,6 +254,11 @@ const CarrierPortalSidebar = () => {
       label: "Settlements",
       href: "/app/carrier-portal/billing/settlements",
       icon: BanknoteIcon,
+    },
+    {
+      label: "Templates",
+      href: "/app/carrier-portal/billing/invoice-templates",
+      icon: LayoutTemplateIcon,
     },
   ];
 

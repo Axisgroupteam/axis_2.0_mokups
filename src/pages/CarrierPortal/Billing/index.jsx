@@ -9,3 +9,8 @@ export { default as InvoiceDetails } from "./Invoicing/InvoiceDetails";
 export { default as ReadyToSettle } from "./Settlements/ReadyToSettle";
 export { default as Settlements } from "./Settlements/Settlements";
 export { default as SettlementDetails } from "./Settlements/SettlementDetails";
+
+// Invoice Templates
+export { default as TemplateList } from "./InvoiceTemplates/TemplateList";
+export { default as TemplateBuilder } from "./InvoiceTemplates/TemplateBuilder";
+export { default as TemplatePreview } from "./InvoiceTemplates/TemplatePreview";
