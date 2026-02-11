@@ -5,6 +5,16 @@ const PAPER_SIZES = {
   Letter: { portrait: { width: 612, height: 792 }, landscape: { width: 792, height: 612 } },
 };
 
+const DEFAULT_SECTION_ORDER = ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"];
+
+const SECTION_SEPARATOR = {
+  reportHeader: true,
+  pageHeader: true,
+  loadDetails: true,
+  summary: false,
+  pageFooter: false,
+};
+
 const DEFAULT_SAMPLE_DATA = {
   companyLogo: "[Logo]",
   companyName: "Mega Logistics LLC",
@@ -42,6 +52,12 @@ const DEFAULT_SAMPLE_DATA = {
     { loadNo: "ML-2025-001247", deliveryDate: "2025-02-05", origin: "Dallas, TX", destination: "San Antonio, TX", commodity: "Gravel", weight: "18,000 lbs", freight: 1300.0, fuelSurcharge: 130.0, accessorials: 100.0, total: 1530.0 },
   ],
 };
+
+// Fields that display only their value (no "Label:" prefix)
+const NO_LABEL_FIELDS = new Set([
+  "companyName", "companyAddress", "companyPhone", "invoiceTitle", "companyLogo",
+  "notes", "bankDetails", "footer", "customText1", "customText2", "lineItemsTable",
+]);
 
 const formatCurrency = (value) => {
   const num = Number(value);
@@ -94,17 +110,25 @@ const TemplatePreview = ({ template, sampleData = DEFAULT_SAMPLE_DATA }) => {
   const marginLeft = (template.margins?.left || 40) * scale;
   const paperWidth = paperDims.width * scale;
   const paperHeight = paperDims.height * scale;
-  const contentWidth = paperWidth - marginLeft - marginRight;
-  const colWidth = contentWidth / 12;
-  const rowHeight = 28 * scale;
+  const rowHeight = 20 * scale;
+
+  const sectionOrder = template.sectionOrder || DEFAULT_SECTION_ORDER;
+
+  // Group fields by section
+  const fieldsBySection = {};
+  sectionOrder.forEach((sId) => { fieldsBySection[sId] = []; });
+  template.fields.forEach((field) => {
+    const section = field.section || "reportHeader";
+    if (!fieldsBySection[section]) fieldsBySection[section] = [];
+    fieldsBySection[section].push(field);
+  });
 
   const renderFieldValue = (field) => {
     const value = sampleData[field.key];
+    const showLabel = !NO_LABEL_FIELDS.has(field.key);
+
     if (field.type === "table") {
       return renderLineItemsTable(sampleData, scale);
-    }
-    if (field.type === "currency") {
-      return formatCurrency(value);
     }
     if (field.type === "image") {
       return (
@@ -112,6 +136,18 @@ const TemplatePreview = ({ template, sampleData = DEFAULT_SAMPLE_DATA }) => {
           [Company Logo]
         </div>
       );
+    }
+    if (field.type === "currency") {
+      const formatted = formatCurrency(value);
+      if (showLabel) {
+        return (
+          <>
+            <span className="text-gray-500" style={{ fontWeight: "normal" }}>{field.label}: </span>
+            {formatted}
+          </>
+        );
+      }
+      return formatted;
     }
     if (field.type === "textarea" && typeof value === "string") {
       return value.split("\n").map((line, i) => (
@@ -121,7 +157,16 @@ const TemplatePreview = ({ template, sampleData = DEFAULT_SAMPLE_DATA }) => {
         </span>
       ));
     }
-    return value || "";
+    const displayValue = value || "";
+    if (showLabel && displayValue) {
+      return (
+        <>
+          <span className="text-gray-500" style={{ fontWeight: "normal" }}>{field.label}: </span>
+          {displayValue}
+        </>
+      );
+    }
+    return displayValue;
   };
 
   return (
@@ -134,27 +179,51 @@ const TemplatePreview = ({ template, sampleData = DEFAULT_SAMPLE_DATA }) => {
           padding: `${marginTop}px ${marginRight}px ${marginBottom}px ${marginLeft}px`,
         }}
       >
-        <div className="relative w-full" style={{ minHeight: paperHeight - marginTop - marginBottom }}>
-          {template.fields.map((field) => (
-            <div
-              key={field.key}
-              className="absolute overflow-hidden"
-              style={{
-                left: field.position.x * colWidth,
-                top: field.position.y * rowHeight,
-                width: field.position.w * colWidth,
-                height: field.type === "table" ? "auto" : field.position.h * rowHeight,
-                minHeight: field.position.h * rowHeight,
-                fontSize: (field.style?.fontSize || 12) * scale,
-                fontWeight: field.style?.bold ? "bold" : "normal",
-                fontStyle: field.style?.italic ? "italic" : "normal",
-                textAlign: field.style?.alignment || "left",
-                lineHeight: 1.3,
-              }}
-            >
-              {renderFieldValue(field)}
-            </div>
-          ))}
+        <div style={{ minHeight: paperHeight - marginTop - marginBottom }}>
+          {sectionOrder.map((sectionId) => {
+            const sectionFields = fieldsBySection[sectionId] || [];
+            if (sectionFields.length === 0) return null;
+
+            // Calculate the number of grid rows needed for this section
+            const maxRow = Math.max(...sectionFields.map((f) => f.position.y + f.position.h));
+
+            return (
+              <div key={sectionId}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(12, 1fr)",
+                    gridTemplateRows: `repeat(${maxRow}, minmax(${rowHeight}px, auto))`,
+                  }}
+                >
+                  {sectionFields.map((field) => (
+                    <div
+                      key={field.key}
+                      className="overflow-hidden"
+                      style={{
+                        gridColumn: `${field.position.x + 1} / span ${field.position.w}`,
+                        gridRow: `${field.position.y + 1} / span ${field.position.h}`,
+                        fontSize: (field.style?.fontSize || 12) * scale,
+                        fontWeight: field.style?.bold ? "bold" : "normal",
+                        fontStyle: field.style?.italic ? "italic" : "normal",
+                        textAlign: field.style?.alignment || "left",
+                        lineHeight: 1.3,
+                        padding: `${1 * scale}px 0`,
+                      }}
+                    >
+                      {renderFieldValue(field)}
+                    </div>
+                  ))}
+                </div>
+                {SECTION_SEPARATOR[sectionId] && (
+                  <div
+                    className="border-b border-gray-200"
+                    style={{ margin: `${4 * scale}px 0` }}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
