@@ -52,20 +52,26 @@ const SEED_TEMPLATES = [
     orientation: "portrait",
     margins: { top: 40, right: 40, bottom: 40, left: 40 },
     status: "Active",
+    sectionOrder: ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"],
     fields: [
-      { key: "companyName", label: "Company Name", type: "text", category: "header", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 20, bold: true, italic: false, alignment: "left" } },
-      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 22, bold: true, italic: false, alignment: "right" } },
-      { key: "companyAddress", label: "Company Address", type: "textarea", category: "header", position: { x: 0, y: 1, w: 6, h: 2 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
-      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", position: { x: 8, y: 1, w: 4, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
-      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", position: { x: 8, y: 2, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "customerName", label: "Bill To", type: "text", category: "customer", position: { x: 0, y: 4, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
-      { key: "customerAddress", label: "Customer Address", type: "textarea", category: "customer", position: { x: 0, y: 5, w: 6, h: 2 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
-      { key: "dueDate", label: "Due Date", type: "date", category: "invoice", position: { x: 8, y: 4, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "terms", label: "Payment Terms", type: "text", category: "invoice", position: { x: 8, y: 5, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", position: { x: 0, y: 8, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
-      { key: "subtotal", label: "Subtotal", type: "currency", category: "financial", position: { x: 8, y: 14, w: 4, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
-      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", position: { x: 8, y: 15, w: 4, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
-      { key: "notes", label: "Notes", type: "textarea", category: "custom", position: { x: 0, y: 17, w: 8, h: 2 }, style: { fontSize: 9, bold: false, italic: true, alignment: "left" } },
+      // Report Header
+      { key: "companyName", label: "Company Name", type: "text", category: "header", section: "reportHeader", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 20, bold: true, italic: false, alignment: "left" } },
+      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", section: "reportHeader", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 22, bold: true, italic: false, alignment: "right" } },
+      { key: "companyAddress", label: "Company Address", type: "textarea", category: "header", section: "reportHeader", position: { x: 0, y: 1, w: 6, h: 2 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
+      // Page Header
+      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", section: "pageHeader", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
+      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", section: "pageHeader", position: { x: 8, y: 1, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      { key: "customerName", label: "Bill To", type: "text", category: "customer", section: "pageHeader", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
+      { key: "customerAddress", label: "Customer Address", type: "textarea", category: "customer", section: "pageHeader", position: { x: 0, y: 1, w: 6, h: 2 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
+      { key: "dueDate", label: "Due Date", type: "date", category: "invoice", section: "pageHeader", position: { x: 8, y: 2, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      { key: "terms", label: "Payment Terms", type: "text", category: "invoice", section: "pageHeader", position: { x: 8, y: 3, w: 4, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      // Load Details
+      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", section: "loadDetails", position: { x: 0, y: 0, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
+      // Summary
+      { key: "subtotal", label: "Subtotal", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
+      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 1, w: 4, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
+      // Page Footer
+      { key: "notes", label: "Notes", type: "textarea", category: "custom", section: "pageFooter", position: { x: 0, y: 0, w: 8, h: 2 }, style: { fontSize: 9, bold: false, italic: true, alignment: "left" } },
     ],
   },
   {
@@ -78,24 +84,30 @@ const SEED_TEMPLATES = [
     orientation: "portrait",
     margins: { top: 40, right: 40, bottom: 40, left: 40 },
     status: "Active",
+    sectionOrder: ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"],
     fields: [
-      { key: "companyName", label: "Company Name", type: "text", category: "header", position: { x: 0, y: 0, w: 5, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "left" } },
-      { key: "companyAddress", label: "Company Address", type: "textarea", category: "header", position: { x: 0, y: 1, w: 5, h: 2 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
-      { key: "companyPhone", label: "Company Phone", type: "text", category: "header", position: { x: 0, y: 3, w: 5, h: 1 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
-      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", position: { x: 7, y: 0, w: 5, h: 1 }, style: { fontSize: 24, bold: true, italic: false, alignment: "right" } },
-      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", position: { x: 7, y: 1, w: 5, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
-      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", position: { x: 7, y: 2, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "dueDate", label: "Due Date", type: "date", category: "invoice", position: { x: 7, y: 3, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "customerName", label: "Bill To", type: "text", category: "customer", position: { x: 0, y: 5, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
-      { key: "customerAddress", label: "Customer Address", type: "textarea", category: "customer", position: { x: 0, y: 6, w: 6, h: 2 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
-      { key: "customerEmail", label: "Customer Email", type: "text", category: "customer", position: { x: 0, y: 8, w: 6, h: 1 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
-      { key: "poNumber", label: "PO Number", type: "text", category: "invoice", position: { x: 7, y: 5, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
-      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", position: { x: 0, y: 10, w: 12, h: 5 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
-      { key: "subtotal", label: "Subtotal", type: "currency", category: "financial", position: { x: 8, y: 16, w: 4, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
-      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", position: { x: 8, y: 17, w: 4, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
-      { key: "balanceDue", label: "Balance Due", type: "currency", category: "financial", position: { x: 8, y: 18, w: 4, h: 1 }, style: { fontSize: 14, bold: true, italic: false, alignment: "right" } },
-      { key: "notes", label: "Notes", type: "textarea", category: "custom", position: { x: 0, y: 20, w: 7, h: 2 }, style: { fontSize: 9, bold: false, italic: true, alignment: "left" } },
-      { key: "bankDetails", label: "Bank Details", type: "textarea", category: "custom", position: { x: 8, y: 20, w: 4, h: 2 }, style: { fontSize: 9, bold: false, italic: false, alignment: "right" } },
+      // Report Header
+      { key: "companyName", label: "Company Name", type: "text", category: "header", section: "reportHeader", position: { x: 0, y: 0, w: 5, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "left" } },
+      { key: "companyAddress", label: "Company Address", type: "textarea", category: "header", section: "reportHeader", position: { x: 0, y: 1, w: 5, h: 2 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
+      { key: "companyPhone", label: "Company Phone", type: "text", category: "header", section: "reportHeader", position: { x: 0, y: 3, w: 5, h: 1 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
+      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", section: "reportHeader", position: { x: 7, y: 0, w: 5, h: 1 }, style: { fontSize: 24, bold: true, italic: false, alignment: "right" } },
+      // Page Header
+      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", section: "pageHeader", position: { x: 7, y: 0, w: 5, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
+      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", section: "pageHeader", position: { x: 7, y: 1, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      { key: "dueDate", label: "Due Date", type: "date", category: "invoice", section: "pageHeader", position: { x: 7, y: 2, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      { key: "customerName", label: "Bill To", type: "text", category: "customer", section: "pageHeader", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
+      { key: "customerAddress", label: "Customer Address", type: "textarea", category: "customer", section: "pageHeader", position: { x: 0, y: 1, w: 6, h: 2 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
+      { key: "customerEmail", label: "Customer Email", type: "text", category: "customer", section: "pageHeader", position: { x: 0, y: 3, w: 6, h: 1 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
+      { key: "poNumber", label: "PO Number", type: "text", category: "invoice", section: "pageHeader", position: { x: 7, y: 3, w: 5, h: 1 }, style: { fontSize: 11, bold: false, italic: false, alignment: "right" } },
+      // Load Details
+      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", section: "loadDetails", position: { x: 0, y: 0, w: 12, h: 5 }, style: { fontSize: 10, bold: false, italic: false, alignment: "left" } },
+      // Summary
+      { key: "subtotal", label: "Subtotal", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
+      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 1, w: 4, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
+      { key: "balanceDue", label: "Balance Due", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 2, w: 4, h: 1 }, style: { fontSize: 14, bold: true, italic: false, alignment: "right" } },
+      // Page Footer
+      { key: "notes", label: "Notes", type: "textarea", category: "custom", section: "pageFooter", position: { x: 0, y: 0, w: 7, h: 2 }, style: { fontSize: 9, bold: false, italic: true, alignment: "left" } },
+      { key: "bankDetails", label: "Bank Details", type: "textarea", category: "custom", section: "pageFooter", position: { x: 8, y: 0, w: 4, h: 2 }, style: { fontSize: 9, bold: false, italic: false, alignment: "right" } },
     ],
   },
   {
@@ -108,14 +120,20 @@ const SEED_TEMPLATES = [
     orientation: "portrait",
     margins: { top: 50, right: 50, bottom: 50, left: 50 },
     status: "Active",
+    sectionOrder: ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"],
     fields: [
-      { key: "companyName", label: "Company Name", type: "text", category: "header", position: { x: 0, y: 0, w: 12, h: 1 }, style: { fontSize: 22, bold: true, italic: false, alignment: "center" } },
-      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", position: { x: 0, y: 2, w: 6, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "left" } },
-      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", position: { x: 6, y: 2, w: 6, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
-      { key: "customerName", label: "Bill To", type: "text", category: "customer", position: { x: 0, y: 4, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
-      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", position: { x: 0, y: 6, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
-      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", position: { x: 8, y: 12, w: 4, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "right" } },
-      { key: "footer", label: "Footer", type: "text", category: "custom", position: { x: 0, y: 14, w: 12, h: 1 }, style: { fontSize: 10, bold: false, italic: true, alignment: "center" } },
+      // Report Header
+      { key: "companyName", label: "Company Name", type: "text", category: "header", section: "reportHeader", position: { x: 0, y: 0, w: 12, h: 1 }, style: { fontSize: 22, bold: true, italic: false, alignment: "center" } },
+      // Page Header
+      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", section: "pageHeader", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "left" } },
+      { key: "invoiceDate", label: "Invoice Date", type: "date", category: "invoice", section: "pageHeader", position: { x: 6, y: 0, w: 6, h: 1 }, style: { fontSize: 12, bold: false, italic: false, alignment: "right" } },
+      { key: "customerName", label: "Bill To", type: "text", category: "customer", section: "pageHeader", position: { x: 0, y: 1, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
+      // Load Details
+      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", section: "loadDetails", position: { x: 0, y: 0, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
+      // Summary
+      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", section: "summary", position: { x: 8, y: 0, w: 4, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "right" } },
+      // Page Footer
+      { key: "footer", label: "Footer", type: "text", category: "custom", section: "pageFooter", position: { x: 0, y: 0, w: 12, h: 1 }, style: { fontSize: 10, bold: false, italic: true, alignment: "center" } },
     ],
   },
   {
@@ -128,13 +146,18 @@ const SEED_TEMPLATES = [
     orientation: "landscape",
     margins: { top: 30, right: 30, bottom: 30, left: 30 },
     status: "Draft",
+    sectionOrder: ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"],
     fields: [
-      { key: "companyName", label: "Company Name", type: "text", category: "header", position: { x: 0, y: 0, w: 4, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "left" } },
-      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", position: { x: 9, y: 0, w: 3, h: 1 }, style: { fontSize: 20, bold: true, italic: false, alignment: "right" } },
-      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", position: { x: 9, y: 1, w: 3, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
-      { key: "customerName", label: "Bill To", type: "text", category: "customer", position: { x: 0, y: 2, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
-      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", position: { x: 0, y: 4, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
-      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", position: { x: 9, y: 10, w: 3, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
+      // Report Header
+      { key: "companyName", label: "Company Name", type: "text", category: "header", section: "reportHeader", position: { x: 0, y: 0, w: 4, h: 1 }, style: { fontSize: 18, bold: true, italic: false, alignment: "left" } },
+      { key: "invoiceTitle", label: "INVOICE", type: "text", category: "header", section: "reportHeader", position: { x: 9, y: 0, w: 3, h: 1 }, style: { fontSize: 20, bold: true, italic: false, alignment: "right" } },
+      // Page Header
+      { key: "invoiceNo", label: "Invoice #", type: "text", category: "invoice", section: "pageHeader", position: { x: 9, y: 0, w: 3, h: 1 }, style: { fontSize: 12, bold: true, italic: false, alignment: "right" } },
+      { key: "customerName", label: "Bill To", type: "text", category: "customer", section: "pageHeader", position: { x: 0, y: 0, w: 6, h: 1 }, style: { fontSize: 13, bold: true, italic: false, alignment: "left" } },
+      // Load Details
+      { key: "lineItemsTable", label: "Line Items", type: "table", category: "financial", section: "loadDetails", position: { x: 0, y: 0, w: 12, h: 5 }, style: { fontSize: 11, bold: false, italic: false, alignment: "left" } },
+      // Summary
+      { key: "totalDue", label: "Total Due", type: "currency", category: "financial", section: "summary", position: { x: 9, y: 0, w: 3, h: 1 }, style: { fontSize: 16, bold: true, italic: false, alignment: "right" } },
     ],
   },
 ];
