@@ -72,7 +72,7 @@ const InvoicePdfRenderer = ({ template, invoiceData, onGenerate }) => {
 
     return {
       // Header Info
-      companyLogo: "[Logo]",
+      companyLogo: invoiceData.businessUnitLogo || null,
       companyName: invoiceData.businessUnit || "Company Name",
       companyAddress: invoiceData.businessUnitAddress || "",
       companyPhone: invoiceData.businessUnitPhone || "",
@@ -172,24 +172,21 @@ const InvoicePdfRenderer = ({ template, invoiceData, onGenerate }) => {
     }
 
     if (field.type === "image") {
-      return (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#f3f4f6",
-            border: "1px solid #d1d5db",
-            borderRadius: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#9ca3af",
-            fontSize: 10
-          }}
-        >
-          [Company Logo]
-        </div>
-      );
+      if (data.companyLogo) {
+        return (
+          <img
+            src={data.companyLogo}
+            alt="Company Logo"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain"
+            }}
+            crossOrigin="anonymous"
+          />
+        );
+      }
+      return null;
     }
 
     if (field.type === "textarea" && typeof value === "string") {
@@ -262,6 +259,9 @@ const InvoicePdfRenderer = ({ template, invoiceData, onGenerate }) => {
   );
 };
 
+// Section order for proper stacking
+const SECTION_ORDER = ["reportHeader", "pageHeader", "loadDetails", "summary", "pageFooter"];
+
 // Export a hook-friendly version
 export const useInvoicePdfGenerator = () => {
   const generatePdf = useCallback(async (template, invoiceData, filename) => {
@@ -282,7 +282,7 @@ export const useInvoicePdfGenerator = () => {
     // Map invoice data
     const lineItems = invoiceData.lineItems || [];
     const data = {
-      companyLogo: "[Logo]",
+      companyLogo: invoiceData.businessUnitLogo || null,
       companyName: invoiceData.businessUnit || "Company Name",
       companyAddress: invoiceData.businessUnitAddress || "",
       companyPhone: invoiceData.businessUnitPhone || "",
@@ -320,29 +320,29 @@ export const useInvoicePdfGenerator = () => {
       const items = data.lineItems || [];
       let rows = items.map((item, i) => `
         <tr style="border-bottom: 1px solid #ddd; background-color: ${i % 2 === 1 ? '#f9f9f9' : 'transparent'};">
-          <td style="padding: 4px 6px;">${item.loadNo || ''}</td>
-          <td style="padding: 4px 6px;">${formatDate(item.deliveryDate)}</td>
-          <td style="padding: 4px 6px;">${item.origin || ''}</td>
-          <td style="padding: 4px 6px;">${item.destination || ''}</td>
-          <td style="text-align: right; padding: 4px 6px;">${formatCurrency(item.freight)}</td>
-          <td style="text-align: right; padding: 4px 6px;">${formatCurrency(item.fuelSurcharge)}</td>
-          <td style="text-align: right; padding: 4px 6px;">${formatCurrency(item.accessorials)}</td>
-          <td style="text-align: right; padding: 4px 6px; font-weight: 500;">${formatCurrency(item.total)}</td>
+          <td style="padding: 4px 6px; width: 15%;">${item.loadNo || ''}</td>
+          <td style="padding: 4px 6px; width: 10%;">${formatDate(item.deliveryDate)}</td>
+          <td style="padding: 4px 6px; width: 15%;">${item.origin || ''}</td>
+          <td style="padding: 4px 6px; width: 15%;">${item.destination || ''}</td>
+          <td style="text-align: right; padding: 4px 6px; width: 12%;">${formatCurrency(item.freight)}</td>
+          <td style="text-align: right; padding: 4px 6px; width: 10%;">${formatCurrency(item.fuelSurcharge)}</td>
+          <td style="text-align: right; padding: 4px 6px; width: 11%;">${formatCurrency(item.accessorials)}</td>
+          <td style="text-align: right; padding: 4px 6px; width: 12%; font-weight: 500;">${formatCurrency(item.total)}</td>
         </tr>
       `).join('');
 
       return `
-        <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 10px;">
           <thead>
             <tr style="border-bottom: 1px solid #999;">
-              <th style="text-align: left; padding: 4px 6px; font-weight: 600;">Load #</th>
-              <th style="text-align: left; padding: 4px 6px; font-weight: 600;">Date</th>
-              <th style="text-align: left; padding: 4px 6px; font-weight: 600;">Origin</th>
-              <th style="text-align: left; padding: 4px 6px; font-weight: 600;">Destination</th>
-              <th style="text-align: right; padding: 4px 6px; font-weight: 600;">Freight</th>
-              <th style="text-align: right; padding: 4px 6px; font-weight: 600;">Fuel SC</th>
-              <th style="text-align: right; padding: 4px 6px; font-weight: 600;">Accessorials</th>
-              <th style="text-align: right; padding: 4px 6px; font-weight: 600;">Total</th>
+              <th style="text-align: left; padding: 4px 6px; font-weight: 600; width: 15%;">Load #</th>
+              <th style="text-align: left; padding: 4px 6px; font-weight: 600; width: 10%;">Date</th>
+              <th style="text-align: left; padding: 4px 6px; font-weight: 600; width: 15%;">Origin</th>
+              <th style="text-align: left; padding: 4px 6px; font-weight: 600; width: 15%;">Destination</th>
+              <th style="text-align: right; padding: 4px 6px; font-weight: 600; width: 12%;">Freight</th>
+              <th style="text-align: right; padding: 4px 6px; font-weight: 600; width: 10%;">Fuel SC</th>
+              <th style="text-align: right; padding: 4px 6px; font-weight: 600; width: 11%;">Accessorials</th>
+              <th style="text-align: right; padding: 4px 6px; font-weight: 600; width: 12%;">Total</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -355,7 +355,10 @@ export const useInvoicePdfGenerator = () => {
       if (field.type === "table") return buildLineItemsTable();
       if (field.type === "currency") return formatCurrency(value);
       if (field.type === "image") {
-        return `<div style="width: 100%; height: 100%; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 10px;">[Company Logo]</div>`;
+        if (data.companyLogo) {
+          return `<img src="${data.companyLogo}" alt="Company Logo" style="width: 100%; height: 100%; object-fit: contain;" crossorigin="anonymous" />`;
+        }
+        return "";
       }
       if (field.type === "textarea" && typeof value === "string") {
         return value.split("\n").join("<br/>");
@@ -363,30 +366,70 @@ export const useInvoicePdfGenerator = () => {
       return value || "";
     };
 
-    // Find table field and calculate dynamic offset for fields below it
-    const tableField = template.fields.find((f) => f.type === "table");
-    const lineItemCount = data.lineItems?.length || 0;
-    const tableHeaderHeight = 30; // pixels for header row
-    const tableRowHeight = 28; // pixels per data row (including padding + border)
-    const actualTableHeight = tableHeaderHeight + (lineItemCount * tableRowHeight) + 10; // +10 for spacing
-    const templateTableHeight = tableField ? tableField.position.h * rowHeight : 0;
-    const tableHeightDiff = tableField ? Math.max(0, actualTableHeight - templateTableHeight) : 0;
-    const tableBottomY = tableField ? tableField.position.y + tableField.position.h : 0;
+    // Group fields by section
+    const fieldsBySection = {};
+    SECTION_ORDER.forEach((s) => { fieldsBySection[s] = []; });
+    template.fields.forEach((field) => {
+      const section = field.section || "reportHeader";
+      if (fieldsBySection[section]) {
+        fieldsBySection[section].push(field);
+      } else {
+        fieldsBySection["reportHeader"].push(field);
+      }
+    });
 
+    // Calculate section heights and cumulative offsets
+    const sectionHeights = {};
+    const sectionOffsets = {};
+    let cumulativeOffset = 0;
+
+    SECTION_ORDER.forEach((sectionId) => {
+      sectionOffsets[sectionId] = cumulativeOffset;
+      const sectionFields = fieldsBySection[sectionId] || [];
+
+      if (sectionFields.length === 0) {
+        sectionHeights[sectionId] = 0;
+      } else {
+        // Find the maximum bottom Y in this section
+        let maxBottom = 0;
+        sectionFields.forEach((field) => {
+          // For table fields, calculate actual height based on line items
+          let fieldHeight = field.position.h;
+          if (field.type === "table") {
+            const lineItemCount = data.lineItems?.length || 0;
+            const tableHeaderHeight = 30;
+            const tableRowHeightPx = 28;
+            const actualTableHeightPx = tableHeaderHeight + (lineItemCount * tableRowHeightPx) + 10;
+            fieldHeight = Math.ceil(actualTableHeightPx / rowHeight);
+          }
+          const bottom = field.position.y + fieldHeight;
+          if (bottom > maxBottom) maxBottom = bottom;
+        });
+        sectionHeights[sectionId] = maxBottom * rowHeight + 10; // +10 for section spacing
+      }
+
+      cumulativeOffset += sectionHeights[sectionId];
+    });
+
+    // Build fields HTML with section offsets
     const fieldsHtml = template.fields.map((field) => {
-      // Adjust Y position for fields below the table
-      let adjustedY = field.position.y * rowHeight;
-      if (tableField && field.type !== "table" && field.position.y >= tableBottomY) {
-        adjustedY += tableHeightDiff;
+      const section = field.section || "reportHeader";
+      const sectionOffset = sectionOffsets[section] || 0;
+      const fieldY = sectionOffset + (field.position.y * rowHeight);
+
+      // Calculate height for table fields
+      let heightStyle = `height: ${field.position.h * rowHeight}px;`;
+      if (field.type === "table") {
+        heightStyle = "height: auto;";
       }
 
       return `
         <div style="
           position: absolute;
           left: ${field.position.x * colWidth}px;
-          top: ${adjustedY}px;
+          top: ${fieldY}px;
           width: ${field.position.w * colWidth}px;
-          ${field.type === "table" ? "height: auto;" : `height: ${field.position.h * rowHeight}px;`}
+          ${heightStyle}
           min-height: ${field.position.h * rowHeight}px;
           font-size: ${field.style?.fontSize || 12}px;
           font-weight: ${field.style?.bold ? "bold" : "normal"};
@@ -417,8 +460,11 @@ export const useInvoicePdfGenerator = () => {
     `;
 
     // Create isolated iframe to avoid Tailwind CSS oklch color issues
+    // Use dynamic dimensions based on paper size and orientation
+    const iframeWidth = paperDims.width + 50; // Add some buffer
+    const iframeHeight = paperDims.height + 50;
     const iframe = document.createElement("iframe");
-    iframe.style.cssText = "position: absolute; left: -9999px; top: 0; width: 900px; height: 1200px; border: none;";
+    iframe.style.cssText = `position: absolute; left: -9999px; top: 0; width: ${iframeWidth}px; height: ${iframeHeight}px; border: none;`;
     document.body.appendChild(iframe);
 
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -467,6 +513,8 @@ export const useInvoicePdfGenerator = () => {
         useCORS: true,
         letterRendering: true,
         backgroundColor: "#ffffff",
+        width: paperDims.width,
+        windowWidth: paperDims.width,
         onclone: (clonedDoc) => {
           // Reset all elements to use hex colors instead of oklch
           const allElements = clonedDoc.querySelectorAll("*");
