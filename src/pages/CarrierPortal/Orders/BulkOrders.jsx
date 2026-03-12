@@ -148,14 +148,17 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
 
       // Animate through each recommendation
       aiRecommendationKeys.forEach((_, index) => {
-        setTimeout(() => {
-          setAiLoadingStep(index + 1);
-          if (index === aiRecommendationKeys.length - 1) {
-            setTimeout(() => {
-              setIsAiLoading(false);
-            }, 300);
-          }
-        }, (index + 1) * 400);
+        setTimeout(
+          () => {
+            setAiLoadingStep(index + 1);
+            if (index === aiRecommendationKeys.length - 1) {
+              setTimeout(() => {
+                setIsAiLoading(false);
+              }, 300);
+            }
+          },
+          (index + 1) * 400,
+        );
       });
     }
   };
@@ -173,7 +176,14 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
 
   const handleDeclineSubmit = () => {
     // Handle decline submission logic
-    console.log("Declined:", selectedLoad?.loadId, "Reason:", declineReason, "Notes:", declineNotes);
+    console.log(
+      "Declined:",
+      selectedLoad?.loadId,
+      "Reason:",
+      declineReason,
+      "Notes:",
+      declineNotes,
+    );
     setIsDeclineDialogOpen(false);
     setIsDetailSheetOpen(false);
     setSelectedLoad(null);
@@ -298,12 +308,29 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       notes: "Require tarp for cement load. Call 30 min before arrival.",
       countdown: 30,
       aiRecommendations: {
-        driverLocation: { status: "good", driver: "Mike Thompson", distance: "12 miles", location: "Houston, TX" },
-        hosStatus: { status: "good", hoursAvailable: "9.5 hrs", message: "Sufficient hours for trip" },
-        equipmentMatch: { status: "good", trailer: "Pneumatic Tank #PT-2847", position: "Same yard" },
+        driverLocation: {
+          status: "good",
+          driver: "Mike Thompson",
+          distance: "12 miles",
+          location: "Houston, TX",
+        },
+        hosStatus: {
+          status: "good",
+          hoursAvailable: "9.5 hrs",
+          message: "Sufficient hours for trip",
+        },
+        equipmentMatch: {
+          status: "good",
+          trailer: "Pneumatic Tank #PT-2847",
+          position: "Same yard",
+        },
         deadhead: { status: "good", miles: "12 miles", cost: "$18.00" },
         profitability: { status: "good", score: "87%", margin: "$425.00" },
-        nextLoadPositioning: { status: "warning", message: "Limited loads from Dallas area", suggestion: "Consider relay option" },
+        nextLoadPositioning: {
+          status: "warning",
+          message: "Limited loads from Dallas area",
+          suggestion: "Consider relay option",
+        },
       },
     },
     {
@@ -347,12 +374,29 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       },
       notes: "Weight station required before delivery.",
       aiRecommendations: {
-        driverLocation: { status: "warning", driver: "Carlos Rodriguez", distance: "45 miles", location: "San Marcos, TX" },
-        hosStatus: { status: "good", hoursAvailable: "11 hrs", message: "Full hours available" },
-        equipmentMatch: { status: "good", trailer: "End Dump #ED-1923", position: "En route" },
+        driverLocation: {
+          status: "warning",
+          driver: "Carlos Rodriguez",
+          distance: "45 miles",
+          location: "San Marcos, TX",
+        },
+        hosStatus: {
+          status: "good",
+          hoursAvailable: "11 hrs",
+          message: "Full hours available",
+        },
+        equipmentMatch: {
+          status: "good",
+          trailer: "End Dump #ED-1923",
+          position: "En route",
+        },
         deadhead: { status: "warning", miles: "45 miles", cost: "$67.50" },
         profitability: { status: "good", score: "72%", margin: "$280.00" },
-        nextLoadPositioning: { status: "good", message: "High demand in San Antonio", suggestion: "Good positioning" },
+        nextLoadPositioning: {
+          status: "good",
+          message: "High demand in San Antonio",
+          suggestion: "Good positioning",
+        },
       },
     },
     {
@@ -396,12 +440,29 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       },
       notes: "",
       aiRecommendations: {
-        driverLocation: { status: "good", driver: "James Wilson", distance: "8 miles", location: "Fort Worth, TX" },
-        hosStatus: { status: "warning", hoursAvailable: "6.5 hrs", message: "May need 30-min break" },
-        equipmentMatch: { status: "good", trailer: "Walking Floor #WF-4521", position: "Available" },
+        driverLocation: {
+          status: "good",
+          driver: "James Wilson",
+          distance: "8 miles",
+          location: "Fort Worth, TX",
+        },
+        hosStatus: {
+          status: "warning",
+          hoursAvailable: "6.5 hrs",
+          message: "May need 30-min break",
+        },
+        equipmentMatch: {
+          status: "good",
+          trailer: "Walking Floor #WF-4521",
+          position: "Available",
+        },
         deadhead: { status: "good", miles: "8 miles", cost: "$12.00" },
         profitability: { status: "good", score: "91%", margin: "$680.00" },
-        nextLoadPositioning: { status: "warning", message: "Moderate demand in OKC", suggestion: "Check return loads" },
+        nextLoadPositioning: {
+          status: "warning",
+          message: "Moderate demand in OKC",
+          suggestion: "Check return loads",
+        },
       },
     },
     {
@@ -445,12 +506,29 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       },
       notes: "Oversized load - escort required. Check permits.",
       aiRecommendations: {
-        driverLocation: { status: "bad", driver: "No driver nearby", distance: "120+ miles", location: "Nearest in Midland, TX" },
-        hosStatus: { status: "neutral", hoursAvailable: "-", message: "Pending driver assignment" },
-        equipmentMatch: { status: "warning", trailer: "Flatbed #FB-7734", position: "85 miles away" },
+        driverLocation: {
+          status: "bad",
+          driver: "No driver nearby",
+          distance: "120+ miles",
+          location: "Nearest in Midland, TX",
+        },
+        hosStatus: {
+          status: "neutral",
+          hoursAvailable: "-",
+          message: "Pending driver assignment",
+        },
+        equipmentMatch: {
+          status: "warning",
+          trailer: "Flatbed #FB-7734",
+          position: "85 miles away",
+        },
         deadhead: { status: "bad", miles: "120 miles", cost: "$180.00" },
         profitability: { status: "warning", score: "58%", margin: "$320.00" },
-        nextLoadPositioning: { status: "good", message: "Phoenix has high demand", suggestion: "Good market" },
+        nextLoadPositioning: {
+          status: "good",
+          message: "Phoenix has high demand",
+          suggestion: "Good market",
+        },
       },
     },
     {
@@ -495,12 +573,29 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       notes: "Hazmat certified driver required.",
       countdown: 8,
       aiRecommendations: {
-        driverLocation: { status: "good", driver: "Robert Chen", distance: "5 miles", location: "Dallas, TX" },
-        hosStatus: { status: "good", hoursAvailable: "10.5 hrs", message: "Sufficient hours" },
-        equipmentMatch: { status: "good", trailer: "Pneumatic Tank #PT-3356", position: "Same location" },
+        driverLocation: {
+          status: "good",
+          driver: "Robert Chen",
+          distance: "5 miles",
+          location: "Dallas, TX",
+        },
+        hosStatus: {
+          status: "good",
+          hoursAvailable: "10.5 hrs",
+          message: "Sufficient hours",
+        },
+        equipmentMatch: {
+          status: "good",
+          trailer: "Pneumatic Tank #PT-3356",
+          position: "Same location",
+        },
         deadhead: { status: "good", miles: "5 miles", cost: "$7.50" },
         profitability: { status: "good", score: "82%", margin: "$520.00" },
-        nextLoadPositioning: { status: "neutral", message: "Moderate demand in Little Rock", suggestion: "May need repositioning" },
+        nextLoadPositioning: {
+          status: "neutral",
+          message: "Moderate demand in Little Rock",
+          suggestion: "May need repositioning",
+        },
       },
     },
     {
@@ -663,7 +758,9 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
       header: "Accept Within",
       cell: ({ row }) => {
         const countdown = row.original.countdown;
-        const isMegaLogistics = ["Titan", "Ashgrove"].includes(row.original.customer);
+        const isMegaLogistics = ["Titan", "Ashgrove"].includes(
+          row.original.customer,
+        );
         if (countdown && isMegaLogistics) {
           return (
             <div className="flex justify-center">
@@ -689,12 +786,17 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
         <DataTableColumnHeader column={column} title="Division" />
       ),
       cell: ({ row }) => {
-        const isMegaLogistics = ["Titan", "Ashgrove"].includes(row.original.customer);
+        const isMegaLogistics = ["Titan", "Ashgrove"].includes(
+          row.original.customer,
+        );
         return (
-          <Badge className={isMegaLogistics
-            ? "bg-purple-500/10 text-purple-700 border-purple-500/50"
-            : "bg-blue-500/10 text-blue-700 border-blue-500/50"
-          }>
+          <Badge
+            className={
+              isMegaLogistics
+                ? "bg-purple-500/10 text-purple-700 border-purple-500/50"
+                : "bg-blue-500/10 text-blue-700 border-blue-500/50"
+            }
+          >
             {isMegaLogistics ? "Mega Logistics" : "Mega Trucking"}
           </Badge>
         );
@@ -851,25 +953,36 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-sm font-semibold text-foreground font-mono">{selectedLoad.loadId}</h3>
+                    <h3 className="text-sm font-semibold text-foreground font-mono">
+                      {selectedLoad.loadId}
+                    </h3>
                     <span className="text-xs text-muted-foreground">•</span>
-                    <span className="text-sm text-foreground">{selectedLoad.customer}</span>
+                    <span className="text-sm text-foreground">
+                      {selectedLoad.customer}
+                    </span>
                   </div>
-                  {selectedLoad.countdown && ["Titan", "Ashgrove"].includes(selectedLoad.customer) && (
-                    <CountdownTimer minutes={selectedLoad.countdown} />
-                  )}
+                  {selectedLoad.countdown &&
+                    ["Titan", "Ashgrove"].includes(selectedLoad.customer) && (
+                      <CountdownTimer minutes={selectedLoad.countdown} />
+                    )}
                 </div>
                 <div className="p-4 space-y-4">
                   {/* Load Details Row */}
                   <div className="flex items-center gap-6 text-sm">
                     <div className="flex items-center gap-2">
                       <Truck className="size-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">{selectedLoad.fleetType}</span>
-                      <span className="text-foreground font-medium">{selectedLoad.commodity}</span>
+                      <span className="text-muted-foreground">
+                        {selectedLoad.fleetType}
+                      </span>
+                      <span className="text-foreground font-medium">
+                        {selectedLoad.commodity}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1">
                       <DollarSign className="size-4 text-green-600" />
-                      <span className="font-semibold text-green-600">{selectedLoad.customerRate}</span>
+                      <span className="font-semibold text-green-600">
+                        {selectedLoad.customerRate}
+                      </span>
                     </div>
                   </div>
 
@@ -884,14 +997,18 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-sm font-medium text-foreground truncate">
-                            {selectedLoad.origin.city}, {selectedLoad.origin.state}
+                            {selectedLoad.origin.city},{" "}
+                            {selectedLoad.origin.state}
                           </p>
                           <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {selectedLoad.pickup.date} • {selectedLoad.pickup.startTime}-{selectedLoad.pickup.endTime}
+                            {selectedLoad.pickup.date} •{" "}
+                            {selectedLoad.pickup.startTime}-
+                            {selectedLoad.pickup.endTime}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground truncate">
-                          {selectedLoad.origin.address}, {selectedLoad.origin.zip}
+                          {selectedLoad.origin.address},{" "}
+                          {selectedLoad.origin.zip}
                         </p>
                       </div>
                     </div>
@@ -903,14 +1020,18 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-sm font-medium text-foreground truncate">
-                            {selectedLoad.destination.city}, {selectedLoad.destination.state}
+                            {selectedLoad.destination.city},{" "}
+                            {selectedLoad.destination.state}
                           </p>
                           <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {selectedLoad.dropoff.date} • {selectedLoad.dropoff.startTime}-{selectedLoad.dropoff.endTime}
+                            {selectedLoad.dropoff.date} •{" "}
+                            {selectedLoad.dropoff.startTime}-
+                            {selectedLoad.dropoff.endTime}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground truncate">
-                          {selectedLoad.destination.address}, {selectedLoad.destination.zip}
+                          {selectedLoad.destination.address},{" "}
+                          {selectedLoad.destination.zip}
                         </p>
                       </div>
                     </div>
@@ -919,7 +1040,9 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                   {/* Notes */}
                   {selectedLoad.notes && (
                     <div className="pt-2 border-t">
-                      <p className="text-xs text-muted-foreground">{selectedLoad.notes}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedLoad.notes}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -935,28 +1058,39 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                       ) : (
                         <Sparkles className="size-4 text-purple-600" />
                       )}
-                      <h3 className="text-sm font-semibold text-foreground">AI Recommendations</h3>
+                      <h3 className="text-sm font-semibold text-foreground">
+                        AI Recommendations
+                      </h3>
                     </div>
                     {isAiLoading && (
-                      <span className="text-xs text-muted-foreground">Analyzing...</span>
+                      <span className="text-xs text-muted-foreground">
+                        Analyzing...
+                      </span>
                     )}
                   </div>
                   <div className="divide-y divide-border">
                     {/* Driver Location */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 1 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 1 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <Navigation className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">Driver Location</p>
+                          <p className="text-xs text-muted-foreground">
+                            Driver Location
+                          </p>
                           {aiLoadingStep >= 1 ? (
                             <>
-                              {selectedLoad.aiRecommendations.driverLocation.status === "good" && (
+                              {selectedLoad.aiRecommendations.driverLocation
+                                .status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.driverLocation.status === "warning" && (
+                              {selectedLoad.aiRecommendations.driverLocation
+                                .status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
-                              {selectedLoad.aiRecommendations.driverLocation.status === "bad" && (
+                              {selectedLoad.aiRecommendations.driverLocation
+                                .status === "bad" && (
                                 <XCircle className="size-4 text-red-500" />
                               )}
                             </>
@@ -965,29 +1099,41 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 1 ? selectedLoad.aiRecommendations.driverLocation.driver : "Searching..."}
+                          {aiLoadingStep >= 1
+                            ? selectedLoad.aiRecommendations.driverLocation
+                                .driver
+                            : "Searching..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 1 ? `${selectedLoad.aiRecommendations.driverLocation.distance} from pickup • ${selectedLoad.aiRecommendations.driverLocation.location}` : ""}
+                          {aiLoadingStep >= 1
+                            ? `${selectedLoad.aiRecommendations.driverLocation.distance} from pickup • ${selectedLoad.aiRecommendations.driverLocation.location}`
+                            : ""}
                         </p>
                       </div>
                     </div>
 
                     {/* HOS Status */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 2 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 2 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <Timer className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">HOS Status</p>
+                          <p className="text-xs text-muted-foreground">
+                            HOS Status
+                          </p>
                           {aiLoadingStep >= 2 ? (
                             <>
-                              {selectedLoad.aiRecommendations.hosStatus.status === "good" && (
+                              {selectedLoad.aiRecommendations.hosStatus
+                                .status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.hosStatus.status === "warning" && (
+                              {selectedLoad.aiRecommendations.hosStatus
+                                .status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
-                              {selectedLoad.aiRecommendations.hosStatus.status === "neutral" && (
+                              {selectedLoad.aiRecommendations.hosStatus
+                                .status === "neutral" && (
                                 <CircleMinus className="size-4 text-gray-400" />
                               )}
                             </>
@@ -996,26 +1142,36 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 2 ? `${selectedLoad.aiRecommendations.hosStatus.hoursAvailable} available` : "Checking..."}
+                          {aiLoadingStep >= 2
+                            ? `${selectedLoad.aiRecommendations.hosStatus.hoursAvailable} available`
+                            : "Checking..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 2 ? selectedLoad.aiRecommendations.hosStatus.message : ""}
+                          {aiLoadingStep >= 2
+                            ? selectedLoad.aiRecommendations.hosStatus.message
+                            : ""}
                         </p>
                       </div>
                     </div>
 
                     {/* Equipment Match */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 3 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 3 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <Truck className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">Equipment Match</p>
+                          <p className="text-xs text-muted-foreground">
+                            Equipment Match
+                          </p>
                           {aiLoadingStep >= 3 ? (
                             <>
-                              {selectedLoad.aiRecommendations.equipmentMatch.status === "good" && (
+                              {selectedLoad.aiRecommendations.equipmentMatch
+                                .status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.equipmentMatch.status === "warning" && (
+                              {selectedLoad.aiRecommendations.equipmentMatch
+                                .status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
                             </>
@@ -1024,29 +1180,42 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 3 ? selectedLoad.aiRecommendations.equipmentMatch.trailer : "Matching..."}
+                          {aiLoadingStep >= 3
+                            ? selectedLoad.aiRecommendations.equipmentMatch
+                                .trailer
+                            : "Matching..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 3 ? selectedLoad.aiRecommendations.equipmentMatch.position : ""}
+                          {aiLoadingStep >= 3
+                            ? selectedLoad.aiRecommendations.equipmentMatch
+                                .position
+                            : ""}
                         </p>
                       </div>
                     </div>
 
                     {/* Deadhead Calculation */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 4 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 4 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <Route className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">Deadhead Calculation</p>
+                          <p className="text-xs text-muted-foreground">
+                            Deadhead Calculation
+                          </p>
                           {aiLoadingStep >= 4 ? (
                             <>
-                              {selectedLoad.aiRecommendations.deadhead.status === "good" && (
+                              {selectedLoad.aiRecommendations.deadhead
+                                .status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.deadhead.status === "warning" && (
+                              {selectedLoad.aiRecommendations.deadhead
+                                .status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
-                              {selectedLoad.aiRecommendations.deadhead.status === "bad" && (
+                              {selectedLoad.aiRecommendations.deadhead
+                                .status === "bad" && (
                                 <XCircle className="size-4 text-red-500" />
                               )}
                             </>
@@ -1055,26 +1224,36 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 4 ? `${selectedLoad.aiRecommendations.deadhead.miles} empty miles` : "Calculating..."}
+                          {aiLoadingStep >= 4
+                            ? `${selectedLoad.aiRecommendations.deadhead.miles} empty miles`
+                            : "Calculating..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 4 ? `Estimated cost: ${selectedLoad.aiRecommendations.deadhead.cost}` : ""}
+                          {aiLoadingStep >= 4
+                            ? `Estimated cost: ${selectedLoad.aiRecommendations.deadhead.cost}`
+                            : ""}
                         </p>
                       </div>
                     </div>
 
                     {/* Profitability Score */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 5 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 5 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <TrendingUp className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">Profitability Score</p>
+                          <p className="text-xs text-muted-foreground">
+                            Profitability Score
+                          </p>
                           {aiLoadingStep >= 5 ? (
                             <>
-                              {selectedLoad.aiRecommendations.profitability.status === "good" && (
+                              {selectedLoad.aiRecommendations.profitability
+                                .status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.profitability.status === "warning" && (
+                              {selectedLoad.aiRecommendations.profitability
+                                .status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
                             </>
@@ -1083,29 +1262,40 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 5 ? `${selectedLoad.aiRecommendations.profitability.score} profitable` : "Analyzing..."}
+                          {aiLoadingStep >= 5
+                            ? `${selectedLoad.aiRecommendations.profitability.score} profitable`
+                            : "Analyzing..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 5 ? `Estimated margin: ${selectedLoad.aiRecommendations.profitability.margin}` : ""}
+                          {aiLoadingStep >= 5
+                            ? `Estimated margin: ${selectedLoad.aiRecommendations.profitability.margin}`
+                            : ""}
                         </p>
                       </div>
                     </div>
 
                     {/* Next Load Positioning */}
-                    <div className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 6 ? "opacity-100" : "opacity-30"}`}>
+                    <div
+                      className={`px-4 py-2.5 flex items-start gap-3 transition-all duration-300 ${aiLoadingStep >= 6 ? "opacity-100" : "opacity-30"}`}
+                    >
                       <MapPin className="size-4 mt-0.5 text-muted-foreground" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">Next Load Positioning</p>
+                          <p className="text-xs text-muted-foreground">
+                            Next Load Positioning
+                          </p>
                           {aiLoadingStep >= 6 ? (
                             <>
-                              {selectedLoad.aiRecommendations.nextLoadPositioning.status === "good" && (
+                              {selectedLoad.aiRecommendations
+                                .nextLoadPositioning.status === "good" && (
                                 <CircleCheck className="size-4 text-green-600" />
                               )}
-                              {selectedLoad.aiRecommendations.nextLoadPositioning.status === "warning" && (
+                              {selectedLoad.aiRecommendations
+                                .nextLoadPositioning.status === "warning" && (
                                 <CircleAlert className="size-4 text-amber-500" />
                               )}
-                              {selectedLoad.aiRecommendations.nextLoadPositioning.status === "neutral" && (
+                              {selectedLoad.aiRecommendations
+                                .nextLoadPositioning.status === "neutral" && (
                                 <CircleMinus className="size-4 text-gray-400" />
                               )}
                             </>
@@ -1114,10 +1304,16 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
                           )}
                         </div>
                         <p className="text-sm font-medium text-foreground">
-                          {aiLoadingStep >= 6 ? selectedLoad.aiRecommendations.nextLoadPositioning.message : "Evaluating..."}
+                          {aiLoadingStep >= 6
+                            ? selectedLoad.aiRecommendations.nextLoadPositioning
+                                .message
+                            : "Evaluating..."}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {aiLoadingStep >= 6 ? selectedLoad.aiRecommendations.nextLoadPositioning.suggestion : ""}
+                          {aiLoadingStep >= 6
+                            ? selectedLoad.aiRecommendations.nextLoadPositioning
+                                .suggestion
+                            : ""}
                         </p>
                       </div>
                     </div>
@@ -1162,33 +1358,47 @@ const BulkOrders = ({ defaultTab = "inbox" }) => {
           <div className="space-y-4 py-4">
             {selectedLoad && (
               <div className="p-3 bg-muted rounded-md">
-                <p className="text-sm font-mono font-medium">{selectedLoad.loadId}</p>
+                <p className="text-sm font-mono font-medium">
+                  {selectedLoad.loadId}
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  {selectedLoad.origin.city}, {selectedLoad.origin.state} → {selectedLoad.destination.city}, {selectedLoad.destination.state}
+                  {selectedLoad.origin.city}, {selectedLoad.origin.state} →{" "}
+                  {selectedLoad.destination.city},{" "}
+                  {selectedLoad.destination.state}
                 </p>
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="declineReason">Reason for Declining <span className="text-rose-500">*</span></Label>
+              <Label htmlFor="declineReason">
+                Reason for Declining <span className="text-rose-500">*</span>
+              </Label>
               <Select value={declineReason} onValueChange={setDeclineReason}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a reason..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="no-driver">No Driver Available</SelectItem>
-                  <SelectItem value="no-equipment">No Equipment Available</SelectItem>
+                  <SelectItem value="no-equipment">
+                    No Equipment Available
+                  </SelectItem>
                   <SelectItem value="rate-too-low">Rate Too Low</SelectItem>
-                  <SelectItem value="route-not-serviceable">Route Not Serviceable</SelectItem>
-                  <SelectItem value="time-constraint">Cannot Meet Time Requirements</SelectItem>
-                  <SelectItem value="capacity-full">At Full Capacity</SelectItem>
+                  <SelectItem value="route-not-serviceable">
+                    Route Not Serviceable
+                  </SelectItem>
+                  <SelectItem value="time-constraint">
+                    Cannot Meet Time Requirements
+                  </SelectItem>
+                  <SelectItem value="capacity-full">
+                    At Full Capacity
+                  </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="declineNotes">Additional Notes</Label>
+              <Label htmlFor="declineNotes">Accessorial Notes</Label>
               <Textarea
                 id="declineNotes"
                 placeholder="Provide any additional details about why this load is being declined..."

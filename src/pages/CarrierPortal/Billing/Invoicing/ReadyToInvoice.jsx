@@ -61,10 +61,10 @@ const ReadyToInvoice = () => {
       origin: "Houston, TX",
       destination: "Dallas, TX",
       weight: "24,500 lbs",
-      freightCharges: 1850.00,
-      fuelSurcharge: 185.00,
-      accessorials: 150.00,
-      totalCharges: 2185.00,
+      freightCharges: 1850.0,
+      fuelSurcharge: 185.0,
+      accessorials: 150.0,
+      totalCharges: 2185.0,
       driverName: "John Smith",
       vehicleNo: "TRK-2847",
       podUploaded: true,
@@ -80,10 +80,10 @@ const ReadyToInvoice = () => {
       origin: "Austin, TX",
       destination: "Dallas, TX",
       weight: "22,000 lbs",
-      freightCharges: 1650.00,
-      fuelSurcharge: 165.00,
-      accessorials: 75.00,
-      totalCharges: 1890.00,
+      freightCharges: 1650.0,
+      fuelSurcharge: 165.0,
+      accessorials: 75.0,
+      totalCharges: 1890.0,
       driverName: "Mike Davis",
       vehicleNo: "TRK-1923",
       podUploaded: true,
@@ -99,10 +99,10 @@ const ReadyToInvoice = () => {
       origin: "San Antonio, TX",
       destination: "Houston, TX",
       weight: "26,000 lbs",
-      freightCharges: 2100.00,
-      fuelSurcharge: 210.00,
-      accessorials: 200.00,
-      totalCharges: 2510.00,
+      freightCharges: 2100.0,
+      fuelSurcharge: 210.0,
+      accessorials: 200.0,
+      totalCharges: 2510.0,
       driverName: "Sarah Johnson",
       vehicleNo: "TRK-4521",
       podUploaded: true,
@@ -118,10 +118,10 @@ const ReadyToInvoice = () => {
       origin: "Fort Worth, TX",
       destination: "Austin, TX",
       weight: "25,500 lbs",
-      freightCharges: 1950.00,
-      fuelSurcharge: 195.00,
-      accessorials: 100.00,
-      totalCharges: 2245.00,
+      freightCharges: 1950.0,
+      fuelSurcharge: 195.0,
+      accessorials: 100.0,
+      totalCharges: 2245.0,
       driverName: "Robert Wilson",
       vehicleNo: "TRK-7734",
       podUploaded: true,
@@ -137,10 +137,10 @@ const ReadyToInvoice = () => {
       origin: "Dallas, TX",
       destination: "San Antonio, TX",
       weight: "23,000 lbs",
-      freightCharges: 1750.00,
-      fuelSurcharge: 175.00,
-      accessorials: 0.00,
-      totalCharges: 1925.00,
+      freightCharges: 1750.0,
+      fuelSurcharge: 175.0,
+      accessorials: 0.0,
+      totalCharges: 1925.0,
       driverName: "Emily Brown",
       vehicleNo: "TRK-3356",
       podUploaded: false,
@@ -241,7 +241,9 @@ const ReadyToInvoice = () => {
       cell: ({ row }) => (
         <Checkbox
           checked={selectedRows.includes(row.original.id)}
-          onCheckedChange={(checked) => handleSelectRow(row.original.id, checked)}
+          onCheckedChange={(checked) =>
+            handleSelectRow(row.original.id, checked)
+          }
           aria-label="Select row"
         />
       ),
@@ -262,7 +264,13 @@ const ReadyToInvoice = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${load.loadNo}&mode=view`)}>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate(
+                    `/app/carrier-portal/orders/bulk/complete/load-details?id=${load.loadNo}&mode=view`,
+                  )
+                }
+              >
                 <EyeIcon className="h-4 w-4 mr-2" />
                 View Load
               </DropdownMenuItem>
@@ -295,7 +303,9 @@ const ReadyToInvoice = () => {
       cell: ({ row }) => (
         <div className="flex flex-col">
           <span className="font-medium">{row.getValue("customer")}</span>
-          <span className="text-xs text-muted-foreground">{row.original.customerId}</span>
+          <span className="text-xs text-muted-foreground">
+            {row.original.customerId}
+          </span>
         </div>
       ),
     },
@@ -424,7 +434,9 @@ const ReadyToInvoice = () => {
                   <span className="font-bold">{selectedRows.length} loads</span>
                   <span className="mx-2 text-muted-foreground">|</span>
                   <span className="text-muted-foreground">Total: </span>
-                  <span className="font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
+                  <span className="font-bold text-green-600">
+                    {formatCurrency(selectedTotal)}
+                  </span>
                 </div>
                 <Button
                   onClick={() => setShowBatchInvoiceDialog(true)}
@@ -461,7 +473,12 @@ const ReadyToInvoice = () => {
               <div>
                 <p className="text-xs text-muted-foreground">Total Amount</p>
                 <p className="text-xl font-bold text-green-600">
-                  {formatCurrency(readyToInvoiceData.reduce((sum, row) => sum + row.totalCharges, 0))}
+                  {formatCurrency(
+                    readyToInvoiceData.reduce(
+                      (sum, row) => sum + row.totalCharges,
+                      0,
+                    ),
+                  )}
                 </p>
               </div>
             </div>
@@ -472,7 +489,9 @@ const ReadyToInvoice = () => {
                 <TruckIcon className="size-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Unique Customers</p>
+                <p className="text-xs text-muted-foreground">
+                  Unique Customers
+                </p>
                 <p className="text-xl font-bold">
                   {new Set(readyToInvoiceData.map((r) => r.customerId)).size}
                 </p>
@@ -487,7 +506,8 @@ const ReadyToInvoice = () => {
               <div>
                 <p className="text-xs text-muted-foreground">POD Complete</p>
                 <p className="text-xl font-bold">
-                  {readyToInvoiceData.filter((r) => r.podUploaded).length}/{readyToInvoiceData.length}
+                  {readyToInvoiceData.filter((r) => r.podUploaded).length}/
+                  {readyToInvoiceData.length}
                 </p>
               </div>
             </div>
@@ -516,7 +536,10 @@ const ReadyToInvoice = () => {
       </div>
 
       {/* Batch Invoice Dialog */}
-      <AlertDialog open={showBatchInvoiceDialog} onOpenChange={setShowBatchInvoiceDialog}>
+      <AlertDialog
+        open={showBatchInvoiceDialog}
+        onOpenChange={setShowBatchInvoiceDialog}
+      >
         <AlertDialogContent className="max-w-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>Create Invoices</AlertDialogTitle>
@@ -524,7 +547,8 @@ const ReadyToInvoice = () => {
               Configure invoice settings for {selectedRows.length} loads.
               {Object.keys(selectedByCustomer).length > 1 && (
                 <span className="block mt-1">
-                  Creating invoices for {Object.keys(selectedByCustomer).length} customers.
+                  Creating invoices for {Object.keys(selectedByCustomer).length}{" "}
+                  customers.
                 </span>
               )}
             </AlertDialogDescription>
@@ -533,21 +557,32 @@ const ReadyToInvoice = () => {
           <div className="py-4 space-y-4">
             {/* Customer Summary */}
             <div className="space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">Customers</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Customers
+              </p>
               {Object.values(selectedByCustomer).map((group) => (
-                <div key={group.customerId} className="border rounded-lg p-3 bg-muted/50">
+                <div
+                  key={group.customerId}
+                  className="border rounded-lg p-3 bg-muted/50"
+                >
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium">{group.customer}</p>
-                      <p className="text-xs text-muted-foreground">{group.loads.length} loads</p>
+                      <p className="text-xs text-muted-foreground">
+                        {group.loads.length} loads
+                      </p>
                     </div>
-                    <p className="font-bold text-green-600">{formatCurrency(group.total)}</p>
+                    <p className="font-bold text-green-600">
+                      {formatCurrency(group.total)}
+                    </p>
                   </div>
                 </div>
               ))}
               <div className="border-t pt-3 flex items-center justify-between">
                 <span className="font-medium">Grand Total</span>
-                <span className="text-lg font-bold text-green-600">{formatCurrency(selectedTotal)}</span>
+                <span className="text-lg font-bold text-green-600">
+                  {formatCurrency(selectedTotal)}
+                </span>
               </div>
             </div>
 
@@ -565,7 +600,9 @@ const ReadyToInvoice = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <FileStack className={`size-4 ${invoiceType === "summary" ? "text-primary" : "text-muted-foreground"}`} />
+                    <FileStack
+                      className={`size-4 ${invoiceType === "summary" ? "text-primary" : "text-muted-foreground"}`}
+                    />
                     <span className="font-medium">Summary Invoice</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -573,7 +610,8 @@ const ReadyToInvoice = () => {
                   </p>
                   {invoiceType === "summary" && (
                     <p className="text-xs text-primary mt-2 font-medium">
-                      Creates {Object.keys(selectedByCustomer).length} invoice(s)
+                      Creates {Object.keys(selectedByCustomer).length}{" "}
+                      invoice(s)
                     </p>
                   )}
                 </button>
@@ -587,7 +625,9 @@ const ReadyToInvoice = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <Truck className={`size-4 ${invoiceType === "per-load" ? "text-primary" : "text-muted-foreground"}`} />
+                    <Truck
+                      className={`size-4 ${invoiceType === "per-load" ? "text-primary" : "text-muted-foreground"}`}
+                    />
                     <span className="font-medium">Per-Load Invoice</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -602,7 +642,7 @@ const ReadyToInvoice = () => {
               </div>
             </div>
 
-            {/* Additional Options */}
+            {/* Accessorial Options */}
             <div className="space-y-3 pt-2 border-t">
               <p className="text-sm font-medium">Options</p>
               <div className="space-y-2">
@@ -613,7 +653,9 @@ const ReadyToInvoice = () => {
                   />
                   <div className="flex items-center gap-2">
                     <FileText className="size-4 text-muted-foreground" />
-                    <span className="text-sm">Auto-generate PDF after creation</span>
+                    <span className="text-sm">
+                      Auto-generate PDF after creation
+                    </span>
                   </div>
                 </label>
                 <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer">
@@ -646,7 +688,11 @@ const ReadyToInvoice = () => {
               onClick={() => handleCreateInvoice(selectedRows)}
               className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
             >
-              Create {invoiceType === "summary" ? Object.keys(selectedByCustomer).length : selectedRows.length} Invoice(s)
+              Create{" "}
+              {invoiceType === "summary"
+                ? Object.keys(selectedByCustomer).length
+                : selectedRows.length}{" "}
+              Invoice(s)
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

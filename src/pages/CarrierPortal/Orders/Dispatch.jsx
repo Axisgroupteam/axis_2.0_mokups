@@ -160,15 +160,39 @@ const Dispatch = () => {
   // Status badge colors
   const getStatusBadge = (status) => {
     const statusConfig = {
-      accepted: { label: "Accepted", className: "bg-blue-500/10 text-blue-700 border-blue-500/50" },
-      start: { label: "Start", className: "bg-purple-500/10 text-purple-700 border-purple-500/50" },
-      arrive_pickup: { label: "Arrive Pick Up", className: "bg-amber-500/10 text-amber-700 border-amber-500/50" },
-      pickup: { label: "Pick Up", className: "bg-orange-500/10 text-orange-700 border-orange-500/50" },
-      on_road: { label: "On Road", className: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50" },
-      arrive_delivery: { label: "Arrive Delivery", className: "bg-indigo-500/10 text-indigo-700 border-indigo-500/50" },
-      delivered: { label: "Delivered", className: "bg-green-500/10 text-green-700 border-green-500/50" },
+      accepted: {
+        label: "Accepted",
+        className: "bg-blue-500/10 text-blue-700 border-blue-500/50",
+      },
+      start: {
+        label: "Start",
+        className: "bg-purple-500/10 text-purple-700 border-purple-500/50",
+      },
+      arrive_pickup: {
+        label: "Arrive Pick Up",
+        className: "bg-amber-500/10 text-amber-700 border-amber-500/50",
+      },
+      pickup: {
+        label: "Pick Up",
+        className: "bg-orange-500/10 text-orange-700 border-orange-500/50",
+      },
+      on_road: {
+        label: "On Road",
+        className: "bg-cyan-500/10 text-cyan-700 border-cyan-500/50",
+      },
+      arrive_delivery: {
+        label: "Arrive Delivery",
+        className: "bg-indigo-500/10 text-indigo-700 border-indigo-500/50",
+      },
+      delivered: {
+        label: "Delivered",
+        className: "bg-green-500/10 text-green-700 border-green-500/50",
+      },
     };
-    const config = statusConfig[status] || { label: status, className: "bg-gray-500/10 text-gray-700" };
+    const config = statusConfig[status] || {
+      label: status,
+      className: "bg-gray-500/10 text-gray-700",
+    };
     return <Badge className={config.className}>{config.label}</Badge>;
   };
 
@@ -489,27 +513,60 @@ const Dispatch = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=general&mode=view`,
+                )
+              }
+            >
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`,
+                )
+              }
+            >
               <DollarSign className="size-4 mr-2" />
-              Additional Charge
+              Accessorial Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`,
+                )
+              }
+            >
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=audit&mode=view`,
+                )
+              }
+            >
               <History className="size-4 mr-2" />
               Audit Log
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=tracking&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/dispatch/load-details?id=${row.original.loadNo}&tab=tracking&mode=view`,
+                )
+              }
+            >
               <Navigation className="size-4 mr-2" />
               Tracking
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleReturnToPlanning(row.original)} className="text-amber-600">
+            <DropdownMenuItem
+              onClick={() => handleReturnToPlanning(row.original)}
+              className="text-amber-600"
+            >
               <Undo2 className="size-4 mr-2" />
               Return to Planning
             </DropdownMenuItem>
@@ -700,14 +757,19 @@ const Dispatch = () => {
               {/* Status Change Section */}
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Update Status</Label>
-                <Select value={selectedStatus} onValueChange={handleStatusChange}>
+                <Select
+                  value={selectedStatus}
+                  onValueChange={handleStatusChange}
+                >
                   <SelectTrigger className="h-10 w-full">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="pickup">Pick Up</SelectItem>
                     <SelectItem value="on_road">On Road</SelectItem>
-                    <SelectItem value="arrive_delivery">Arrive Delivery</SelectItem>
+                    <SelectItem value="arrive_delivery">
+                      Arrive Delivery
+                    </SelectItem>
                     <SelectItem value="delivered">Delivered</SelectItem>
                   </SelectContent>
                 </Select>
@@ -716,50 +778,82 @@ const Dispatch = () => {
               {/* Basic Information Card */}
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-2 border-b bg-muted">
-                  <h3 className="text-sm font-semibold text-foreground">Basic Information</h3>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Basic Information
+                  </h3>
                 </div>
                 <div className="divide-y divide-border">
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Load No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.loadNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Load No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.loadNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Pick Up No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.pickUpNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Pick Up No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.pickUpNo}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Vehicle</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Vehicle
+                      </p>
                       <p className="text-sm font-medium text-foreground font-mono flex items-center gap-1">
                         <Truck className="size-3" />
                         {selectedLoad.vehicle}
                       </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customer}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Customer
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customer}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contract ID</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.customerContractId}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contract ID
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.customerContractId}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Region</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customerRegion}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Region
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customerRegion}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Commodity</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.commodity}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Commodity
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.commodity}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Rates</p>
-                      <p className="text-sm font-semibold text-green-600">{selectedLoad.rates}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Rates
+                      </p>
+                      <p className="text-sm font-semibold text-green-600">
+                        {selectedLoad.rates}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -775,23 +869,39 @@ const Dispatch = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.pickup}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.pickup}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -811,23 +921,39 @@ const Dispatch = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.dropOff}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.dropOff}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -864,9 +990,16 @@ const Dispatch = () => {
                 <AlertTriangle className="size-6 text-amber-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to change status?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to change status?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{loadToReturn?.loadNo}</span> to <span className="font-medium text-foreground">Active</span> status in the planning tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {loadToReturn?.loadNo}
+                  </span>{" "}
+                  to <span className="font-medium text-foreground">Active</span>{" "}
+                  status in the planning tab.
                 </p>
               </div>
             </div>

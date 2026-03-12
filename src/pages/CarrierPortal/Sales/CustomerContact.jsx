@@ -683,13 +683,17 @@ const CustomerContact = () => {
                   {/* Customer, Contact */}
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Customer
+                      </p>
                       <p className="text-sm font-medium text-foreground">
                         {selectedInquiry.customerName}
                       </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact
+                      </p>
                       <p className="text-sm font-medium text-foreground">
                         {selectedInquiry.contactInfo}
                       </p>
@@ -697,7 +701,9 @@ const CustomerContact = () => {
                   </div>
                   {/* Priority */}
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Priority</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Priority
+                    </p>
                     <p className="text-sm font-medium text-foreground">
                       {selectedInquiry.priority}
                     </p>
@@ -705,7 +711,9 @@ const CustomerContact = () => {
                   {/* Summary / Details */}
                   <div className="px-4 py-2.5">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-xs text-muted-foreground">Summary / Details</p>
+                      <p className="text-xs text-muted-foreground">
+                        Summary / Details
+                      </p>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -820,7 +828,9 @@ const CustomerContact = () => {
                     <SelectContent>
                       <SelectItem value="flatbed">Flatbed</SelectItem>
                       <SelectItem value="pneumatic">Pneumatic</SelectItem>
-                      <SelectItem value="walking-floor">Walking Floor</SelectItem>
+                      <SelectItem value="walking-floor">
+                        Walking Floor
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -849,7 +859,9 @@ const CustomerContact = () => {
                         <SelectItem value="gu">GU</SelectItem>
                         <SelectItem value="slag">Slag</SelectItem>
                         <SelectItem value="sand-40-140">Sand 40-140</SelectItem>
-                        <SelectItem value="glass-40-140">Glass 40-140</SelectItem>
+                        <SelectItem value="glass-40-140">
+                          Glass 40-140
+                        </SelectItem>
                         <SelectItem value="masonry">Masonry</SelectItem>
                         <SelectItem value="1-2">1/2</SelectItem>
                         <SelectItem value="it">IT</SelectItem>
@@ -968,7 +980,7 @@ const CustomerContact = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Additional Notes</Label>
+                  <Label>Accessorial Notes</Label>
                   <Textarea
                     placeholder="Enter any special instructions or requirements..."
                     rows={3}

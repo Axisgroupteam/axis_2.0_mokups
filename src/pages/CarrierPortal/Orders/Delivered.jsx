@@ -430,39 +430,81 @@ const Delivered = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=general&mode=view`,
+                )
+              }
+            >
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`,
+                )
+              }
+            >
               <DollarSign className="size-4 mr-2" />
-              Additional Charge
+              Accessorial Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`,
+                )
+              }
+            >
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=audit&mode=view`,
+                )
+              }
+            >
               <History className="size-4 mr-2" />
               Audit Log
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=pod&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/delivered/load-details?id=${row.original.loadNo}&tab=pod&mode=view`,
+                )
+              }
+            >
               <Receipt className="size-4 mr-2" />
               POD
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleChangeStatusClick(row.original)} className="text-red-600">
+            <DropdownMenuItem
+              onClick={() => handleChangeStatusClick(row.original)}
+              className="text-red-600"
+            >
               <Undo2 className="size-4 mr-2" />
               Return to Planning
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleApproveClick(row.original)} className="text-green-600">
+            <DropdownMenuItem
+              onClick={() => handleApproveClick(row.original)}
+              className="text-green-600"
+            >
               <CheckCircle className="size-4 mr-2" />
               Approve Load
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleResendClick(row.original)} className="text-blue-600">
+            <DropdownMenuItem
+              onClick={() => handleResendClick(row.original)}
+              className="text-blue-600"
+            >
               <RefreshCw className="size-4 mr-2" />
               Resend Load
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleWorkflowClick(row.original)} className="text-purple-600">
+            <DropdownMenuItem
+              onClick={() => handleWorkflowClick(row.original)}
+              className="text-purple-600"
+            >
               <GitBranch className="size-4 mr-2" />
               Send to Workflow
             </DropdownMenuItem>
@@ -655,26 +697,42 @@ const Delivered = () => {
               {/* Basic Information Card */}
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-2 border-b bg-muted">
-                  <h3 className="text-sm font-semibold text-foreground">Basic Information</h3>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Basic Information
+                  </h3>
                 </div>
                 <div className="divide-y divide-border">
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Load No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.loadNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Load No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.loadNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Ticket No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.ticketNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Ticket No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.ticketNo}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Pick Up No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.pickUpNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Pick Up No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.pickUpNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Vehicle</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Vehicle
+                      </p>
                       <p className="text-sm font-medium text-foreground font-mono flex items-center gap-1">
                         <Truck className="size-3" />
                         {selectedLoad.vehicle}
@@ -683,28 +741,48 @@ const Delivered = () => {
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customer}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Customer
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customer}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contract ID</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.customerContractId}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x divide-border">
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Region</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customerRegion}</p>
-                    </div>
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Commodity</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.commodity}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contract ID
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.customerContractId}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Rates</p>
-                      <p className="text-sm font-semibold text-green-600">{selectedLoad.rates}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Region
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customerRegion}
+                      </p>
+                    </div>
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Commodity
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.commodity}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Rates
+                      </p>
+                      <p className="text-sm font-semibold text-green-600">
+                        {selectedLoad.rates}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -724,23 +802,39 @@ const Delivered = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.pickup}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.pickup}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -760,23 +854,39 @@ const Delivered = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.dropOff}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.dropOff}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -813,14 +923,23 @@ const Delivered = () => {
                 <Undo2 className="size-6 text-red-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to change status?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to change status?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{loadToChange?.loadNo}</span> to <span className="font-medium text-foreground">Active</span> status in the planning tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {loadToChange?.loadNo}
+                  </span>{" "}
+                  to <span className="font-medium text-foreground">Active</span>{" "}
+                  status in the planning tab.
                 </p>
               </div>
               <div className="w-full px-4 py-2.5 rounded-md bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-900/50 flex items-center gap-2">
                 <AlertCircle className="size-4 text-amber-600 shrink-0" />
-                <p className="text-sm text-amber-700 dark:text-amber-500">This action will remove Vehicle and POD.</p>
+                <p className="text-sm text-amber-700 dark:text-amber-500">
+                  This action will remove Vehicle and POD.
+                </p>
               </div>
             </div>
           </div>
@@ -858,9 +977,17 @@ const Delivered = () => {
                 <CheckCircle className="size-6 text-green-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to approve?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to approve?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{loadToApprove?.loadNo}</span> to <span className="font-medium text-foreground">Complete</span> status in the complete tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {loadToApprove?.loadNo}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-medium text-foreground">Complete</span>{" "}
+                  status in the complete tab.
                 </p>
               </div>
             </div>
@@ -899,9 +1026,16 @@ const Delivered = () => {
                 <RefreshCw className="size-6 text-blue-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to resend?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to resend?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{loadToResend?.loadNo}</span> to <span className="font-medium text-foreground">Resend</span> status in the delivered tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {loadToResend?.loadNo}
+                  </span>{" "}
+                  to <span className="font-medium text-foreground">Resend</span>{" "}
+                  status in the delivered tab.
                 </p>
               </div>
             </div>
@@ -940,9 +1074,17 @@ const Delivered = () => {
                 <GitBranch className="size-6 text-purple-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to send to workflow?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to send to workflow?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{loadToWorkflow?.loadNo}</span> to <span className="font-medium text-foreground">Workflow</span> status in the delivered tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {loadToWorkflow?.loadNo}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-medium text-foreground">Workflow</span>{" "}
+                  status in the delivered tab.
                 </p>
               </div>
             </div>

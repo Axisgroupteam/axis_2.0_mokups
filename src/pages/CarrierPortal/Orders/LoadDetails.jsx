@@ -67,7 +67,16 @@ import {
   X,
   MoreHorizontalIcon,
   PencilIcon,
+  ZapIcon,
+  AlertTriangleIcon,
+  PaperclipIcon,
+  ClipboardList,
+  BanknoteIcon,
+  ShieldAlert,
+  PowerIcon,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import BillingIntegration from "@/pages/CarrierPortal/Accessorial/BillingIntegration";
 import { MdEdit } from "react-icons/md";
 
 const LoadDetails = () => {
@@ -115,8 +124,16 @@ const LoadDetails = () => {
     invoiceTime: "14:30",
   });
   const [podImages, setPodImages] = useState([
-    { id: 1, name: "pod_front.jpg", url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop" },
-    { id: 2, name: "pod_signature.jpg", url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop" },
+    {
+      id: 1,
+      name: "pod_front.jpg",
+      url: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop",
+    },
+    {
+      id: 2,
+      name: "pod_signature.jpg",
+      url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+    },
   ]);
   const [isPodUploadSheetOpen, setIsPodUploadSheetOpen] = useState(false);
   const [pendingPodImages, setPendingPodImages] = useState([]);
@@ -163,20 +180,72 @@ const LoadDetails = () => {
 
   // Options for searchable selects
   const vehicles = [
-    { value: "TRK-2847", label: "TRK-2847", loads: 2, assigned: 0, revenue: 1849.12, expense: 0, status: "unavailable" },
-    { value: "TRK-1923", label: "TRK-1923", loads: 5, assigned: 2, revenue: 3250.0, expense: 450.0, status: "partial" },
-    { value: "TRK-4521", label: "TRK-4521", loads: 3, assigned: 1, revenue: 2100.5, expense: 125.0, status: "partial" },
-    { value: "TRK-7734", label: "TRK-7734", loads: 4, assigned: 0, revenue: 4500.0, expense: 0, status: "available" },
-    { value: "TRK-3356", label: "TRK-3356", loads: 1, assigned: 1, revenue: 950.0, expense: 200.0, status: "unavailable" },
-    { value: "TRK-5589", label: "TRK-5589", loads: 6, assigned: 3, revenue: 5200.0, expense: 780.0, status: "available" },
+    {
+      value: "TRK-2847",
+      label: "TRK-2847",
+      loads: 2,
+      assigned: 0,
+      revenue: 1849.12,
+      expense: 0,
+      status: "unavailable",
+    },
+    {
+      value: "TRK-1923",
+      label: "TRK-1923",
+      loads: 5,
+      assigned: 2,
+      revenue: 3250.0,
+      expense: 450.0,
+      status: "partial",
+    },
+    {
+      value: "TRK-4521",
+      label: "TRK-4521",
+      loads: 3,
+      assigned: 1,
+      revenue: 2100.5,
+      expense: 125.0,
+      status: "partial",
+    },
+    {
+      value: "TRK-7734",
+      label: "TRK-7734",
+      loads: 4,
+      assigned: 0,
+      revenue: 4500.0,
+      expense: 0,
+      status: "available",
+    },
+    {
+      value: "TRK-3356",
+      label: "TRK-3356",
+      loads: 1,
+      assigned: 1,
+      revenue: 950.0,
+      expense: 200.0,
+      status: "unavailable",
+    },
+    {
+      value: "TRK-5589",
+      label: "TRK-5589",
+      loads: 6,
+      assigned: 3,
+      revenue: 5200.0,
+      expense: 780.0,
+      status: "available",
+    },
   ];
 
   const getVehicleStatusColor = (status) => {
     switch (status) {
-      case "available": return "bg-green-500";
-      case "partial": return "bg-orange-500";
-      case "unavailable": return "bg-rose-500";
-      default: return "bg-gray-400";
+      case "available":
+        return "bg-green-500";
+      case "partial":
+        return "bg-orange-500";
+      case "unavailable":
+        return "bg-rose-500";
+      default:
+        return "bg-gray-400";
     }
   };
 
@@ -197,11 +266,26 @@ const LoadDetails = () => {
   ];
 
   const locations = [
-    { value: "1234 Industrial Blvd, Houston, TX 77001", label: "1234 Industrial Blvd, Houston, TX 77001" },
-    { value: "5678 Commerce St, Dallas, TX 75201", label: "5678 Commerce St, Dallas, TX 75201" },
-    { value: "890 Quarry Rd, Austin, TX 78701", label: "890 Quarry Rd, Austin, TX 78701" },
-    { value: "234 Construction Ave, San Antonio, TX 78201", label: "234 Construction Ave, San Antonio, TX 78201" },
-    { value: "567 Sand Pit Ln, Fort Worth, TX 76101", label: "567 Sand Pit Ln, Fort Worth, TX 76101" },
+    {
+      value: "1234 Industrial Blvd, Houston, TX 77001",
+      label: "1234 Industrial Blvd, Houston, TX 77001",
+    },
+    {
+      value: "5678 Commerce St, Dallas, TX 75201",
+      label: "5678 Commerce St, Dallas, TX 75201",
+    },
+    {
+      value: "890 Quarry Rd, Austin, TX 78701",
+      label: "890 Quarry Rd, Austin, TX 78701",
+    },
+    {
+      value: "234 Construction Ave, San Antonio, TX 78201",
+      label: "234 Construction Ave, San Antonio, TX 78201",
+    },
+    {
+      value: "567 Sand Pit Ln, Fort Worth, TX 76101",
+      label: "567 Sand Pit Ln, Fort Worth, TX 76101",
+    },
   ];
 
   // Mock load data
@@ -252,113 +336,293 @@ const LoadDetails = () => {
     setIsEditSheetOpen(false);
   };
 
-  // Mock additional charges data - Load-specific accessorials
-  const additionalCharges = [
+  // Mock Accessorial Charges data - Load-specific accessorials
+  const [additionalCharges, setAdditionalCharges] = useState([
     {
       id: 1,
       code: "DET",
       name: "Detention",
       quantity: 2,
-      rate: 75.00,
-      amount: 150.00,
-      driverPay: 75.00,
-      status: "Approved",
+      rate: 75.0,
+      amount: 150.0,
+      driverPay: 75.0,
+      disposition: "Bill to Customer",
+      absorptionReason: "",
+      triggerType: "auto",
+      status: "Active",
       addedBy: "System (Auto)",
       dateAdded: "Dec 10, 2024",
-      notes: "Arrived on time, waited 2 hours at pickup"
+      notes: "Arrived on time, waited 2 hours at pickup",
     },
     {
       id: 2,
       code: "TRP",
       name: "Tarping",
       quantity: 1,
-      rate: 75.00,
-      amount: 75.00,
-      driverPay: 50.00,
-      status: "Approved",
+      rate: 75.0,
+      amount: 75.0,
+      driverPay: 50.0,
+      disposition: "Bill to Customer",
+      absorptionReason: "",
+      triggerType: "manual",
+      status: "Active",
       addedBy: "John Smith",
       dateAdded: "Dec 10, 2024",
-      notes: "Load required tarping per customer request"
+      notes: "Load required tarping per customer request",
     },
     {
       id: 3,
       code: "STP",
       name: "Stop Off",
       quantity: 1,
-      rate: 100.00,
-      amount: 100.00,
-      driverPay: 50.00,
-      status: "Pending",
+      rate: 100.0,
+      ratePerMile: 2.0,
+      amount: 100.0,
+      driverPay: 50.0,
+      disposition: "Bill to Customer",
+      absorptionReason: "",
+      triggerType: "manual",
+      status: "Inactive",
       addedBy: "Mike Davis",
       dateAdded: "Dec 10, 2024",
-      notes: "Additional stop at warehouse"
+      notes: "Accessorial stop at warehouse",
     },
+    {
+      id: 4,
+      code: "TOL",
+      name: "Tolls",
+      quantity: 1,
+      rate: 22.5,
+      amount: 22.5,
+      driverPay: 0,
+      disposition: "Bill to Customer",
+      absorptionReason: "",
+      triggerType: "auto",
+      status: "Active",
+      addedBy: "System (Auto)",
+      dateAdded: "Dec 10, 2024",
+      notes: "I-75 EFS toll transaction",
+    },
+  ]);
+
+  const absorptionReasons = [
+    "Driver error",
+    "Operations error",
+    "Customer goodwill / relationship",
+    "Operational decision",
+    "Pricing already accounted for it",
+    "Dispute avoidance",
+    "Other — requires a note",
   ];
 
   // Available accessorial codes for selection
   const accessorialCodes = [
-    { code: "DET", name: "Detention", rate: 75.00, chargeType: "Per Hour", driverPayMethod: "percentage", driverPayAmount: 50 },
-    { code: "LAY", name: "Layover", rate: 350.00, chargeType: "Per Day", driverPayMethod: "flat", driverPayAmount: 150 },
-    { code: "STP", name: "Stop Off", rate: 100.00, chargeType: "Flat + Mileage", driverPayMethod: "flat", driverPayAmount: 50 },
-    { code: "DIV", name: "Diversion", rate: 150.00, chargeType: "Flat + OOR Miles", driverPayMethod: "same", driverPayAmount: 0 },
-    { code: "TNU", name: "TONU", rate: 400.00, chargeType: "Flat Fee", driverPayMethod: "percentage", driverPayAmount: 75 },
-    { code: "DRV", name: "Driver Assist", rate: 75.00, chargeType: "Flat Fee", driverPayMethod: "flat", driverPayAmount: 75 },
-    { code: "TRP", name: "Tarping", rate: 75.00, chargeType: "Flat Fee", driverPayMethod: "flat", driverPayAmount: 50 },
-    { code: "HAZ", name: "Hazmat", rate: 150.00, chargeType: "Flat Fee", driverPayMethod: "none", driverPayAmount: 0 },
-    { code: "TOL", name: "Tolls", rate: 0, chargeType: "Pass-through", driverPayMethod: "none", driverPayAmount: 0 },
-    { code: "OVW", name: "Overweight", rate: 0, chargeType: "Variable", driverPayMethod: "none", driverPayAmount: 0 },
-    { code: "OOR", name: "Out of Route Miles", rate: 3.00, chargeType: "Per Mile", driverPayMethod: "same", driverPayAmount: 0 },
-    { code: "RDL", name: "Re-delivery", rate: 200.00, chargeType: "Flat Fee", driverPayMethod: "percentage", driverPayAmount: 50 },
-    { code: "PRM", name: "Permits", rate: 0, chargeType: "Pass-through", driverPayMethod: "none", driverPayAmount: 0 },
-    { code: "EMP", name: "Empty Miles", rate: 2.50, chargeType: "Per Mile", driverPayMethod: "same", driverPayAmount: 0 },
+    {
+      code: "DET",
+      name: "Detention",
+      rate: 75.0,
+      chargeType: "Per Hour",
+      driverPayMethod: "percentage",
+      driverPayAmount: 50,
+      approvalTier: "tier1",
+    },
+    {
+      code: "LAY",
+      name: "Layover",
+      rate: 350.0,
+      chargeType: "Per Day",
+      driverPayMethod: "flat",
+      driverPayAmount: 150,
+      approvalTier: "tier2",
+    },
+    {
+      code: "STP",
+      name: "Stop Off",
+      rate: 100.0,
+      defaultRatePerMile: 2.0,
+      chargeType: "Flat + Mileage",
+      driverPayMethod: "flat",
+      driverPayAmount: 50,
+      approvalTier: "tier2",
+    },
+    {
+      code: "DIV",
+      name: "Diversion",
+      rate: 150.0,
+      defaultRatePerMile: 3.0,
+      chargeType: "Flat + OOR Miles",
+      driverPayMethod: "same",
+      driverPayAmount: 0,
+      approvalTier: "tier2",
+    },
+    {
+      code: "TNU",
+      name: "TONU",
+      rate: 400.0,
+      chargeType: "Flat Fee",
+      driverPayMethod: "percentage",
+      driverPayAmount: 75,
+      approvalTier: "tier2",
+    },
+    {
+      code: "DRV",
+      name: "Driver Assist",
+      rate: 75.0,
+      chargeType: "Flat Fee",
+      driverPayMethod: "flat",
+      driverPayAmount: 75,
+      approvalTier: "tier2",
+    },
+    {
+      code: "TRP",
+      name: "Tarping",
+      rate: 75.0,
+      chargeType: "Flat Fee",
+      driverPayMethod: "flat",
+      driverPayAmount: 50,
+      approvalTier: "tier2",
+    },
+    {
+      code: "HAZ",
+      name: "Hazmat",
+      rate: 150.0,
+      chargeType: "Flat Fee",
+      driverPayMethod: "none",
+      driverPayAmount: 0,
+      approvalTier: "tier2",
+    },
+    {
+      code: "TOL",
+      name: "Tolls",
+      rate: 0,
+      chargeType: "Pass-through",
+      driverPayMethod: "none",
+      driverPayAmount: 0,
+      approvalTier: "tier1",
+    },
+    {
+      code: "OVW",
+      name: "Overweight",
+      rate: 0,
+      chargeType: "Variable",
+      driverPayMethod: "none",
+      driverPayAmount: 0,
+      approvalTier: "tier2",
+    },
+    {
+      code: "OOR",
+      name: "Out of Route Miles",
+      rate: 50.0,
+      defaultRatePerMile: 3.0,
+      chargeType: "Flat + OOR Miles",
+      driverPayMethod: "same",
+      driverPayAmount: 0,
+      approvalTier: "tier2",
+    },
+    {
+      code: "RDL",
+      name: "Re-delivery",
+      rate: 200.0,
+      chargeType: "Flat Fee",
+      driverPayMethod: "percentage",
+      driverPayAmount: 50,
+      approvalTier: "tier2",
+    },
+    {
+      code: "PRM",
+      name: "Permits",
+      rate: 0,
+      chargeType: "Pass-through",
+      driverPayMethod: "none",
+      driverPayAmount: 0,
+      approvalTier: "tier1",
+    },
+    {
+      code: "EMP",
+      name: "Empty Miles",
+      rate: 75.0,
+      defaultRatePerMile: 2.5,
+      chargeType: "Flat + Mileage",
+      driverPayMethod: "same",
+      driverPayAmount: 0,
+      approvalTier: "tier2",
+    },
   ];
 
   // Form state for adding/editing accessorial
   const [accessorialFormData, setAccessorialFormData] = useState({
     code: "",
+    chargeType: "",
+    driverPaid: true,
+    driverPayMethod: "percentage",
+    driverPayAmount: "",
+    approvalTier: "",
     quantity: "1",
     rate: "",
+    ratePerMile: "",
+    miles: "",
     notes: "",
+    disposition: "Bill to Customer",
+    absorptionReason: "",
+    absorptionNote: "",
   });
   const [editingCharge, setEditingCharge] = useState(null);
 
   const handleAccessorialCodeChange = (code) => {
-    const selectedCode = accessorialCodes.find(c => c.code === code);
-    setAccessorialFormData({
-      ...accessorialFormData,
-      code: code,
-      rate: selectedCode ? selectedCode.rate.toString() : "",
-    });
-  };
-
-  const getSelectedAccessorialInfo = () => {
-    return accessorialCodes.find(c => c.code === accessorialFormData.code);
+    const selectedCode = accessorialCodes.find((c) => c.code === code);
+    const method = selectedCode?.driverPayMethod ?? "percentage";
+    setAccessorialFormData((prev) => ({
+      ...prev,
+      code,
+      chargeType: selectedCode?.chargeType ?? "",
+      driverPaid: method !== "none",
+      driverPayMethod: method,
+      driverPayAmount: selectedCode?.driverPayAmount?.toString() ?? "",
+      approvalTier: selectedCode?.approvalTier ?? "",
+      rate: selectedCode?.rate?.toString() ?? "",
+      ratePerMile: selectedCode?.defaultRatePerMile?.toString() ?? "",
+    }));
   };
 
   const calculateAmount = () => {
     const rate = parseFloat(accessorialFormData.rate) || 0;
     const quantity = parseFloat(accessorialFormData.quantity) || 1;
-    return rate * quantity;
+    const ratePerMile = parseFloat(accessorialFormData.ratePerMile) || 0;
+    const miles = parseFloat(accessorialFormData.miles) || 0;
+
+    return rate * quantity + ratePerMile * miles;
   };
 
   const calculateDriverPay = () => {
-    const selectedCode = getSelectedAccessorialInfo();
-    if (!selectedCode) return 0;
-
+    const { driverPayMethod, driverPayAmount } = accessorialFormData;
+    if (!driverPayMethod) return 0;
     const amount = calculateAmount();
-    if (selectedCode.driverPayMethod === "same") return amount;
-    if (selectedCode.driverPayMethod === "flat") return selectedCode.driverPayAmount;
-    if (selectedCode.driverPayMethod === "percentage") return amount * (selectedCode.driverPayAmount / 100);
+    const payAmt = parseFloat(driverPayAmount) || 0;
+    if (driverPayMethod === "same") return amount;
+    if (driverPayMethod === "flat") return payAmt;
+    if (driverPayMethod === "percentage") return amount * (payAmt / 100);
     return 0;
   };
 
   const handleEditCharge = (charge) => {
     setEditingCharge(charge);
+    const selectedCode = accessorialCodes.find((c) => c.code === charge.code);
+    const method = selectedCode?.driverPayMethod ?? "percentage";
     setAccessorialFormData({
       code: charge.code,
+      chargeType: selectedCode?.chargeType ?? "",
+      driverPaid: method !== "none",
+      driverPayMethod: method,
+      driverPayAmount: selectedCode?.driverPayAmount?.toString() ?? "",
+      approvalTier: selectedCode?.approvalTier ?? "",
       quantity: charge.quantity.toString(),
       rate: charge.rate.toString(),
+      ratePerMile: charge.ratePerMile?.toString() || "",
+      miles: charge.miles?.toString() || "",
       notes: charge.notes || "",
+      disposition: charge.disposition || "Bill to Customer",
+      absorptionReason: charge.absorptionReason || "",
+      absorptionNote: charge.absorptionNote || "",
     });
     setIsChargeSheetOpen(true);
   };
@@ -366,59 +630,158 @@ const LoadDetails = () => {
   const handleCloseChargeSheet = () => {
     setIsChargeSheetOpen(false);
     setEditingCharge(null);
-    setAccessorialFormData({ code: "", quantity: "1", rate: "", notes: "" });
+    setAccessorialFormData({
+      code: "",
+      chargeType: "",
+      driverPaid: true,
+      driverPayMethod: "percentage",
+      driverPayAmount: "",
+      approvalTier: "",
+      quantity: "1",
+      rate: "",
+      ratePerMile: "",
+      miles: "",
+      notes: "",
+      disposition: "Bill to Customer",
+      absorptionReason: "",
+      absorptionNote: "",
+    });
   };
 
-  // Filter configuration for additional charges
+  const handleToggleChargeStatus = (chargeId) => {
+    setAdditionalCharges((prev) =>
+      prev.map((c) =>
+        c.id === chargeId
+          ? { ...c, status: c.status === "Active" ? "Inactive" : "Active" }
+          : c,
+      ),
+    );
+  };
+
+  // Filter configuration for Accessorial Charges
   const chargeFilterGroups = [
     {
-      id: "charge-filters",
-      label: "Filter Charges",
+      name: "Search",
+      filters: [
+        {
+          key: "name",
+          label: "Description",
+          type: "input",
+          placeholder: "Search description...",
+        },
+      ],
+    },
+    {
+      name: "Filters",
       filters: [
         {
           key: "code",
           label: "Code",
-          type: "input",
-          group: "Basic",
-          placeholder: "Search code...",
-        },
-        {
-          key: "description",
-          label: "Description",
-          type: "input",
-          group: "Basic",
-          placeholder: "Search description...",
-        },
-        {
-          key: "payDriver",
-          label: "Pay Driver",
           type: "select",
-          group: "Basic",
+          options: [...new Set(additionalCharges.map((c) => c.code))].map(
+            (c) => ({ label: c, value: c }),
+          ),
+        },
+
+        {
+          key: "disposition",
+          label: "Disposition",
+          type: "select",
           options: [
-            { value: "Yes", label: "Yes" },
-            { value: "No", label: "No" },
+            { label: "Bill to Customer", value: "Bill to Customer" },
+            { label: "Absorb (Eat Cost)", value: "Absorb (Eat Cost)" },
           ],
+        },
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          options: [
+            { label: "Active", value: "Active" },
+            { label: "Inactive", value: "Inactive" },
+          ],
+        },
+        {
+          key: "addedBy",
+          label: "Added By",
+          type: "input",
+          placeholder: "Search added by...",
         },
       ],
     },
   ];
 
+  const filteredCharges = additionalCharges.filter((r) =>
+    chargeFilters.every(({ key, value, type }) => {
+      if (!value || value === "") return true;
+      if (type === "input")
+        return r[key]?.toLowerCase().includes(value.toLowerCase());
+      if (type === "select") return r[key] === value;
+      return true;
+    }),
+  );
+
   // Mock product sales data for this load
   const productSales = [
-    { id: 1, sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", quantity: 24, unitPrice: 45.00, total: 1080.00, addedBy: "John Smith", dateAdded: "Dec 10, 2024" },
-    { id: 2, sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", quantity: 12, unitPrice: 35.00, total: 420.00, addedBy: "Sarah Johnson", dateAdded: "Dec 10, 2024" },
+    {
+      id: 1,
+      sku: "MAT-LS-057",
+      name: "#57 Limestone",
+      uom: "ton",
+      quantity: 24,
+      unitPrice: 45.0,
+      total: 1080.0,
+      addedBy: "John Smith",
+      dateAdded: "Dec 10, 2024",
+    },
+    {
+      id: 2,
+      sku: "MAT-SD-001",
+      name: "Concrete Sand",
+      uom: "ton",
+      quantity: 12,
+      unitPrice: 35.0,
+      total: 420.0,
+      addedBy: "Sarah Johnson",
+      dateAdded: "Dec 10, 2024",
+    },
   ];
 
   // Available materials for selection (from Materials module)
   const availableMaterials = [
-    { sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", defaultPrice: 45.00 },
-    { sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", defaultPrice: 35.00 },
-    { sku: "MAT-SD-002", name: "Fill Sand", uom: "ton", defaultPrice: 30.00 },
-    { sku: "MAT-CON-001", name: "Ready-Mix Concrete", uom: "cubic yard", defaultPrice: 125.00 },
-    { sku: "MAT-REC-001", name: "Recycled Concrete", uom: "ton", defaultPrice: 28.00 },
-    { sku: "MAT-ST-089", name: "#89 Stone", uom: "ton", defaultPrice: 42.00 },
-    { sku: "MAT-SD-003", name: "Masonry Sand", uom: "ton", defaultPrice: 38.00 },
-    { sku: "MAT-REC-002", name: "Asphalt Millings", uom: "ton", defaultPrice: 25.00 },
+    {
+      sku: "MAT-LS-057",
+      name: "#57 Limestone",
+      uom: "ton",
+      defaultPrice: 45.0,
+    },
+    {
+      sku: "MAT-SD-001",
+      name: "Concrete Sand",
+      uom: "ton",
+      defaultPrice: 35.0,
+    },
+    { sku: "MAT-SD-002", name: "Fill Sand", uom: "ton", defaultPrice: 30.0 },
+    {
+      sku: "MAT-CON-001",
+      name: "Ready-Mix Concrete",
+      uom: "cubic yard",
+      defaultPrice: 125.0,
+    },
+    {
+      sku: "MAT-REC-001",
+      name: "Recycled Concrete",
+      uom: "ton",
+      defaultPrice: 28.0,
+    },
+    { sku: "MAT-ST-089", name: "#89 Stone", uom: "ton", defaultPrice: 42.0 },
+    { sku: "MAT-SD-003", name: "Masonry Sand", uom: "ton", defaultPrice: 38.0 },
+    {
+      sku: "MAT-REC-002",
+      name: "Asphalt Millings",
+      uom: "ton",
+      defaultPrice: 25.0,
+    },
   ];
 
   // Form state for adding/editing product
@@ -430,16 +793,18 @@ const LoadDetails = () => {
   const [editingProduct, setEditingProduct] = useState(null);
 
   const handleProductChange = (sku) => {
-    const selectedMaterial = availableMaterials.find(m => m.sku === sku);
+    const selectedMaterial = availableMaterials.find((m) => m.sku === sku);
     setProductFormData({
       ...productFormData,
       sku: sku,
-      unitPrice: selectedMaterial ? selectedMaterial.defaultPrice.toString() : "",
+      unitPrice: selectedMaterial
+        ? selectedMaterial.defaultPrice.toString()
+        : "",
     });
   };
 
   const getSelectedMaterialInfo = () => {
-    return availableMaterials.find(m => m.sku === productFormData.sku);
+    return availableMaterials.find((m) => m.sku === productFormData.sku);
   };
 
   const calculateProductTotal = () => {
@@ -595,20 +960,28 @@ const LoadDetails = () => {
     },
     nextLocation: {
       lat: 32.7767,
-      lng: -96.7970,
+      lng: -96.797,
       address: "Dallas, TX",
     },
   };
 
   const getTypeBadgeColor = (type) => {
     const colors = {
-      Create: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
-      Update: "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
-      Upload: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
-      Status: "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
-      Verify: "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+      Create:
+        "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Update:
+        "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+      Upload:
+        "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Status:
+        "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Verify:
+        "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
     };
-    return colors[type] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+    return (
+      colors[type] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
   };
 
   const getStatusBadgeColor = (status) => {
@@ -619,7 +992,7 @@ const LoadDetails = () => {
     return colors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/50";
   };
 
-  // Additional Charges columns
+  // Accessorial Charges columns
   const chargesColumns = [
     {
       id: "actions",
@@ -647,6 +1020,13 @@ const LoadDetails = () => {
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit
               </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleToggleChargeStatus(charge.id)}
+              >
+                <PowerIcon className="h-4 w-4 mr-2" />
+                {charge.status === "Active" ? "Set Inactive" : "Set Active"}
+              </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete
@@ -663,11 +1043,20 @@ const LoadDetails = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Code" />
       ),
+      size: 80,
       cell: ({ row }) => (
-        <span className="font-mono text-sm bg-blue-500/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded">
+        <span className="font-mono text-sm bg-blue-500/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded font-semibold">
           {row.getValue("code")}
         </span>
       ),
+    },
+
+    {
+      id: "accessorialName",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Accessorial Name" />
+      ),
+      cell: ({ row }) => <span>{row.original.name}</span>,
     },
     {
       accessorKey: "name",
@@ -675,11 +1064,39 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Description" />
       ),
     },
+
+    {
+      accessorKey: "disposition",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Disposition" />
+      ),
+      size: 170,
+      cell: ({ row }) => {
+        const disposition = row.getValue("disposition");
+        const dispositionColors = {
+          "Bill to Customer":
+            "bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+          "Absorb (Eat Cost)":
+            "bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+        };
+        return (
+          <Badge
+            className={
+              dispositionColors[disposition] ||
+              "bg-gray-500/10 text-gray-700 border-gray-500/50"
+            }
+          >
+            {disposition}
+          </Badge>
+        );
+      },
+    },
     {
       accessorKey: "quantity",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Qty/Hours" />
+        <DataTableColumnHeader column={column} title="Qty" />
       ),
+      size: 60,
       cell: ({ row }) => (
         <span className="text-center">{row.getValue("quantity")}</span>
       ),
@@ -689,17 +1106,72 @@ const LoadDetails = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Rate" />
       ),
-      cell: ({ row }) => (
-        <span className="font-medium">${row.getValue("rate").toFixed(2)}</span>
-      ),
+      size: 90,
+      cell: ({ row }) => {
+        const rate = row.getValue("rate");
+        return <span className="font-medium">${rate.toFixed(2)}</span>;
+      },
     },
+    {
+      accessorKey: "ratePerMile",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Rate Per Mile" />
+      ),
+      size: 110,
+      cell: ({ row }) => {
+        const ratePerMile = row.getValue("ratePerMile");
+        const code = row.original.code;
+        const selectedCode = accessorialCodes.find((c) => c.code === code);
+        const chargeType = selectedCode?.chargeType || "";
+        const isMileage =
+          chargeType.includes("Mile") || chargeType.includes("OOR");
+
+        if (!isMileage || !ratePerMile) {
+          return <span className="text-muted-foreground">—</span>;
+        }
+
+        return (
+          <span className="text-sm font-medium text-muted-foreground">
+            ${ratePerMile}/mi
+          </span>
+        );
+      },
+    },
+    // {
+    //   accessorKey: "miles",
+    //   header: ({ column }) => (
+    //     <DataTableColumnHeader column={column} title="Miles" />
+    //   ),
+    //   size: 80,
+    //   cell: ({ row }) => {
+    //     const miles = row.getValue("miles");
+    //     const code = row.original.code;
+    //     const selectedCode = accessorialCodes.find((c) => c.code === code);
+    //     const chargeType = selectedCode?.chargeType || "";
+    //     const isMileage =
+    //       chargeType.includes("Mile") || chargeType.includes("OOR");
+
+    //     if (!isMileage || !miles) {
+    //       return <span className="text-muted-foreground">—</span>;
+    //     }
+
+    //     return (
+    //       <span className="text-sm text-muted-foreground font-semibold">
+    //         {miles} mi
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "amount",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Amount" />
       ),
+      size: 90,
       cell: ({ row }) => (
-        <span className="font-medium text-green-600">${row.getValue("amount").toFixed(2)}</span>
+        <span className="font-semibold text-green-600">
+          ${row.getValue("amount").toFixed(2)}
+        </span>
       ),
     },
     {
@@ -707,8 +1179,11 @@ const LoadDetails = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Driver Pay" />
       ),
+      size: 100,
       cell: ({ row }) => (
-        <span className="font-medium text-amber-600">${row.getValue("driverPay").toFixed(2)}</span>
+        <span className="font-medium text-amber-600">
+          ${row.getValue("driverPay").toFixed(2)}
+        </span>
       ),
     },
     {
@@ -716,27 +1191,37 @@ const LoadDetails = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),
+      size: 200,
       cell: ({ row }) => {
         const status = row.getValue("status");
         const statusColors = {
-          Approved: "bg-green-500/10 text-green-700 border-green-500/50",
-          Pending: "bg-amber-500/10 text-amber-700 border-amber-500/50",
-          Disputed: "bg-red-500/10 text-red-700 border-red-500/50",
+          Active:
+            "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50",
+          Inactive:
+            "bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/50",
         };
         return (
-          <Badge className={statusColors[status] || "bg-gray-500/10 text-gray-700 border-gray-500/50"}>
+          <Badge
+            className={
+              statusColors[status] ||
+              "bg-gray-500/10 text-gray-700 border-gray-500/50"
+            }
+          >
             {status}
           </Badge>
         );
       },
     },
+
     {
       accessorKey: "addedBy",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Added By" />
       ),
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">{row.getValue("addedBy")}</span>
+        <span className="text-sm text-muted-foreground">
+          {row.getValue("addedBy")}
+        </span>
       ),
     },
     {
@@ -745,7 +1230,9 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Date Added" />
       ),
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">{row.getValue("dateAdded")}</span>
+        <span className="text-sm text-muted-foreground">
+          {row.getValue("dateAdded")}
+        </span>
       ),
     },
   ];
@@ -828,7 +1315,9 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Unit Price" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium">${row.getValue("unitPrice").toFixed(2)}</span>
+        <span className="font-medium">
+          ${row.getValue("unitPrice").toFixed(2)}
+        </span>
       ),
     },
     {
@@ -837,7 +1326,9 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Total" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium text-green-600">${row.getValue("total").toFixed(2)}</span>
+        <span className="font-medium text-green-600">
+          ${row.getValue("total").toFixed(2)}
+        </span>
       ),
     },
     {
@@ -846,7 +1337,9 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Added By" />
       ),
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">{row.getValue("addedBy")}</span>
+        <span className="text-sm text-muted-foreground">
+          {row.getValue("addedBy")}
+        </span>
       ),
     },
     {
@@ -855,7 +1348,9 @@ const LoadDetails = () => {
         <DataTableColumnHeader column={column} title="Date Added" />
       ),
       cell: ({ row }) => (
-        <span className="text-sm text-muted-foreground">{row.getValue("dateAdded")}</span>
+        <span className="text-sm text-muted-foreground">
+          {row.getValue("dateAdded")}
+        </span>
       ),
     },
   ];
@@ -924,8 +1419,9 @@ const LoadDetails = () => {
             </TabsTrigger>
             <TabsTrigger value="additional-charge" className="h-full">
               <DollarSign className="size-4" />
-              Additional Charge
+              Accessorial Charge
             </TabsTrigger>
+
             <TabsTrigger value="product-sale" className="h-full">
               <ShoppingCart className="size-4" />
               Product Sale
@@ -951,7 +1447,10 @@ const LoadDetails = () => {
 
         <div className="flex-1 overflow-auto">
           {/* General Tab */}
-          <TabsContent value="general" className="space-y-4 h-full mt-0 px-4 py-4">
+          <TabsContent
+            value="general"
+            className="space-y-4 h-full mt-0 px-4 py-4"
+          >
             <div className="w-full border rounded-sm bg-card flex flex-col">
               <div className="px-4 py-4 border-b bg-muted flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -971,40 +1470,72 @@ const LoadDetails = () => {
                 {/* Load Information Section */}
                 <div className="grid grid-cols-4 divide-x divide-border">
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Load No</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{loadData.loadNo}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Load No
+                    </p>
+                    <p className="text-sm font-medium text-foreground font-mono">
+                      {loadData.loadNo}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Pick Up No</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{loadData.pickUpNo}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Pick Up No
+                    </p>
+                    <p className="text-sm font-medium text-foreground font-mono">
+                      {loadData.pickUpNo}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Vehicle</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.vehicle || "-"}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Vehicle
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.vehicle || "-"}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Rates</p>
-                    <p className="text-sm font-bold text-green-600">{loadData.rates}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Rates
+                    </p>
+                    <p className="text-sm font-bold text-green-600">
+                      {loadData.rates}
+                    </p>
                   </div>
                 </div>
 
                 {/* Customer Information Section */}
                 <div className="grid grid-cols-4 divide-x divide-border">
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.customer}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Customer
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.customer}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Contract ID</p>
-                    <p className="text-sm font-medium text-foreground font-mono">{loadData.customerContractId}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Contract ID
+                    </p>
+                    <p className="text-sm font-medium text-foreground font-mono">
+                      {loadData.customerContractId}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Region</p>
-                    <Badge className="bg-purple-500/10 text-purple-700 border-purple-500/50">{loadData.customerRegion}</Badge>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Region
+                    </p>
+                    <Badge className="bg-purple-500/10 text-purple-700 border-purple-500/50">
+                      {loadData.customerRegion}
+                    </Badge>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Commodity</p>
-                    <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/50">{loadData.commodity}</Badge>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Commodity
+                    </p>
+                    <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/50">
+                      {loadData.commodity}
+                    </Badge>
                   </div>
                 </div>
 
@@ -1018,27 +1549,45 @@ const LoadDetails = () => {
 
                 {/* Pickup Location */}
                 <div className="px-4 py-2.5">
-                  <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                  <p className="text-sm font-medium text-foreground">{loadData.pickup.location}</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">
+                    Location
+                  </p>
+                  <p className="text-sm font-medium text-foreground">
+                    {loadData.pickup.location}
+                  </p>
                 </div>
 
                 {/* Pickup Details Row */}
                 <div className="grid grid-cols-4 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.pickup.date}</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.pickup.date}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Appointment Time</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.pickup.appointmentTime}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Appointment Time
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.pickup.appointmentTime}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.pickup.contactName}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Contact Name
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.pickup.contactName}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.pickup.phone}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Phone
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.pickup.phone}
+                    </p>
                   </div>
                 </div>
 
@@ -1052,35 +1601,56 @@ const LoadDetails = () => {
 
                 {/* Drop Off Location */}
                 <div className="px-4 py-2.5">
-                  <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                  <p className="text-sm font-medium text-foreground">{loadData.dropOff.location}</p>
+                  <p className="text-xs text-muted-foreground mb-0.5">
+                    Location
+                  </p>
+                  <p className="text-sm font-medium text-foreground">
+                    {loadData.dropOff.location}
+                  </p>
                 </div>
 
                 {/* Drop Off Details Row */}
                 <div className="grid grid-cols-4 divide-x divide-border">
                   <div className="px-4 py-2.5">
                     <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.dropOff.date}</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.dropOff.date}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Appointment Time</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.dropOff.appointmentTime}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Appointment Time
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.dropOff.appointmentTime}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.dropOff.contactName}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Contact Name
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.dropOff.contactName}
+                    </p>
                   </div>
                   <div className="px-4 py-2.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                    <p className="text-sm font-medium text-foreground">{loadData.dropOff.phone}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Phone
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {loadData.dropOff.phone}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </TabsContent>
 
-          {/* Additional Charge Tab */}
-          <TabsContent value="additional-charge" className="h-full mt-0 p-4">
+          {/* Accessorial Charge Tab */}
+          <TabsContent
+            value="additional-charge"
+            className="h-full mt-0 p-4 space-y-3"
+          >
             <div className="border border-border rounded-lg bg-background">
               {/* Filter and Add Button */}
               <div className="flex items-center justify-between px-2 py-2 border-b border-border">
@@ -1104,7 +1674,7 @@ const LoadDetails = () => {
               <div className="px-4 pb-3">
                 <DataTable
                   columns={chargesColumns}
-                  data={additionalCharges}
+                  data={filteredCharges}
                   showViewOptions={false}
                 />
               </div>
@@ -1112,7 +1682,10 @@ const LoadDetails = () => {
           </TabsContent>
 
           {/* Product Sale Tab */}
-          <TabsContent value="product-sale" className="h-full mt-0 p-4 space-y-4">
+          <TabsContent
+            value="product-sale"
+            className="h-full mt-0 p-4 space-y-4"
+          >
             {/* Filter and Add Button */}
             <div className="flex items-center justify-between">
               <SmartFilter
@@ -1139,7 +1712,10 @@ const LoadDetails = () => {
           </TabsContent>
 
           {/* Audit Log Tab */}
-          <TabsContent value="audit" className="space-y-4 px-4 pb-4 h-full mt-2">
+          <TabsContent
+            value="audit"
+            className="space-y-4 px-4 pb-4 h-full mt-2"
+          >
             <DataTable
               columns={auditLogColumns}
               data={auditLogData}
@@ -1155,35 +1731,45 @@ const LoadDetails = () => {
                 <div className="border rounded-sm bg-card flex-shrink-0">
                   <div className="grid grid-cols-5 divide-x divide-border">
                     <div className="px-4 py-3">
-                      <p className="text-xs text-muted-foreground mb-1">Check Date</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Check Date
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Calendar className="size-3.5 text-muted-foreground" />
                         {trackingData.checkDate}
                       </p>
                     </div>
                     <div className="px-4 py-3">
-                      <p className="text-xs text-muted-foreground mb-1">Check Time</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Check Time
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Clock className="size-3.5 text-muted-foreground" />
                         {trackingData.checkTime}
                       </p>
                     </div>
                     <div className="px-4 py-3">
-                      <p className="text-xs text-muted-foreground mb-1">Distance to Next Location</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Distance to Next Location
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Route className="size-3.5 text-muted-foreground" />
                         {trackingData.distanceToNext}
                       </p>
                     </div>
                     <div className="px-4 py-3">
-                      <p className="text-xs text-muted-foreground mb-1">Time to Next Location</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Time to Next Location
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Clock className="size-3.5 text-muted-foreground" />
                         {trackingData.timeToNext}
                       </p>
                     </div>
                     <div className="px-4 py-3">
-                      <p className="text-xs text-muted-foreground mb-1">Status</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Status
+                      </p>
                       <Badge className="bg-cyan-500/10 text-cyan-700 border-cyan-500/50">
                         {trackingData.status}
                       </Badge>
@@ -1224,22 +1810,34 @@ const LoadDetails = () => {
                 <div className="border rounded-sm bg-card">
                   <div className="grid grid-cols-4 divide-x divide-border">
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Ticket Number</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{podData.ticketNumber}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Ticket Number
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {podData.ticketNumber}
+                      </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Weight</p>
-                      <p className="text-sm font-medium text-foreground">{podData.weight}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Weight
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {podData.weight}
+                      </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Invoice Date</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Invoice Date
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Calendar className="size-3.5 text-muted-foreground" />
                         {podData.invoiceDate}
                       </p>
                     </div>
                     <div className="px-4 py-2.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Invoice Time</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Invoice Time
+                      </p>
                       <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         <Clock className="size-3.5 text-muted-foreground" />
                         {podData.invoiceTime}
@@ -1286,7 +1884,9 @@ const LoadDetails = () => {
                                 <X className="size-3" />
                               </button>
                             )}
-                            <p className="mt-1 text-xs text-muted-foreground truncate">{image.name}</p>
+                            <p className="mt-1 text-xs text-muted-foreground truncate">
+                              {image.name}
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -1295,8 +1895,12 @@ const LoadDetails = () => {
                         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                           <Image className="size-8 text-muted-foreground" />
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2">No POD images uploaded</p>
-                        <p className="text-xs text-muted-foreground">Click "Upload Image" to add proof of delivery images</p>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          No POD images uploaded
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Click "Upload Image" to add proof of delivery images
+                        </p>
                       </div>
                     )}
                   </div>
@@ -1308,19 +1912,28 @@ const LoadDetails = () => {
       </Tabs>
 
       {/* Add/Edit Accessorial Sheet */}
-      <Sheet open={isChargeSheetOpen} onOpenChange={(open) => {
-        if (!open) {
-          handleCloseChargeSheet();
-        }
-      }}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <Sheet
+        open={isChargeSheetOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleCloseChargeSheet();
+          }
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-lg overflow-y-auto"
+        >
           <SheetHeader className="pb-4 border-b px-6">
-            <SheetTitle className="text-lg font-bold text-foreground">
-              {editingCharge ? "Edit Accessorial Charge" : "Add Accessorial Charge"}
+            <SheetTitle className="text-lg font-bold">
+              {editingCharge
+                ? "Edit Accessorial Charge"
+                : "Add Accessorial Charge"}
             </SheetTitle>
           </SheetHeader>
-          <div className="space-y-5 mt-4 px-6">
-            {/* Accessorial Code Selection */}
+
+          <div className="space-y-5 mt-4 mb-2 px-6">
+            {/* Accessorial Code */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
                 Accessorial Code <span className="text-red-500">*</span>
@@ -1330,133 +1943,329 @@ const LoadDetails = () => {
                 onValueChange={handleAccessorialCodeChange}
                 disabled={!!editingCharge}
               >
-                <SelectTrigger className={cn("h-10 w-full", editingCharge && "bg-muted")}>
+                <SelectTrigger
+                  className={cn("h-10 w-full", editingCharge && "bg-muted")}
+                >
                   <SelectValue placeholder="Select accessorial code" />
                 </SelectTrigger>
                 <SelectContent>
                   {accessorialCodes.map((code) => (
                     <SelectItem key={code.code} value={code.code}>
                       <span className="font-mono mr-2">{code.code}</span>
-                      <span className="text-muted-foreground">- {code.name}</span>
+                      <span className="text-muted-foreground">
+                        - {code.name}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Selected Code Info */}
-            {getSelectedAccessorialInfo() && (
-              <div className="p-3 bg-muted/50 rounded-lg space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Charge Type:</span>
-                  <Badge variant="outline">{getSelectedAccessorialInfo().chargeType}</Badge>
+            {/* Charge Structure | Driver Paid */}
+            {accessorialFormData.code && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Charge Structure
+                  </Label>
+                  <Input
+                    readOnly
+                    value={accessorialFormData.chargeType}
+                    className="h-10 bg-muted text-muted-foreground cursor-default"
+                  />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Default Rate:</span>
-                  <span className="font-medium">${getSelectedAccessorialInfo().rate.toFixed(2)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Driver Pay:</span>
-                  <span className="text-sm">
-                    {getSelectedAccessorialInfo().driverPayMethod === "same" && "Same as Billed"}
-                    {getSelectedAccessorialInfo().driverPayMethod === "flat" && `$${getSelectedAccessorialInfo().driverPayAmount.toFixed(2)} Flat`}
-                    {getSelectedAccessorialInfo().driverPayMethod === "percentage" && `${getSelectedAccessorialInfo().driverPayAmount}% of Billed`}
-                    {getSelectedAccessorialInfo().driverPayMethod === "none" && "No Pay"}
-                  </span>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Driver Paid</Label>
+                  <Select
+                    value={accessorialFormData.driverPaid ? "yes" : "no"}
+                    disabled
+                  >
+                    <SelectTrigger className="h-10 bg-muted cursor-default">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             )}
 
-            {/* Quantity/Hours/Miles */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Quantity/Hours/Miles <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                type="number"
-                min="0"
-                step="0.5"
-                placeholder="Enter quantity"
-                className="h-10"
-                value={accessorialFormData.quantity}
-                onChange={(e) => setAccessorialFormData({ ...accessorialFormData, quantity: e.target.value })}
-              />
-            </div>
+            {/* Driver Pay Method | Approval Tier */}
+            {accessorialFormData.code && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Driver Pay Method
+                  </Label>
+                  <Input
+                    readOnly
+                    className="h-10 bg-muted text-muted-foreground cursor-default"
+                    value={
+                      accessorialFormData.driverPayMethod === "same"
+                        ? "Same as Billed"
+                        : accessorialFormData.driverPayMethod === "flat"
+                          ? `$${parseFloat(accessorialFormData.driverPayAmount || 0).toFixed(2)} Flat`
+                          : accessorialFormData.driverPayMethod === "percentage"
+                            ? `${accessorialFormData.driverPayAmount || 0}% of Billed`
+                            : "No Pay"
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Approval Tier</Label>
+                  <Input
+                    readOnly
+                    className="h-10 bg-muted text-muted-foreground cursor-default"
+                    value={
+                      {
+                        tier1: "Tier 1: Auto-Apply",
+                        tier2: "Tier 2: Dispatch Manager",
+                        tier3: "Tier 3: VP of Operations",
+                      }[accessorialFormData.approvalTier] ||
+                      accessorialFormData.approvalTier ||
+                      ""
+                    }
+                  />
+                </div>
+              </div>
+            )}
 
-            {/* Rate (editable) */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Rate <span className="text-red-500">*</span>
-              </Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+            {/* Quantity | Rate */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Quantity <span className="text-red-500">*</span>
+                </Label>
                 <Input
                   type="number"
                   min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  className="h-10 pl-7"
-                  value={accessorialFormData.rate}
-                  onChange={(e) => setAccessorialFormData({ ...accessorialFormData, rate: e.target.value })}
+                  step="0.5"
+                  placeholder="0"
+                  className="h-10"
+                  value={accessorialFormData.quantity}
+                  onChange={(e) =>
+                    setAccessorialFormData({
+                      ...accessorialFormData,
+                      quantity: e.target.value,
+                    })
+                  }
                 />
               </div>
-              <p className="text-xs text-muted-foreground">Rate auto-filled from code defaults. Override if needed.</p>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  {accessorialFormData.chargeType?.includes("Flat")
+                    ? "Flat Amount"
+                    : "Rate"}{" "}
+                  <span className="text-red-500">*</span>
+                </Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                    $
+                  </span>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                    className="h-10 pl-7"
+                    value={accessorialFormData.rate}
+                    onChange={(e) =>
+                      setAccessorialFormData({
+                        ...accessorialFormData,
+                        rate: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Calculated Values */}
-            {accessorialFormData.code && accessorialFormData.rate && (
-              <div className="p-4 bg-card border rounded-lg space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Total Amount:</span>
-                  <span className="text-lg font-bold text-green-600">${calculateAmount().toFixed(2)}</span>
+            {/* Mileage Related Fields */}
+            {(accessorialFormData.chargeType?.includes("Mile") ||
+              accessorialFormData.chargeType?.includes("OOR")) && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Rate Per Mile <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                      $
+                    </span>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      className="h-10 pl-7"
+                      value={accessorialFormData.ratePerMile}
+                      onChange={(e) =>
+                        setAccessorialFormData({
+                          ...accessorialFormData,
+                          ratePerMile: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Driver Pay:</span>
-                  <span className="text-lg font-bold text-amber-600">${calculateDriverPay().toFixed(2)}</span>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Miles <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    placeholder="0"
+                    className="h-10"
+                    value={accessorialFormData.miles}
+                    onChange={(e) =>
+                      setAccessorialFormData({
+                        ...accessorialFormData,
+                        miles: e.target.value,
+                      })
+                    }
+                  />
                 </div>
+              </div>
+            )}
+
+            {/* Disposition | Absorption Reason */}
+            <div
+              className={`grid gap-4 ${accessorialFormData.disposition === "Absorb (Eat Cost)" ? "grid-cols-2" : "grid-cols-1"}`}
+            >
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Disposition</Label>
+                <Select
+                  value={accessorialFormData.disposition}
+                  onValueChange={(v) =>
+                    setAccessorialFormData({
+                      ...accessorialFormData,
+                      disposition: v,
+                      absorptionReason: "",
+                      absorptionNote: "",
+                    })
+                  }
+                >
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="Select disposition" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Bill to Customer">
+                      Bill to Customer
+                    </SelectItem>
+                    <SelectItem value="Absorb (Eat Cost)">
+                      Absorb (Eat Cost)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {accessorialFormData.disposition === "Absorb (Eat Cost)" && (
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Absorption Reason <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={accessorialFormData.absorptionReason}
+                    onValueChange={(v) =>
+                      setAccessorialFormData({
+                        ...accessorialFormData,
+                        absorptionReason: v,
+                        absorptionNote: "",
+                      })
+                    }
+                  >
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Select reason" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {absorptionReasons.map((r) => (
+                        <SelectItem key={r} value={r}>
+                          {r}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+
+            {/* Absorption Note */}
+            {accessorialFormData.absorptionReason ===
+              "Other — requires a note" && (
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Absorption Note <span className="text-red-500">*</span>
+                </Label>
+                <textarea
+                  rows={3}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+                  placeholder="Describe the reason for absorption..."
+                  value={accessorialFormData.absorptionNote}
+                  onChange={(e) =>
+                    setAccessorialFormData({
+                      ...accessorialFormData,
+                      absorptionNote: e.target.value,
+                    })
+                  }
+                />
               </div>
             )}
 
             {/* Notes */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Notes</Label>
-              <Input
+              <textarea
+                rows={3}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
                 placeholder="Enter notes for this charge..."
-                className="h-10"
                 value={accessorialFormData.notes}
-                onChange={(e) => setAccessorialFormData({ ...accessorialFormData, notes: e.target.value })}
+                onChange={(e) =>
+                  setAccessorialFormData({
+                    ...accessorialFormData,
+                    notes: e.target.value,
+                  })
+                }
               />
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-6 border-t">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCloseChargeSheet}
-                className="flex-1 h-10"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                disabled={!accessorialFormData.code || !accessorialFormData.rate}
-              >
-                {editingCharge ? "Update Charge" : "Add Charge"}
-              </Button>
-            </div>
+          {/* Action Buttons */}
+          <div className="flex gap-3 -mx-6 mt-8 px-6 pt-5 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCloseChargeSheet}
+              className="flex-1 h-10"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
+              disabled={!accessorialFormData.code || !accessorialFormData.rate}
+            >
+              {editingCharge ? "Update Charge" : "Add Charge"}
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
 
       {/* Add/Edit Product Sheet */}
-      <Sheet open={isProductSheetOpen} onOpenChange={(open) => {
-        if (!open) {
-          handleCloseProductSheet();
-        }
-      }}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <Sheet
+        open={isProductSheetOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleCloseProductSheet();
+          }
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-lg overflow-y-auto"
+        >
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-lg font-bold text-foreground">
               {editingProduct ? "Edit Product Sale" : "Add Product Sale"}
@@ -1473,14 +2282,18 @@ const LoadDetails = () => {
                 onValueChange={handleProductChange}
                 disabled={!!editingProduct}
               >
-                <SelectTrigger className={cn("h-10 w-full", editingProduct && "bg-muted")}>
+                <SelectTrigger
+                  className={cn("h-10 w-full", editingProduct && "bg-muted")}
+                >
                   <SelectValue placeholder="Select material" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableMaterials.map((material) => (
                     <SelectItem key={material.sku} value={material.sku}>
                       <span className="font-mono mr-2">{material.sku}</span>
-                      <span className="text-muted-foreground">- {material.name}</span>
+                      <span className="text-muted-foreground">
+                        - {material.name}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -1491,16 +2304,26 @@ const LoadDetails = () => {
             {getSelectedMaterialInfo() && (
               <div className="p-3 bg-muted/50 rounded-lg space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Material:</span>
-                  <span className="font-medium">{getSelectedMaterialInfo().name}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Material:
+                  </span>
+                  <span className="font-medium">
+                    {getSelectedMaterialInfo().name}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">UOM:</span>
-                  <span className="text-sm">{getSelectedMaterialInfo().uom}</span>
+                  <span className="text-sm">
+                    {getSelectedMaterialInfo().uom}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Default Price:</span>
-                  <span className="font-medium">${getSelectedMaterialInfo().defaultPrice.toFixed(2)}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Default Price:
+                  </span>
+                  <span className="font-medium">
+                    ${getSelectedMaterialInfo().defaultPrice.toFixed(2)}
+                  </span>
                 </div>
               </div>
             )}
@@ -1517,7 +2340,12 @@ const LoadDetails = () => {
                 placeholder="Enter quantity"
                 className="h-10"
                 value={productFormData.quantity}
-                onChange={(e) => setProductFormData({ ...productFormData, quantity: e.target.value })}
+                onChange={(e) =>
+                  setProductFormData({
+                    ...productFormData,
+                    quantity: e.target.value,
+                  })
+                }
               />
               {getSelectedMaterialInfo() && (
                 <p className="text-xs text-muted-foreground">
@@ -1532,7 +2360,9 @@ const LoadDetails = () => {
                 Unit Price <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  $
+                </span>
                 <Input
                   type="number"
                   min="0"
@@ -1540,21 +2370,32 @@ const LoadDetails = () => {
                   placeholder="0.00"
                   className="h-10 pl-7"
                   value={productFormData.unitPrice}
-                  onChange={(e) => setProductFormData({ ...productFormData, unitPrice: e.target.value })}
+                  onChange={(e) =>
+                    setProductFormData({
+                      ...productFormData,
+                      unitPrice: e.target.value,
+                    })
+                  }
                 />
               </div>
-              <p className="text-xs text-muted-foreground">Price auto-filled from material defaults. Override if needed.</p>
+              <p className="text-xs text-muted-foreground">
+                Price auto-filled from material defaults. Override if needed.
+              </p>
             </div>
 
             {/* Calculated Total */}
-            {productFormData.sku && productFormData.unitPrice && productFormData.quantity && (
-              <div className="p-4 bg-card border rounded-lg">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Total Amount:</span>
-                  <span className="text-lg font-bold text-green-600">${calculateProductTotal().toFixed(2)}</span>
+            {productFormData.sku &&
+              productFormData.unitPrice &&
+              productFormData.quantity && (
+                <div className="p-4 bg-card border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Total Amount:</span>
+                    <span className="text-lg font-bold text-green-600">
+                      ${calculateProductTotal().toFixed(2)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-6 border-t">
@@ -1569,7 +2410,11 @@ const LoadDetails = () => {
               <Button
                 type="submit"
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                disabled={!productFormData.sku || !productFormData.unitPrice || !productFormData.quantity}
+                disabled={
+                  !productFormData.sku ||
+                  !productFormData.unitPrice ||
+                  !productFormData.quantity
+                }
               >
                 {editingProduct ? "Update Product" : "Add Product"}
               </Button>
@@ -1590,11 +2435,19 @@ const LoadDetails = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Load No</Label>
-                <Input value={loadData.loadNo} disabled className="h-10 bg-muted" />
+                <Input
+                  value={loadData.loadNo}
+                  disabled
+                  className="h-10 bg-muted"
+                />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Pick Up No</Label>
-                <Input value={loadData.pickUpNo} disabled className="h-10 bg-muted" />
+                <Input
+                  value={loadData.pickUpNo}
+                  disabled
+                  className="h-10 bg-muted"
+                />
               </div>
             </div>
 
@@ -1614,7 +2467,11 @@ const LoadDetails = () => {
                       <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="p-0" align="start" style={{ width: "var(--radix-popover-trigger-width)" }}>
+                  <PopoverContent
+                    className="p-0"
+                    align="start"
+                    style={{ width: "var(--radix-popover-trigger-width)" }}
+                  >
                     <Command>
                       <CommandInput placeholder="Search vehicle..." />
                       <CommandList>
@@ -1625,27 +2482,52 @@ const LoadDetails = () => {
                               key={vehicle.value}
                               value={vehicle.value}
                               onSelect={() => {
-                                setFormData({ ...formData, vehicle: vehicle.value });
+                                setFormData({
+                                  ...formData,
+                                  vehicle: vehicle.value,
+                                });
                                 setVehicleOpen(false);
                               }}
                               className={cn(
                                 "flex items-center gap-3 w-full p-2 rounded-md cursor-pointer border mb-1",
-                                formData.vehicle === vehicle.value ? "border-primary bg-primary/5" : "border-border"
+                                formData.vehicle === vehicle.value
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border",
                               )}
                             >
-                              <div className={cn("w-1.5 h-8 rounded-full shrink-0", getVehicleStatusColor(vehicle.status))} />
+                              <div
+                                className={cn(
+                                  "w-1.5 h-8 rounded-full shrink-0",
+                                  getVehicleStatusColor(vehicle.status),
+                                )}
+                              />
                               <div className="flex items-center justify-between flex-1">
                                 <div className="flex flex-col">
-                                  <span className="font-medium text-sm">{vehicle.label}</span>
-                                  <span className="text-xs text-muted-foreground">{vehicle.loads} Loads</span>
+                                  <span className="font-medium text-sm">
+                                    {vehicle.label}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {vehicle.loads} Loads
+                                  </span>
                                 </div>
                                 <div className="flex flex-col items-end">
-                                  <span className={cn("text-xs font-medium", vehicle.assigned === 0 ? "text-rose-600" : "text-green-600")}>
+                                  <span
+                                    className={cn(
+                                      "text-xs font-medium",
+                                      vehicle.assigned === 0
+                                        ? "text-rose-600"
+                                        : "text-green-600",
+                                    )}
+                                  >
                                     {vehicle.assigned} Assigned
                                   </span>
                                   <div className="flex items-center gap-2 text-xs">
-                                    <span className="text-rose-600">${vehicle.expense.toFixed(2)}</span>
-                                    <span className="text-green-600">${vehicle.revenue.toFixed(2)}</span>
+                                    <span className="text-rose-600">
+                                      ${vehicle.expense.toFixed(2)}
+                                    </span>
+                                    <span className="text-green-600">
+                                      ${vehicle.revenue.toFixed(2)}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
@@ -1682,11 +2564,21 @@ const LoadDetails = () => {
                               key={customer.value}
                               value={customer.value}
                               onSelect={() => {
-                                setFormData({ ...formData, customer: customer.value });
+                                setFormData({
+                                  ...formData,
+                                  customer: customer.value,
+                                });
                                 setCustomerOpen(false);
                               }}
                             >
-                              <CheckIcon className={cn("mr-2 h-4 w-4", formData.customer === customer.value ? "opacity-100" : "opacity-0")} />
+                              <CheckIcon
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  formData.customer === customer.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
                               {customer.label}
                             </CommandItem>
                           ))}
@@ -1701,12 +2593,22 @@ const LoadDetails = () => {
             {/* Row 3: Customer Contract ID, Customer Region */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Customer Contract ID</Label>
-                <Input value={loadData.customerContractId} disabled className="h-10 bg-muted" />
+                <Label className="text-sm font-medium">
+                  Customer Contract ID
+                </Label>
+                <Input
+                  value={loadData.customerContractId}
+                  disabled
+                  className="h-10 bg-muted"
+                />
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Customer Region</Label>
-                <Input value={loadData.customerRegion} disabled className="h-10 bg-muted" />
+                <Input
+                  value={loadData.customerRegion}
+                  disabled
+                  className="h-10 bg-muted"
+                />
               </div>
             </div>
 
@@ -1737,11 +2639,21 @@ const LoadDetails = () => {
                               key={commodity.value}
                               value={commodity.value}
                               onSelect={() => {
-                                setFormData({ ...formData, commodity: commodity.value });
+                                setFormData({
+                                  ...formData,
+                                  commodity: commodity.value,
+                                });
                                 setCommodityOpen(false);
                               }}
                             >
-                              <CheckIcon className={cn("mr-2 h-4 w-4", formData.commodity === commodity.value ? "opacity-100" : "opacity-0")} />
+                              <CheckIcon
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  formData.commodity === commodity.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
                               {commodity.label}
                             </CommandItem>
                           ))}
@@ -1753,7 +2665,11 @@ const LoadDetails = () => {
               </div>
               <div className="space-y-2">
                 <Label className="text-sm font-medium">Rates</Label>
-                <Input value={loadData.rates} disabled className="h-10 bg-muted" />
+                <Input
+                  value={loadData.rates}
+                  disabled
+                  className="h-10 bg-muted"
+                />
               </div>
             </div>
 
@@ -1766,7 +2682,10 @@ const LoadDetails = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Pickup Location</Label>
-                  <Popover open={pickupLocationOpen} onOpenChange={setPickupLocationOpen}>
+                  <Popover
+                    open={pickupLocationOpen}
+                    onOpenChange={setPickupLocationOpen}
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -1774,7 +2693,9 @@ const LoadDetails = () => {
                         aria-expanded={pickupLocationOpen}
                         className="w-full justify-between h-10 font-normal"
                       >
-                        <span className="truncate">{formData.pickupLocation || "Select location..."}</span>
+                        <span className="truncate">
+                          {formData.pickupLocation || "Select location..."}
+                        </span>
                         <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
@@ -1789,11 +2710,21 @@ const LoadDetails = () => {
                                 key={location.value}
                                 value={location.value}
                                 onSelect={() => {
-                                  setFormData({ ...formData, pickupLocation: location.value });
+                                  setFormData({
+                                    ...formData,
+                                    pickupLocation: location.value,
+                                  });
                                   setPickupLocationOpen(false);
                                 }}
                               >
-                                <CheckIcon className={cn("mr-2 h-4 w-4", formData.pickupLocation === location.value ? "opacity-100" : "opacity-0")} />
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    formData.pickupLocation === location.value
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
                                 {location.label}
                               </CommandItem>
                             ))}
@@ -1808,7 +2739,9 @@ const LoadDetails = () => {
                   <Input
                     type="date"
                     value={formData.pickupDate}
-                    onChange={(e) => setFormData({ ...formData, pickupDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, pickupDate: e.target.value })
+                    }
                     className="h-10"
                   />
                 </div>
@@ -1816,25 +2749,47 @@ const LoadDetails = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Contact Name</Label>
-                  <Input value={loadData.pickup.contactName} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.pickup.contactName}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Phone</Label>
-                  <Input value={loadData.pickup.phone} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.pickup.phone}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Appointment Time</Label>
-                  <Input value={loadData.pickup.appointmentTime} disabled className="h-10 bg-muted" />
+                  <Label className="text-sm font-medium">
+                    Appointment Time
+                  </Label>
+                  <Input
+                    value={loadData.pickup.appointmentTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Start Time</Label>
-                  <Input value={loadData.pickup.startTime} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.pickup.startTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">End Time</Label>
-                  <Input value={loadData.pickup.endTime} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.pickup.endTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
               </div>
             </div>
@@ -1847,8 +2802,13 @@ const LoadDetails = () => {
               </h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Drop Off Location</Label>
-                  <Popover open={dropOffLocationOpen} onOpenChange={setDropOffLocationOpen}>
+                  <Label className="text-sm font-medium">
+                    Drop Off Location
+                  </Label>
+                  <Popover
+                    open={dropOffLocationOpen}
+                    onOpenChange={setDropOffLocationOpen}
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -1856,7 +2816,9 @@ const LoadDetails = () => {
                         aria-expanded={dropOffLocationOpen}
                         className="w-full justify-between h-10 font-normal"
                       >
-                        <span className="truncate">{formData.dropOffLocation || "Select location..."}</span>
+                        <span className="truncate">
+                          {formData.dropOffLocation || "Select location..."}
+                        </span>
                         <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
@@ -1871,11 +2833,21 @@ const LoadDetails = () => {
                                 key={location.value}
                                 value={location.value}
                                 onSelect={() => {
-                                  setFormData({ ...formData, dropOffLocation: location.value });
+                                  setFormData({
+                                    ...formData,
+                                    dropOffLocation: location.value,
+                                  });
                                   setDropOffLocationOpen(false);
                                 }}
                               >
-                                <CheckIcon className={cn("mr-2 h-4 w-4", formData.dropOffLocation === location.value ? "opacity-100" : "opacity-0")} />
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    formData.dropOffLocation === location.value
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
                                 {location.label}
                               </CommandItem>
                             ))}
@@ -1890,7 +2862,9 @@ const LoadDetails = () => {
                   <Input
                     type="date"
                     value={formData.dropOffDate}
-                    onChange={(e) => setFormData({ ...formData, dropOffDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, dropOffDate: e.target.value })
+                    }
                     className="h-10"
                   />
                 </div>
@@ -1898,25 +2872,47 @@ const LoadDetails = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Contact Name</Label>
-                  <Input value={loadData.dropOff.contactName} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.dropOff.contactName}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Phone</Label>
-                  <Input value={loadData.dropOff.phone} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.dropOff.phone}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Appointment Time</Label>
-                  <Input value={loadData.dropOff.appointmentTime} disabled className="h-10 bg-muted" />
+                  <Label className="text-sm font-medium">
+                    Appointment Time
+                  </Label>
+                  <Input
+                    value={loadData.dropOff.appointmentTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Start Time</Label>
-                  <Input value={loadData.dropOff.startTime} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.dropOff.startTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">End Time</Label>
-                  <Input value={loadData.dropOff.endTime} disabled className="h-10 bg-muted" />
+                  <Input
+                    value={loadData.dropOff.endTime}
+                    disabled
+                    className="h-10 bg-muted"
+                  />
                 </div>
               </div>
             </div>
@@ -1924,7 +2920,11 @@ const LoadDetails = () => {
 
           <SheetFooter className="border-t pt-4 px-6">
             <div className="flex gap-3 w-full">
-              <Button variant="outline" className="flex-1" onClick={() => setIsEditSheetOpen(false)}>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsEditSheetOpen(false)}
+              >
                 Cancel
               </Button>
               <Button
@@ -1964,8 +2964,12 @@ const LoadDetails = () => {
                     <Upload className="size-6 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">Click to upload images</p>
-                    <p className="text-xs text-muted-foreground mt-1">PNG, JPG, JPEG up to 10MB each</p>
+                    <p className="text-sm font-medium text-foreground">
+                      Click to upload images
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      PNG, JPG, JPEG up to 10MB each
+                    </p>
                   </div>
                 </div>
               </label>
@@ -1975,7 +2979,9 @@ const LoadDetails = () => {
             {pendingPodImages.length > 0 && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-foreground">Selected Images ({pendingPodImages.length})</p>
+                  <p className="text-sm font-medium text-foreground">
+                    Selected Images ({pendingPodImages.length})
+                  </p>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -2001,7 +3007,9 @@ const LoadDetails = () => {
                       >
                         <X className="size-3" />
                       </button>
-                      <p className="mt-1.5 text-xs text-muted-foreground truncate">{image.name}</p>
+                      <p className="mt-1.5 text-xs text-muted-foreground truncate">
+                        {image.name}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -2011,14 +3019,20 @@ const LoadDetails = () => {
             {/* Empty State */}
             {pendingPodImages.length === 0 && (
               <div className="text-center py-4">
-                <p className="text-sm text-muted-foreground">No images selected yet</p>
+                <p className="text-sm text-muted-foreground">
+                  No images selected yet
+                </p>
               </div>
             )}
           </div>
 
           <SheetFooter className="border-t pt-4 px-6">
             <div className="flex gap-3 w-full">
-              <Button variant="outline" className="flex-1" onClick={handleCancelPodUpload}>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={handleCancelPodUpload}
+              >
                 Cancel
               </Button>
               <Button
@@ -2026,7 +3040,8 @@ const LoadDetails = () => {
                 onClick={handleSavePodImages}
                 disabled={pendingPodImages.length === 0}
               >
-                Upload {pendingPodImages.length > 0 && `(${pendingPodImages.length})`}
+                Upload{" "}
+                {pendingPodImages.length > 0 && `(${pendingPodImages.length})`}
               </Button>
             </div>
           </SheetFooter>

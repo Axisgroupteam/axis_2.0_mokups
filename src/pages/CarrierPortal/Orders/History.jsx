@@ -405,28 +405,64 @@ const History = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=general&mode=view`,
+                )
+              }
+            >
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`,
+                )
+              }
+            >
               <DollarSign className="size-4 mr-2" />
-              Additional Charge
+              Accessorial Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`,
+                )
+              }
+            >
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=audit&mode=view`,
+                )
+              }
+            >
               <HistoryIcon className="size-4 mr-2" />
               Audit Log
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=pod&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/history/load-details?id=${row.original.loadNo}&tab=pod&mode=view`,
+                )
+              }
+            >
               <Receipt className="size-4 mr-2" />
               POD
             </DropdownMenuItem>
             {row.original.invoiceNo && (
-              <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${row.original.invoiceNo}`)}>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate(
+                    `/app/carrier-portal/billing/invoicing/invoice-details?id=${row.original.invoiceNo}`,
+                  )
+                }
+              >
                 <FileText className="size-4 mr-2" />
                 View Invoice
               </DropdownMenuItem>
@@ -461,7 +497,11 @@ const History = () => {
         }
         return (
           <button
-            onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${invoiceNo}`)}
+            onClick={() =>
+              navigate(
+                `/app/carrier-portal/billing/invoicing/invoice-details?id=${invoiceNo}`,
+              )
+            }
             className="font-mono text-sm text-primary underline hover:text-primary/80 cursor-pointer flex items-center gap-1"
           >
             {invoiceNo}
@@ -615,22 +655,37 @@ const History = () => {
                 <div className="divide-y divide-border">
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Billing Status</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Billing Status
+                      </p>
                       <div className="mt-1">
-                        {getBillingStatusBadge(selectedLoad.billingStatus, selectedLoad.invoiceStatus)}
+                        {getBillingStatusBadge(
+                          selectedLoad.billingStatus,
+                          selectedLoad.invoiceStatus,
+                        )}
                       </div>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Validated At</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.validatedAt}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Validated At
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.validatedAt}
+                      </p>
                     </div>
                   </div>
                   {selectedLoad.invoiceNo && (
                     <div className="grid grid-cols-2 divide-x divide-border">
                       <div className="px-4 py-1.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Invoice No</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Invoice No
+                        </p>
                         <button
-                          onClick={() => navigate(`/app/carrier-portal/billing/invoicing/invoice-details?id=${selectedLoad.invoiceNo}`)}
+                          onClick={() =>
+                            navigate(
+                              `/app/carrier-portal/billing/invoicing/invoice-details?id=${selectedLoad.invoiceNo}`,
+                            )
+                          }
                           className="text-sm font-medium text-primary underline hover:text-primary/80 cursor-pointer flex items-center gap-1 font-mono"
                         >
                           {selectedLoad.invoiceNo}
@@ -638,8 +693,12 @@ const History = () => {
                         </button>
                       </div>
                       <div className="px-4 py-1.5">
-                        <p className="text-xs text-muted-foreground mb-0.5">Invoice Date</p>
-                        <p className="text-sm font-medium text-foreground">{selectedLoad.invoiceDate}</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">
+                          Invoice Date
+                        </p>
+                        <p className="text-sm font-medium text-foreground">
+                          {selectedLoad.invoiceDate}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -649,26 +708,42 @@ const History = () => {
               {/* Basic Information Card */}
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-2 border-b bg-muted">
-                  <h3 className="text-sm font-semibold text-foreground">Basic Information</h3>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Basic Information
+                  </h3>
                 </div>
                 <div className="divide-y divide-border">
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Load No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.loadNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Load No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.loadNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Ticket No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.ticketNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Ticket No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.ticketNo}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Pick Up No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.pickUpNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Pick Up No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.pickUpNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Vehicle</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Vehicle
+                      </p>
                       <p className="text-sm font-medium text-foreground font-mono flex items-center gap-1">
                         <Truck className="size-3" />
                         {selectedLoad.vehicle}
@@ -677,28 +752,48 @@ const History = () => {
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customer}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Customer
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customer}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contract ID</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.customerContractId}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x divide-border">
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Region</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customerRegion}</p>
-                    </div>
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Commodity</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.commodity}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contract ID
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.customerContractId}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Rates</p>
-                      <p className="text-sm font-semibold text-green-600">{selectedLoad.rates}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Region
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customerRegion}
+                      </p>
+                    </div>
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Commodity
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.commodity}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Rates
+                      </p>
+                      <p className="text-sm font-semibold text-green-600">
+                        {selectedLoad.rates}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -718,23 +813,39 @@ const History = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.pickup}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.pickup}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -754,23 +865,39 @@ const History = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.dropOff}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.dropOff}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>

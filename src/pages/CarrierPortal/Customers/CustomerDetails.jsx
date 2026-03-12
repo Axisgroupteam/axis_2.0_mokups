@@ -58,7 +58,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, HandshakeIcon } from "lucide-react";
 import BasicInformationCard from "./CustomerDetails/BasicInformationCard";
 import ContactDetailsCard from "./CustomerDetails/ContactDetailsCard";
 import PaymentsMetricsCards from "./CustomerDetails/PaymentsMetricsCards";
@@ -75,6 +75,7 @@ import ReceivablesMetricsCards from "./CustomerDetails/Receivables/ReceivablesMe
 import ReceivablesTable from "./CustomerDetails/Receivables/ReceivablesTable";
 import UnpostedMetricsCards from "./CustomerDetails/Unposted/UnpostedMetricsCards";
 import UnpostedTable from "./CustomerDetails/Unposted/UnpostedTable";
+import CustomerRateCard from "@/pages/CarrierPortal/Accessorial/CustomerRateCard";
 
 const CustomerDetails = () => {
   const [searchParams] = useSearchParams();
@@ -92,7 +93,7 @@ const CustomerDetails = () => {
     selectedCommodities: [],
   });
 
-  // Additional Charges state
+  // Accessorial Charges state
   const [additionalChargesFilters, setAdditionalChargesFilters] = useState([]);
   const [isChargeSheetOpen, setIsChargeSheetOpen] = useState(false);
   const [editingCharge, setEditingCharge] = useState(null);
@@ -101,6 +102,8 @@ const CustomerDetails = () => {
     name: "",
     chargeType: "",
     defaultAmount: "",
+    customerRate: "",
+    effectiveDate: new Date().toISOString().split("T")[0],
     status: "Active",
   });
 
@@ -187,7 +190,7 @@ const CustomerDetails = () => {
     setRateTableForm((prev) => ({
       ...prev,
       rows: prev.rows.map((row) =>
-        row.id === id ? { ...row, [field]: value } : row
+        row.id === id ? { ...row, [field]: value } : row,
       ),
     }));
   };
@@ -247,7 +250,7 @@ const CustomerDetails = () => {
       filters: [
         {
           key: "chargeType",
-          label: "Charge Type",
+          label: "Charge Structure",
           type: "select",
           group: "Basic",
           options: [
@@ -332,7 +335,7 @@ const CustomerDetails = () => {
 
   // Filter out used commodities from the available list for Add Rate Table form
   const availableCommodities = allCommoditiesList.filter(
-    (commodity) => !usedCommodities.includes(commodity)
+    (commodity) => !usedCommodities.includes(commodity),
   );
 
   // Mock accessorial charges data (existing - for rates tab)
@@ -366,32 +369,193 @@ const CustomerDetails = () => {
     },
   ];
 
-  // Additional Charges mock data (for customer-specific accessorial codes)
-  const additionalChargesData = [
-    { id: 1, code: "DET", name: "Detention", chargeType: "Per Hour", defaultAmount: 75.00, approvalTier: "tier1", driverPaid: true, driverPayMethod: "percentage", driverPayAmount: "50%", status: "Active" },
-    { id: 2, code: "LAY", name: "Layover", chargeType: "Per Day", defaultAmount: 350.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$150", status: "Active" },
-    { id: 3, code: "STP", name: "Stop Off", chargeType: "Flat + Mileage", defaultAmount: 100.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$50", status: "Active" },
-    { id: 4, code: "TNU", name: "TONU", chargeType: "Flat Fee", defaultAmount: 400.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "percentage", driverPayAmount: "75%", status: "Active" },
-    { id: 5, code: "DRV", name: "Driver Assist", chargeType: "Flat Fee", defaultAmount: 75.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$75", status: "Active" },
-    { id: 6, code: "TRP", name: "Tarping", chargeType: "Flat Fee", defaultAmount: 75.00, approvalTier: "tier2", driverPaid: true, driverPayMethod: "flat", driverPayAmount: "$50", status: "Inactive" },
-  ];
+  // Accessorial Charges mock data (for customer-specific accessorial codes)
+  const [additionalChargesData, setAdditionalChargesData] = useState([
+    {
+      id: 1,
+      code: "DET",
+      name: "Detention",
+      chargeType: "Per Hour",
+      defaultAmount: 75.0,
+      customerRate: 85.0,
+      unit: "/ hr",
+      approvalTier: "tier1",
+      driverPayAmount: "50%",
+      effectiveDate: "2026-01-01",
+      status: "Active",
+    },
+    {
+      id: 2,
+      code: "LAY",
+      name: "Layover",
+      chargeType: "Per Day",
+      defaultAmount: 350.0,
+      customerRate: 400.0,
+      unit: "/ day",
+      approvalTier: "tier2",
+      driverPayAmount: "$150",
+      effectiveDate: "2026-01-01",
+      status: "Active",
+    },
+    {
+      id: 3,
+      code: "STP",
+      name: "Stop Off",
+      chargeType: "Flat + Mileage",
+      defaultAmount: 100.0,
+      customerRate: 100.0,
+      unit: "flat",
+      approvalTier: "tier2",
+      driverPayAmount: "$50",
+      effectiveDate: "2026-01-01",
+      status: "Active",
+    },
+    {
+      id: 4,
+      code: "TNU",
+      name: "TONU",
+      chargeType: "Flat Fee",
+      defaultAmount: 400.0,
+      customerRate: 475.0,
+      unit: "flat",
+      approvalTier: "tier2",
+      driverPayAmount: "75%",
+      effectiveDate: "2026-02-01",
+      status: "Active",
+    },
+    {
+      id: 5,
+      code: "DRV",
+      name: "Driver Assist",
+      chargeType: "Flat Fee",
+      defaultAmount: 75.0,
+      customerRate: 75.0,
+      unit: "flat",
+      approvalTier: "tier2",
+      driverPayAmount: "$75",
+      effectiveDate: "2026-01-01",
+      status: "Active",
+    },
+    {
+      id: 6,
+      code: "TRP",
+      name: "Tarping",
+      chargeType: "Flat Fee",
+      defaultAmount: 75.0,
+      customerRate: 50.0,
+      unit: "flat",
+      approvalTier: "tier2",
+      driverPayAmount: "$50",
+      effectiveDate: "2026-01-01",
+      status: "Inactive",
+    },
+    {
+      id: 7,
+      code: "OOR",
+      name: "Out of Route Miles",
+      chargeType: "Per Mile",
+      defaultAmount: 2.5,
+      customerRate: 2.25,
+      unit: "/ mi",
+      approvalTier: "tier2",
+      driverPayAmount: "Same",
+      effectiveDate: "2026-01-15",
+      status: "Active",
+    },
+    {
+      id: 8,
+      code: "EMP",
+      name: "Empty Miles",
+      chargeType: "Per Mile",
+      defaultAmount: 2.0,
+      customerRate: 1.75,
+      unit: "/ mi",
+      approvalTier: "tier2",
+      driverPayAmount: "Same",
+      effectiveDate: "2026-01-15",
+      status: "Active",
+    },
+    {
+      id: 9,
+      code: "HAZ",
+      name: "Hazmat",
+      chargeType: "Flat Fee",
+      defaultAmount: 200.0,
+      customerRate: 200.0,
+      unit: "flat",
+      approvalTier: "tier2",
+      driverPayAmount: "No pay",
+      effectiveDate: "2026-03-01",
+      status: "Pending",
+    },
+  ]);
 
   // Product Sales mock data (customer-specific materials/products)
   const productSalesData = [
-    { id: 1, sku: "MAT-LS-057", name: "#57 Limestone", uom: "ton", defaultPrice: 45.00, status: "Active" },
-    { id: 2, sku: "MAT-SD-001", name: "Concrete Sand", uom: "ton", defaultPrice: 35.00, status: "Active" },
-    { id: 3, sku: "MAT-SD-002", name: "Fill Sand", uom: "ton", defaultPrice: 30.00, status: "Active" },
-    { id: 4, sku: "MAT-CON-001", name: "Ready-Mix Concrete", uom: "cubic yard", defaultPrice: 125.00, status: "Active" },
-    { id: 5, sku: "MAT-REC-001", name: "Recycled Concrete", uom: "ton", defaultPrice: 28.00, status: "Inactive" },
+    {
+      id: 1,
+      sku: "MAT-LS-057",
+      name: "#57 Limestone",
+      uom: "ton",
+      defaultPrice: 45.0,
+      status: "Active",
+    },
+    {
+      id: 2,
+      sku: "MAT-SD-001",
+      name: "Concrete Sand",
+      uom: "ton",
+      defaultPrice: 35.0,
+      status: "Active",
+    },
+    {
+      id: 3,
+      sku: "MAT-SD-002",
+      name: "Fill Sand",
+      uom: "ton",
+      defaultPrice: 30.0,
+      status: "Active",
+    },
+    {
+      id: 4,
+      sku: "MAT-CON-001",
+      name: "Ready-Mix Concrete",
+      uom: "cubic yard",
+      defaultPrice: 125.0,
+      status: "Active",
+    },
+    {
+      id: 5,
+      sku: "MAT-REC-001",
+      name: "Recycled Concrete",
+      uom: "ton",
+      defaultPrice: 28.0,
+      status: "Inactive",
+    },
   ];
 
-  // Additional Charges filter groups
+  // Accessorial Charges filter groups
   const additionalChargesFilterGroups = [
     {
       name: "Basic",
       filters: [
-        { key: "name", label: "Name", type: "input", group: "Basic", placeholder: "Search name..." },
-        { key: "status", label: "Status", type: "select", group: "Basic", options: [{ label: "Active", value: "Active" }, { label: "Inactive", value: "Inactive" }] },
+        {
+          key: "name",
+          label: "Name",
+          type: "input",
+          group: "Basic",
+          placeholder: "Search name...",
+        },
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          group: "Basic",
+          options: [
+            { label: "Active", value: "Active" },
+            { label: "Inactive", value: "Inactive" },
+          ],
+        },
       ],
     },
   ];
@@ -401,8 +565,23 @@ const CustomerDetails = () => {
     {
       name: "Basic",
       filters: [
-        { key: "name", label: "Name", type: "input", group: "Basic", placeholder: "Search name..." },
-        { key: "status", label: "Status", type: "select", group: "Basic", options: [{ label: "Active", value: "Active" }, { label: "Inactive", value: "Inactive" }] },
+        {
+          key: "name",
+          label: "Name",
+          type: "input",
+          group: "Basic",
+          placeholder: "Search name...",
+        },
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          group: "Basic",
+          options: [
+            { label: "Active", value: "Active" },
+            { label: "Inactive", value: "Inactive" },
+          ],
+        },
       ],
     },
   ];
@@ -423,6 +602,9 @@ const CustomerDetails = () => {
       name: charge.name,
       chargeType: charge.chargeType,
       defaultAmount: charge.defaultAmount.toString(),
+      customerRate: charge.customerRate.toString(),
+      effectiveDate:
+        charge.effectiveDate || new Date().toISOString().split("T")[0],
       status: charge.status,
     });
     setIsChargeSheetOpen(true);
@@ -431,7 +613,55 @@ const CustomerDetails = () => {
   const handleCloseChargeSheet = () => {
     setIsChargeSheetOpen(false);
     setEditingCharge(null);
-    setChargeFormData({ code: "", name: "", chargeType: "", defaultAmount: "", status: "Active" });
+    setChargeFormData({
+      code: "",
+      name: "",
+      chargeType: "",
+      defaultAmount: "",
+      customerRate: "",
+      effectiveDate: new Date().toISOString().split("T")[0],
+      status: "Active",
+    });
+  };
+
+  const handleSaveCharge = () => {
+    const rate =
+      parseFloat(chargeFormData.customerRate) ||
+      parseFloat(chargeFormData.defaultAmount) ||
+      0;
+    const defRate = parseFloat(chargeFormData.defaultAmount) || 0;
+    if (editingCharge) {
+      setAdditionalChargesData(
+        additionalChargesData.map((c) =>
+          c.id === editingCharge.id
+            ? {
+                ...c,
+                customerRate: rate,
+                effectiveDate: chargeFormData.effectiveDate,
+                status: chargeFormData.status,
+              }
+            : c,
+        ),
+      );
+    } else {
+      setAdditionalChargesData([
+        ...additionalChargesData,
+        {
+          id: Date.now(),
+          code: chargeFormData.code,
+          name: chargeFormData.name,
+          chargeType: chargeFormData.chargeType,
+          defaultAmount: defRate,
+          customerRate: rate,
+          unit: "flat",
+          approvalTier: "tier2",
+          driverPayAmount: "—",
+          effectiveDate: chargeFormData.effectiveDate,
+          status: chargeFormData.status,
+        },
+      ]);
+    }
+    handleCloseChargeSheet();
   };
 
   // Product handlers
@@ -450,15 +680,26 @@ const CustomerDetails = () => {
   const handleCloseProductSheet = () => {
     setIsProductSheetOpen(false);
     setEditingProduct(null);
-    setProductFormData({ sku: "", name: "", uom: "", defaultPrice: "", status: "Active" });
+    setProductFormData({
+      sku: "",
+      name: "",
+      uom: "",
+      defaultPrice: "",
+      status: "Active",
+    });
   };
 
   const getStatusBadgeColor = (status) => {
     const colors = {
-      Active: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
-      Inactive: "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
+      Active:
+        "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Inactive:
+        "bg-red-500/10 hover:bg-red-500/30 text-red-700 dark:text-red-400 border border-red-500/50",
     };
-    return colors[status] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+    return (
+      colors[status] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
   };
 
   const getTierBadgeColor = (tier) => {
@@ -471,11 +712,15 @@ const CustomerDetails = () => {
   };
 
   const getTierLabel = (tier) => {
-    const labels = { tier1: "Tier 1: Auto", tier2: "Tier 2: Dispatch Mgr", tier3: "Tier 3: VP Ops" };
+    const labels = {
+      tier1: "Tier 1: Auto Apply",
+      tier2: "Tier 2: Dispatch Mgr",
+      tier3: "Tier 3: VP Ops",
+    };
     return labels[tier] || tier;
   };
 
-  // Additional Charges columns
+  // Accessorial Charges columns
   const additionalChargesColumns = [
     {
       id: "actions",
@@ -495,7 +740,10 @@ const CustomerDetails = () => {
                 <p className="font-medium text-sm">{charge.name}</p>
                 <p className="text-xs text-muted-foreground">{charge.code}</p>
               </div>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => handleEditCharge(charge)}>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleEditCharge(charge)}
+              >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit
               </DropdownMenuItem>
@@ -512,7 +760,9 @@ const CustomerDetails = () => {
     },
     {
       accessorKey: "code",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Code" />
+      ),
       cell: ({ row }) => (
         <span className="font-mono text-sm bg-blue-500/10 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded">
           {row.getValue("code")}
@@ -521,37 +771,123 @@ const CustomerDetails = () => {
     },
     {
       accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
     },
     {
       accessorKey: "chargeType",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Charge Type" />,
-      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("chargeType")}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Charge Structure" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-muted-foreground">
+          {row.getValue("chargeType")}
+        </span>
+      ),
     },
     {
       accessorKey: "defaultAmount",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Default Amount" />,
-      cell: ({ row }) => <span className="font-medium">${row.getValue("defaultAmount").toFixed(2)}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Default Rate" />
+      ),
+      size: 120,
+      cell: ({ row }) => (
+        <span className="text-muted-foreground">
+          ${row.getValue("defaultAmount").toFixed(2)} {row.original.unit}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "customerRate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Customer Rate" />
+      ),
+      size: 150,
+      cell: ({ row }) => {
+        const def = row.original.defaultAmount;
+        const cust = row.getValue("customerRate");
+        const diff = def > 0 ? ((cust - def) / def) * 100 : 0;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">
+              ${cust.toFixed(2)} {row.original.unit}
+            </span>
+            {Math.abs(diff) > 0.1 && (
+              <span
+                className={`text-xs font-medium ${diff > 0 ? "text-emerald-600" : "text-rose-600"}`}
+              >
+                {diff > 0 ? "+" : ""}
+                {diff.toFixed(0)}%
+              </span>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "effectiveDate",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Effective Date" />
+      ),
+      size: 130,
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground">
+          {new Date(row.getValue("effectiveDate")).toLocaleDateString()}
+        </span>
+      ),
     },
     {
       accessorKey: "approvalTier",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Approval Tier" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Approval Tier" />
+      ),
       cell: ({ row }) => {
         const tier = row.getValue("approvalTier");
-        return <Badge className={getTierBadgeColor(tier)}>{getTierLabel(tier)}</Badge>;
+        return (
+          <Badge className={getTierBadgeColor(tier)}>
+            {getTierLabel(tier)}
+          </Badge>
+        );
       },
     },
     {
       accessorKey: "driverPayAmount",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Driver Pay" />,
-      cell: ({ row }) => <span className="text-muted-foreground text-sm">{row.getValue("driverPayAmount")}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Driver Pay" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-muted-foreground text-sm">
+          {row.getValue("driverPayAmount")}
+        </span>
+      ),
     },
     {
       accessorKey: "status",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
+      size: 100,
       cell: ({ row }) => {
         const status = row.getValue("status");
-        return <Badge className={getStatusBadgeColor(status)}>{status}</Badge>;
+        const statusColors = {
+          Active:
+            "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 border border-emerald-500/50",
+          Inactive:
+            "bg-rose-500/10 hover:bg-rose-500/30 text-rose-700 dark:text-rose-400 border border-rose-500/50",
+          Pending:
+            "bg-amber-500/10 hover:bg-amber-500/30 text-amber-700 dark:text-amber-400 border border-amber-500/50",
+        };
+        return (
+          <Badge
+            className={
+              statusColors[status] ||
+              "bg-gray-500/10 text-gray-700 border-gray-500/50"
+            }
+          >
+            {status}
+          </Badge>
+        );
       },
     },
   ];
@@ -576,7 +912,10 @@ const CustomerDetails = () => {
                 <p className="font-medium text-sm">{product.name}</p>
                 <p className="text-xs text-muted-foreground">{product.sku}</p>
               </div>
-              <DropdownMenuItem className="cursor-pointer" onClick={() => handleEditProduct(product)}>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleEditProduct(product)}
+              >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit
               </DropdownMenuItem>
@@ -593,26 +932,44 @@ const CustomerDetails = () => {
     },
     {
       accessorKey: "sku",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="SKU" />,
-      cell: ({ row }) => <span className="font-mono text-sm">{row.getValue("sku")}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="SKU" />
+      ),
+      cell: ({ row }) => (
+        <span className="font-mono text-sm">{row.getValue("sku")}</span>
+      ),
     },
     {
       accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Material Name" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Material Name" />
+      ),
     },
     {
       accessorKey: "uom",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="UOM" />,
-      cell: ({ row }) => <span className="text-muted-foreground">{row.getValue("uom")}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="UOM" />
+      ),
+      cell: ({ row }) => (
+        <span className="text-muted-foreground">{row.getValue("uom")}</span>
+      ),
     },
     {
       accessorKey: "defaultPrice",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Default Price" />,
-      cell: ({ row }) => <span className="font-medium">${row.getValue("defaultPrice").toFixed(2)}</span>,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Default Price" />
+      ),
+      cell: ({ row }) => (
+        <span className="font-medium">
+          ${row.getValue("defaultPrice").toFixed(2)}
+        </span>
+      ),
     },
     {
       accessorKey: "status",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Status" />
+      ),
       cell: ({ row }) => {
         const status = row.getValue("status");
         return <Badge className={getStatusBadgeColor(status)}>{status}</Badge>;
@@ -638,7 +995,7 @@ const CustomerDetails = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details/rate-table-details?id=${row.original.id}`
+                    `/app/carrier-portal/master/customers/customer-details/rate-table-details?id=${row.original.id}`,
                   )
                 }
               >
@@ -711,7 +1068,7 @@ const CustomerDetails = () => {
     {
       accessorKey: "chargeType",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Charge Type" />
+        <DataTableColumnHeader column={column} title="Charge Structure" />
       ),
       size: 150,
     },
@@ -909,13 +1266,21 @@ const CustomerDetails = () => {
 
   const getAuditTypeBadgeColor = (type) => {
     const colors = {
-      Create: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
-      Update: "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
-      Upload: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
-      Status: "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
-      Verify: "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+      Create:
+        "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Update:
+        "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+      Upload:
+        "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Status:
+        "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Verify:
+        "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
     };
-    return colors[type] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+    return (
+      colors[type] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
   };
 
   const auditLogColumns = [
@@ -933,9 +1298,7 @@ const CustomerDetails = () => {
       ),
       cell: ({ row }) => {
         const type = row.getValue("type");
-        return (
-          <Badge className={getAuditTypeBadgeColor(type)}>{type}</Badge>
-        );
+        return <Badge className={getAuditTypeBadgeColor(type)}>{type}</Badge>;
       },
       enableSorting: true,
     },
@@ -985,9 +1348,9 @@ const CustomerDetails = () => {
               <TrendingUpIcon className="size-4" />
               Rates
             </TabsTrigger>
-            <TabsTrigger value="additional-charges" className="h-full">
+            <TabsTrigger value="accessorial-charges" className="h-full">
               <DollarSignIcon className="size-4" />
-              Additional Charges
+              Accessorial Charges
             </TabsTrigger>
             <TabsTrigger value="product-sales" className="h-full">
               <Package className="size-4" />
@@ -1098,10 +1461,7 @@ const CustomerDetails = () => {
             <ReceivablesTable />
           </TabsContent>
 
-          <TabsContent
-            value="unposted"
-            className="space-y-4 h-full mt-0 px-2"
-          >
+          <TabsContent value="unposted" className="space-y-4 h-full mt-0 px-2">
             <UnpostedMetricsCards />
             <UnpostedTable />
           </TabsContent>
@@ -1171,35 +1531,19 @@ const CustomerDetails = () => {
             </div>
           </TabsContent>
 
-          {/* Additional Charges Tab */}
-          <TabsContent value="additional-charges" className="space-y-4 px-2 h-full mt-0">
-            <div className="border border-border rounded-lg bg-background">
-              <div className="flex items-center justify-between px-2 py-2 border-b border-border">
-                <SmartFilter
-                  filterGroups={additionalChargesFilterGroups}
-                  onFiltersChange={handleAdditionalChargesFiltersChange}
-                />
-                <Button
-                  size="sm"
-                  className="bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90 flex items-center gap-1.5"
-                  onClick={() => setIsChargeSheetOpen(true)}
-                >
-                  <PlusIcon className="size-3" />
-                  Add Charge
-                </Button>
-              </div>
-              <div className="px-4 pb-3">
-                <DataTable
-                  columns={additionalChargesColumns}
-                  data={additionalChargesData}
-                  showViewOptions={false}
-                />
-              </div>
-            </div>
+          {/* Accessorial Charges Tab */}
+          <TabsContent
+            value="accessorial-charges"
+            className="space-y-3 px-2 h-full mt-0"
+          >
+            <CustomerRateCard customerName={customerData.name} />
           </TabsContent>
 
           {/* Product Sales Tab */}
-          <TabsContent value="product-sales" className="space-y-4 px-2 h-full mt-0">
+          <TabsContent
+            value="product-sales"
+            className="space-y-4 px-2 h-full mt-0"
+          >
             <div className="border border-border rounded-lg bg-background">
               <div className="flex items-center justify-between px-2 py-2 border-b border-border">
                 <SmartFilter
@@ -1473,7 +1817,7 @@ const CustomerDetails = () => {
                     <Checkbox
                       id={commodity}
                       checked={rateTableForm.selectedCommodities.includes(
-                        commodity
+                        commodity,
                       )}
                       onCheckedChange={(checked) =>
                         handleCommodityChange(commodity, checked)
@@ -1512,81 +1856,221 @@ const CustomerDetails = () => {
       </Sheet>
 
       {/* Add/Edit Charge Sheet */}
-      <Sheet open={isChargeSheetOpen} onOpenChange={(open) => {
-        if (!open) handleCloseChargeSheet();
-      }}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <Sheet
+        open={isChargeSheetOpen}
+        onOpenChange={(open) => {
+          if (!open) handleCloseChargeSheet();
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-lg overflow-y-auto"
+        >
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-xl font-bold text-foreground">
-              {editingCharge ? "Edit Charge" : "Add New Charge"}
+              {editingCharge
+                ? "Edit Customer Rate"
+                : "Add Customer Rate Charge"}
             </SheetTitle>
           </SheetHeader>
           <div className="space-y-5 mt-4 px-6">
+            {!editingCharge && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      Code <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder="e.g., DET"
+                      value={chargeFormData.code}
+                      onChange={(e) =>
+                        setChargeFormData({
+                          ...chargeFormData,
+                          code: e.target.value.toUpperCase(),
+                        })
+                      }
+                      className="h-10 font-mono"
+                      maxLength={4}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      Name <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder="e.g., Detention"
+                      value={chargeFormData.name}
+                      onChange={(e) =>
+                        setChargeFormData({
+                          ...chargeFormData,
+                          name: e.target.value,
+                        })
+                      }
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Charge Structure
+                  </Label>
+                  <Select
+                    value={chargeFormData.chargeType}
+                    onValueChange={(v) =>
+                      setChargeFormData({ ...chargeFormData, chargeType: v })
+                    }
+                  >
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[
+                        "Per Hour",
+                        "Per Day",
+                        "Per Mile",
+                        "Flat Fee",
+                        "Flat + Mileage",
+                        "Flat + OOR Miles",
+                        "Pass-through",
+                        "Variable",
+                      ].map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Default Rate ($)
+                  </Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      $
+                    </span>
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={chargeFormData.defaultAmount}
+                      onChange={(e) =>
+                        setChargeFormData({
+                          ...chargeFormData,
+                          defaultAmount: e.target.value,
+                        })
+                      }
+                      className="h-10 pl-7"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {editingCharge && (
+              <div className="px-3 py-2.5 rounded-md bg-muted text-sm space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Code</span>
+                  <span className="font-mono font-semibold">
+                    {editingCharge.code}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Name</span>
+                  <span className="font-medium">{editingCharge.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Default Rate</span>
+                  <span className="text-muted-foreground">
+                    ${editingCharge.defaultAmount.toFixed(2)}{" "}
+                    {editingCharge.unit}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label className="text-sm font-medium">
-                Code <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                placeholder="e.g., DET"
-                value={chargeFormData.code}
-                onChange={(e) => setChargeFormData({ ...chargeFormData, code: e.target.value.toUpperCase() })}
-                className="h-10 font-mono"
-                maxLength={3}
-                disabled={!!editingCharge}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Name <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                placeholder="e.g., Detention"
-                value={chargeFormData.name}
-                onChange={(e) => setChargeFormData({ ...chargeFormData, name: e.target.value })}
-                className="h-10"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Charge Type <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                type="text"
-                placeholder="e.g., Per Hour, Flat Fee"
-                value={chargeFormData.chargeType}
-                onChange={(e) => setChargeFormData({ ...chargeFormData, chargeType: e.target.value })}
-                className="h-10"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">
-                Default Amount <span className="text-red-500">*</span>
+                Customer Rate ($) <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  $
+                </span>
                 <Input
                   type="number"
                   min="0"
                   step="0.01"
                   placeholder="0.00"
-                  value={chargeFormData.defaultAmount}
-                  onChange={(e) => setChargeFormData({ ...chargeFormData, defaultAmount: e.target.value })}
+                  value={chargeFormData.customerRate}
+                  onChange={(e) =>
+                    setChargeFormData({
+                      ...chargeFormData,
+                      customerRate: e.target.value,
+                    })
+                  }
                   className="h-10 pl-7"
                 />
               </div>
+              <p className="text-xs text-muted-foreground">
+                Override rate applied to all loads for this customer.
+              </p>
             </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Effective Date</Label>
+              <Input
+                type="date"
+                value={chargeFormData.effectiveDate}
+                onChange={(e) =>
+                  setChargeFormData({
+                    ...chargeFormData,
+                    effectiveDate: e.target.value,
+                  })
+                }
+                className="h-10"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Status</Label>
+              <Select
+                value={chargeFormData.status}
+                onValueChange={(v) =>
+                  setChargeFormData({ ...chargeFormData, status: v })
+                }
+              >
+                <SelectTrigger className="h-10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="Inactive">Inactive</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="flex gap-3 pt-6 border-t">
-              <Button type="button" variant="outline" onClick={handleCloseChargeSheet} className="flex-1 h-10">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCloseChargeSheet}
+                className="flex-1 h-10"
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                disabled={!chargeFormData.code || !chargeFormData.name || !chargeFormData.defaultAmount}
+                disabled={!chargeFormData.customerRate}
+                onClick={handleSaveCharge}
               >
-                {editingCharge ? "Update Charge" : "Create Charge"}
+                {editingCharge ? "Save Changes" : "Add Rate"}
               </Button>
             </div>
           </div>
@@ -1594,10 +2078,16 @@ const CustomerDetails = () => {
       </Sheet>
 
       {/* Add/Edit Product Sheet */}
-      <Sheet open={isProductSheetOpen} onOpenChange={(open) => {
-        if (!open) handleCloseProductSheet();
-      }}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <Sheet
+        open={isProductSheetOpen}
+        onOpenChange={(open) => {
+          if (!open) handleCloseProductSheet();
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-lg overflow-y-auto"
+        >
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-xl font-bold text-foreground">
               {editingProduct ? "Edit Product" : "Add New Product"}
@@ -1612,7 +2102,12 @@ const CustomerDetails = () => {
                 type="text"
                 placeholder="e.g., MAT-LS-057"
                 value={productFormData.sku}
-                onChange={(e) => setProductFormData({ ...productFormData, sku: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setProductFormData({
+                    ...productFormData,
+                    sku: e.target.value.toUpperCase(),
+                  })
+                }
                 className="h-10 font-mono"
                 disabled={!!editingProduct}
               />
@@ -1625,7 +2120,12 @@ const CustomerDetails = () => {
                 type="text"
                 placeholder="e.g., #57 Limestone"
                 value={productFormData.name}
-                onChange={(e) => setProductFormData({ ...productFormData, name: e.target.value })}
+                onChange={(e) =>
+                  setProductFormData({
+                    ...productFormData,
+                    name: e.target.value,
+                  })
+                }
                 className="h-10"
               />
             </div>
@@ -1637,7 +2137,12 @@ const CustomerDetails = () => {
                 type="text"
                 placeholder="e.g., ton, cubic yard"
                 value={productFormData.uom}
-                onChange={(e) => setProductFormData({ ...productFormData, uom: e.target.value })}
+                onChange={(e) =>
+                  setProductFormData({
+                    ...productFormData,
+                    uom: e.target.value,
+                  })
+                }
                 className="h-10"
               />
             </div>
@@ -1646,26 +2151,42 @@ const CustomerDetails = () => {
                 Default Price <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  $
+                </span>
                 <Input
                   type="number"
                   min="0"
                   step="0.01"
                   placeholder="0.00"
                   value={productFormData.defaultPrice}
-                  onChange={(e) => setProductFormData({ ...productFormData, defaultPrice: e.target.value })}
+                  onChange={(e) =>
+                    setProductFormData({
+                      ...productFormData,
+                      defaultPrice: e.target.value,
+                    })
+                  }
                   className="h-10 pl-7"
                 />
               </div>
             </div>
             <div className="flex gap-3 pt-6 border-t">
-              <Button type="button" variant="outline" onClick={handleCloseProductSheet} className="flex-1 h-10">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCloseProductSheet}
+                className="flex-1 h-10"
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 className="flex-1 h-10 bg-black hover:bg-black/90 text-white dark:bg-white dark:text-black dark:hover:bg-white/90"
-                disabled={!productFormData.sku || !productFormData.name || !productFormData.defaultPrice}
+                disabled={
+                  !productFormData.sku ||
+                  !productFormData.name ||
+                  !productFormData.defaultPrice
+                }
               >
                 {editingProduct ? "Update Product" : "Create Product"}
               </Button>

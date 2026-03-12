@@ -516,7 +516,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=profile`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=profile`,
                   )
                 }
               >
@@ -525,7 +525,25 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=metrics`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=accessorial-charges`,
+                  )
+                }
+              >
+                Accessorial Charges
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate(
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=accessorial-charges`,
+                  )
+                }
+              >
+                Product Sales
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate(
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=sales`,
                   )
                 }
               >
@@ -534,7 +552,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=orders`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=orders`,
                   )
                 }
               >
@@ -543,7 +561,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=reports`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=reports`,
                   )
                 }
               >
@@ -552,7 +570,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=payments`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=payments`,
                   )
                 }
               >
@@ -561,7 +579,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=receivables`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=receivables`,
                   )
                 }
               >
@@ -570,7 +588,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=rates`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=rates`,
                   )
                 }
               >
@@ -579,7 +597,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=sales`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=sales`,
                   )
                 }
               >
@@ -588,7 +606,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=instructions`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=instructions`,
                   )
                 }
               >
@@ -597,7 +615,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=vault`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=vault`,
                   )
                 }
               >
@@ -606,7 +624,7 @@ const Shippers = () => {
               <DropdownMenuItem
                 onClick={() =>
                   navigate(
-                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=locations`
+                    `/app/carrier-portal/master/customers/customer-details?id=${customer.id}&tab=locations`,
                   )
                 }
               >

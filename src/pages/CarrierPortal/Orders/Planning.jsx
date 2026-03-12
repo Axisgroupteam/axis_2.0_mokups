@@ -297,7 +297,9 @@ const Planning = () => {
   ];
 
   const handleLoadClick = (load) => {
-    navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${load.loadNo}`);
+    navigate(
+      `/app/carrier-portal/orders/bulk/planning/load-details?id=${load.loadNo}`,
+    );
   };
 
   const handleOpenEditSheet = (load) => {
@@ -328,7 +330,14 @@ const Planning = () => {
 
   const handleDeclineSubmit = () => {
     // Handle decline submission logic
-    console.log("Declined:", selectedLoad?.loadNo, "Reason:", declineReason, "Notes:", declineNotes);
+    console.log(
+      "Declined:",
+      selectedLoad?.loadNo,
+      "Reason:",
+      declineReason,
+      "Notes:",
+      declineNotes,
+    );
     setIsDeclineDialogOpen(false);
     setIsDetailSheetOpen(false);
     setSelectedLoad(null);
@@ -854,7 +863,7 @@ const Planning = () => {
     setSelectedLoadsForDispatch((prev) =>
       prev.includes(loadId)
         ? prev.filter((id) => id !== loadId)
-        : [...prev, loadId]
+        : [...prev, loadId],
     );
   };
 
@@ -884,19 +893,43 @@ const Planning = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=general`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=general`,
+                )
+              }
+            >
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=additional-charge`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=additional-charge`,
+                )
+              }
+            >
               <DollarSign className="size-4 mr-2" />
-              Additional Charge
+              Accessorial Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=product-sale`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=product-sale`,
+                )
+              }
+            >
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=history`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/planning/load-details?id=${row.original.loadNo}&tab=history`,
+                )
+              }
+            >
               <History className="size-4 mr-2" />
               History
             </DropdownMenuItem>
@@ -1111,7 +1144,7 @@ const Planning = () => {
                   "flex items-center justify-center p-2 transition-colors",
                   viewType === "table"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted"
+                    : "bg-background text-muted-foreground hover:bg-muted",
                 )}
                 title="Table View"
               >
@@ -1123,7 +1156,7 @@ const Planning = () => {
                   "flex items-center justify-center p-2 transition-colors",
                   viewType === "gantt"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted"
+                    : "bg-background text-muted-foreground hover:bg-muted",
                 )}
                 title="Gantt View"
               >
@@ -1152,7 +1185,7 @@ const Planning = () => {
                     "flex items-center justify-center p-2 transition-colors",
                     viewType === "table"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-background text-muted-foreground hover:bg-muted"
+                      : "bg-background text-muted-foreground hover:bg-muted",
                   )}
                   title="Table View"
                 >
@@ -1164,7 +1197,7 @@ const Planning = () => {
                     "flex items-center justify-center p-2 transition-colors",
                     viewType === "gantt"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-background text-muted-foreground hover:bg-muted"
+                      : "bg-background text-muted-foreground hover:bg-muted",
                   )}
                   title="Gantt View"
                 >
@@ -1195,7 +1228,9 @@ const Planning = () => {
                       <FileText className="size-4" />
                       <span className="text-xs">Load No</span>
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{selectedLoad.loadNo}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedLoad.loadNo}
+                    </p>
                   </div>
 
                   {/* Pick Up No */}
@@ -1204,7 +1239,9 @@ const Planning = () => {
                       <Package className="size-4" />
                       <span className="text-xs">Pick Up No</span>
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{selectedLoad.pickUpNo}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedLoad.pickUpNo}
+                    </p>
                   </div>
                 </div>
 
@@ -1216,7 +1253,9 @@ const Planning = () => {
                       <FileText className="size-4" />
                       <span className="text-xs">Contract ID</span>
                     </div>
-                    <p className="text-xs font-semibold text-foreground">{selectedLoad.customerContractId}</p>
+                    <p className="text-xs font-semibold text-foreground">
+                      {selectedLoad.customerContractId}
+                    </p>
                   </div>
 
                   {/* Region */}
@@ -1225,7 +1264,9 @@ const Planning = () => {
                       <MapPin className="size-4" />
                       <span className="text-xs">Region</span>
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{selectedLoad.customerRegion}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedLoad.customerRegion}
+                    </p>
                   </div>
 
                   {/* Rate */}
@@ -1234,7 +1275,9 @@ const Planning = () => {
                       <DollarSign className="size-4" />
                       <span className="text-xs">Rate</span>
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{selectedLoad.rates}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedLoad.rates}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1277,7 +1320,7 @@ const Planning = () => {
                                   "mr-2 h-4 w-4",
                                   formData.customer === customer.value
                                     ? "opacity-100"
-                                    : "opacity-0"
+                                    : "opacity-0",
                                 )}
                               />
                               {customer.label}
@@ -1331,13 +1374,13 @@ const Planning = () => {
                                   "flex items-center gap-3 w-full p-2 rounded-md cursor-pointer border mb-1",
                                   formData.vehicle === vehicle.value
                                     ? "border-primary bg-primary/5"
-                                    : "border-border"
+                                    : "border-border",
                                 )}
                               >
                                 <div
                                   className={cn(
                                     "w-1.5 h-8 rounded-full shrink-0",
-                                    getVehicleStatusColor(vehicle.status)
+                                    getVehicleStatusColor(vehicle.status),
                                   )}
                                 />
                                 <div className="flex items-center justify-between flex-1">
@@ -1355,7 +1398,7 @@ const Planning = () => {
                                         "text-xs font-medium",
                                         vehicle.assigned === 0
                                           ? "text-rose-600"
-                                          : "text-green-600"
+                                          : "text-green-600",
                                       )}
                                     >
                                       {vehicle.assigned} Assigned
@@ -1415,7 +1458,7 @@ const Planning = () => {
                                     "mr-2 h-4 w-4",
                                     formData.commodity === commodity.value
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                                 {commodity.label}
@@ -1465,7 +1508,8 @@ const Planning = () => {
                               className="w-full justify-between h-10 font-normal"
                             >
                               <span className="truncate">
-                                {formData.pickupLocation || "Select location..."}
+                                {formData.pickupLocation ||
+                                  "Select location..."}
                               </span>
                               <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
@@ -1508,9 +1552,10 @@ const Planning = () => {
                                       <CheckIcon
                                         className={cn(
                                           "mr-2 h-4 w-4",
-                                          formData.pickupLocation === location.value
+                                          formData.pickupLocation ===
+                                            location.value
                                             ? "opacity-100"
-                                            : "opacity-0"
+                                            : "opacity-0",
                                         )}
                                       />
                                       {location.label}
@@ -1528,7 +1573,10 @@ const Planning = () => {
                           type="date"
                           value={formData.pickupDate}
                           onChange={(e) =>
-                            setFormData({ ...formData, pickupDate: e.target.value })
+                            setFormData({
+                              ...formData,
+                              pickupDate: e.target.value,
+                            })
                           }
                           className="h-10"
                         />
@@ -1538,7 +1586,9 @@ const Planning = () => {
                     {/* Appointment Time, Start Time, End Time - Editable */}
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Appointment Time</Label>
+                        <Label className="text-sm font-medium">
+                          Appointment Time
+                        </Label>
                         <Input
                           type="time"
                           defaultValue="08:00"
@@ -1546,7 +1596,9 @@ const Planning = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Start Time</Label>
+                        <Label className="text-sm font-medium">
+                          Start Time
+                        </Label>
                         <Input
                           type="time"
                           defaultValue="08:00"
@@ -1570,14 +1622,18 @@ const Planning = () => {
                           <User className="size-4" />
                           <span className="text-xs">Contact Name</span>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">{selectedLoad?.pickupContactName || "-"}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {selectedLoad?.pickupContactName || "-"}
+                        </p>
                       </div>
                       <div className="border rounded-sm p-3 bg-card">
                         <div className="flex items-center gap-2 text-muted-foreground mb-1">
                           <Phone className="size-4" />
                           <span className="text-xs">Phone</span>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">{selectedLoad?.pickupPhone || "-"}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {selectedLoad?.pickupPhone || "-"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1620,7 +1676,8 @@ const Planning = () => {
                               className="w-full justify-between h-10 font-normal"
                             >
                               <span className="truncate">
-                                {formData.dropOffLocation || "Select location..."}
+                                {formData.dropOffLocation ||
+                                  "Select location..."}
                               </span>
                               <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
@@ -1666,7 +1723,7 @@ const Planning = () => {
                                           formData.dropOffLocation ===
                                             location.value
                                             ? "opacity-100"
-                                            : "opacity-0"
+                                            : "opacity-0",
                                         )}
                                       />
                                       {location.label}
@@ -1697,7 +1754,9 @@ const Planning = () => {
                     {/* Appointment Time, Start Time, End Time - Editable */}
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Appointment Time</Label>
+                        <Label className="text-sm font-medium">
+                          Appointment Time
+                        </Label>
                         <Input
                           type="time"
                           defaultValue="14:00"
@@ -1705,7 +1764,9 @@ const Planning = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">Start Time</Label>
+                        <Label className="text-sm font-medium">
+                          Start Time
+                        </Label>
                         <Input
                           type="time"
                           defaultValue="14:00"
@@ -1729,14 +1790,18 @@ const Planning = () => {
                           <User className="size-4" />
                           <span className="text-xs">Contact Name</span>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">{selectedLoad?.dropOffContactName || "-"}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {selectedLoad?.dropOffContactName || "-"}
+                        </p>
                       </div>
                       <div className="border rounded-sm p-3 bg-card">
                         <div className="flex items-center gap-2 text-muted-foreground mb-1">
                           <Phone className="size-4" />
                           <span className="text-xs">Phone</span>
                         </div>
-                        <p className="text-sm font-semibold text-foreground">{selectedLoad?.dropOffPhone || "-"}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {selectedLoad?.dropOffPhone || "-"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1778,33 +1843,46 @@ const Planning = () => {
           <div className="space-y-4 py-4">
             {selectedLoad && (
               <div className="p-3 bg-muted rounded-md">
-                <p className="text-sm font-mono font-medium">{selectedLoad.loadNo}</p>
+                <p className="text-sm font-mono font-medium">
+                  {selectedLoad.loadNo}
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  {selectedLoad.pickup?.split(',')[0]} → {selectedLoad.dropOff?.split(',')[0]}
+                  {selectedLoad.pickup?.split(",")[0]} →{" "}
+                  {selectedLoad.dropOff?.split(",")[0]}
                 </p>
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="declineReason">Reason for Declining <span className="text-rose-500">*</span></Label>
+              <Label htmlFor="declineReason">
+                Reason for Declining <span className="text-rose-500">*</span>
+              </Label>
               <Select value={declineReason} onValueChange={setDeclineReason}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a reason..." />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="no-driver">No Driver Available</SelectItem>
-                  <SelectItem value="no-equipment">No Equipment Available</SelectItem>
+                  <SelectItem value="no-equipment">
+                    No Equipment Available
+                  </SelectItem>
                   <SelectItem value="rate-too-low">Rate Too Low</SelectItem>
-                  <SelectItem value="route-not-serviceable">Route Not Serviceable</SelectItem>
-                  <SelectItem value="time-constraint">Cannot Meet Time Requirements</SelectItem>
-                  <SelectItem value="capacity-full">At Full Capacity</SelectItem>
+                  <SelectItem value="route-not-serviceable">
+                    Route Not Serviceable
+                  </SelectItem>
+                  <SelectItem value="time-constraint">
+                    Cannot Meet Time Requirements
+                  </SelectItem>
+                  <SelectItem value="capacity-full">
+                    At Full Capacity
+                  </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="declineNotes">Additional Notes</Label>
+              <Label htmlFor="declineNotes">Accessorial Notes</Label>
               <Textarea
                 id="declineNotes"
                 placeholder="Provide any additional details about why this order is being declined..."
@@ -2090,13 +2168,16 @@ const Planning = () => {
             <div className="flex items-center justify-between mb-3 pb-2 border-b">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
-                  checked={selectedLoadsForDispatch.length === loadsWithVehicles.length}
+                  checked={
+                    selectedLoadsForDispatch.length === loadsWithVehicles.length
+                  }
                   onCheckedChange={handleToggleAllLoads}
                 />
                 <span className="text-sm font-medium">Select All</span>
               </label>
               <span className="text-xs text-muted-foreground">
-                {selectedLoadsForDispatch.length} of {loadsWithVehicles.length} selected
+                {selectedLoadsForDispatch.length} of {loadsWithVehicles.length}{" "}
+                selected
               </span>
             </div>
 
@@ -2120,7 +2201,9 @@ const Planning = () => {
                     checked={selectedLoadsForDispatch.includes(load.id)}
                     onCheckedChange={() => handleToggleLoadSelection(load.id)}
                   />
-                  <span className="font-mono text-sm text-primary">{load.loadNo}</span>
+                  <span className="font-mono text-sm text-primary">
+                    {load.loadNo}
+                  </span>
                   <span className="text-sm">{load.customer}</span>
                   <span className="font-mono text-sm">{load.vehicle}</span>
                   <span className="text-sm">{load.pickupDate}</span>

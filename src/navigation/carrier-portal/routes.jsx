@@ -31,7 +31,7 @@ import FuelNetworkPartners from "@/pages/CarrierPortal/Fuel/NetworkPartners";
 import FuelCardProviders from "@/pages/CarrierPortal/Fuel/CardProviders";
 import FuelReports from "@/pages/CarrierPortal/Fuel/Reports";
 import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
-import AccessorialCodes from "@/pages/CarrierPortal/Accessorial";
+import Accessorial from "@/pages/CarrierPortal/Accessorial";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 import RolesAndPermissions from "@/pages/CarrierPortal/RolesAndPermissions";
 import PermissionAssignment from "@/pages/CarrierPortal/RolesAndPermissions/PermissionAssignment";
@@ -273,6 +273,11 @@ export const carrierPortalRoutes = [
     label: "Business Unit",
   },
   {
+    path: "master/accessorial-codes",
+    element: <Accessorial />,
+    label: "Accessorial Code",
+  },
+  {
     path: "master/assets",
     element: <Assets />,
     label: "Assets",
@@ -368,12 +373,6 @@ export const carrierPortalRoutes = [
     path: "fuel/settings",
     element: <FuelSettings />,
     label: "Fuel Settings",
-  },
-  // Accessorial routes
-  {
-    path: "accessorial/codes",
-    element: <AccessorialCodes />,
-    label: "Accessorial Codes",
   },
   // Billing routes - Customer Invoicing (AR)
   {

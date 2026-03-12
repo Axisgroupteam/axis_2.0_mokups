@@ -55,7 +55,8 @@ const Complete = () => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [statusChangeLoad, setStatusChangeLoad] = useState(null);
   const [isValidationDialogOpen, setIsValidationDialogOpen] = useState(false);
-  const [selectedLoadForValidation, setSelectedLoadForValidation] = useState(null);
+  const [selectedLoadForValidation, setSelectedLoadForValidation] =
+    useState(null);
 
   const handleLoadClick = (load) => {
     setSelectedLoad(load);
@@ -69,7 +70,10 @@ const Complete = () => {
 
   const handleConfirmStatusChange = () => {
     // Here you would typically make an API call to update the status
-    console.log("Status changed to Delivered for load:", statusChangeLoad?.loadNo);
+    console.log(
+      "Status changed to Delivered for load:",
+      statusChangeLoad?.loadNo,
+    );
     setIsStatusModalOpen(false);
     setStatusChangeLoad(null);
   };
@@ -173,7 +177,7 @@ const Complete = () => {
         accessorialCleared: false,
         failureReasons: [
           "Weight mismatch: Expected 24,500 lbs, Actual 23,200 lbs",
-          "Pending accessorial: Detention charge awaiting approval"
+          "Pending accessorial: Detention charge awaiting approval",
         ],
         checkedAt: "2024-12-01T16:30:00Z",
       },
@@ -206,7 +210,7 @@ const Complete = () => {
         accessorialCleared: true,
         failureReasons: [
           "Amount mismatch: Expected $1,200.00, Actual $1,050.00",
-          "Invalid fuel card: Card #4532 reported as stolen"
+          "Invalid fuel card: Card #4532 reported as stolen",
         ],
         checkedAt: "2024-12-01T17:15:00Z",
       },
@@ -239,7 +243,7 @@ const Complete = () => {
         accessorialCleared: true,
         failureReasons: [
           "Weight mismatch: Expected 25,000 lbs, Actual 23,500 lbs",
-          "Disputed load: Customer claims partial delivery"
+          "Disputed load: Customer claims partial delivery",
         ],
         checkedAt: "2024-12-02T14:45:00Z",
       },
@@ -272,7 +276,7 @@ const Complete = () => {
         accessorialCleared: false,
         failureReasons: [
           "Amount mismatch: Expected $3,100.00, Actual $2,850.00",
-          "Pending accessorial: Lumper fee receipt pending"
+          "Pending accessorial: Lumper fee receipt pending",
         ],
         checkedAt: "2024-12-03T10:20:00Z",
       },
@@ -306,7 +310,7 @@ const Complete = () => {
         failureReasons: [
           "Weight mismatch: Expected 24,000 lbs, Actual 22,800 lbs",
           "Amount mismatch: Expected $2,200.00, Actual $2,050.00",
-          "Disputed load: Incorrect Fuel Surcharge"
+          "Disputed load: Incorrect Fuel Surcharge",
         ],
         checkedAt: "2024-12-03T11:30:00Z",
       },
@@ -412,7 +416,7 @@ const Complete = () => {
         podUploaded: false,
         failureReasons: [
           "POD not uploaded",
-          "Invalid fuel card: Transaction declined at pump"
+          "Invalid fuel card: Transaction declined at pump",
         ],
         checkedAt: "2024-12-05T18:30:00Z",
       },
@@ -471,7 +475,7 @@ const Complete = () => {
         podLegible: false,
         failureReasons: [
           "POD image not legible",
-          "Pending accessorial: Scale ticket reimbursement pending"
+          "Pending accessorial: Scale ticket reimbursement pending",
         ],
         checkedAt: "2024-12-06T14:45:00Z",
       },
@@ -515,27 +519,60 @@ const Complete = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=general&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=general&mode=view`,
+                )
+              }
+            >
               <Settings className="size-4 mr-2" />
               General
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=additional-charge&mode=view`,
+                )
+              }
+            >
               <DollarSign className="size-4 mr-2" />
-              Additional Charge
+              Accessorial Charge
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=product-sale&mode=view`,
+                )
+              }
+            >
               <ShoppingCart className="size-4 mr-2" />
               Product Sale
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=audit&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=audit&mode=view`,
+                )
+              }
+            >
               <History className="size-4 mr-2" />
               Audit Log
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate(`/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=pod&mode=view`)}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `/app/carrier-portal/orders/bulk/complete/load-details?id=${row.original.loadNo}&tab=pod&mode=view`,
+                )
+              }
+            >
               <Receipt className="size-4 mr-2" />
               POD
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleStatusChangeClick(row.original)} className="text-green-600">
+            <DropdownMenuItem
+              onClick={() => handleStatusChangeClick(row.original)}
+              className="text-green-600"
+            >
               <CheckCircle className="size-4 mr-2" />
               Return to Delivered
             </DropdownMenuItem>
@@ -705,7 +742,10 @@ const Complete = () => {
       header: ({ column }) => (
         <div className="flex items-center gap-1.5">
           <SparklesIcon className="size-4 text-purple-500" />
-          <DataTableColumnHeader column={column} title="AI Billing Validation" />
+          <DataTableColumnHeader
+            column={column}
+            title="AI Billing Validation"
+          />
         </div>
       ),
       cell: ({ row }) => {
@@ -723,7 +763,9 @@ const Complete = () => {
               className="flex items-center gap-1.5 text-red-600 hover:text-red-700 hover:underline"
             >
               <XCircle className="size-4" />
-              <span className="text-xs font-medium">Failed ({validation.failureReasons?.length || 0})</span>
+              <span className="text-xs font-medium">
+                Failed ({validation.failureReasons?.length || 0})
+              </span>
               <ExternalLink className="size-3" />
             </button>
           );
@@ -764,26 +806,42 @@ const Complete = () => {
               {/* Basic Information Card */}
               <div className="border rounded-sm bg-card">
                 <div className="px-4 py-2 border-b bg-muted">
-                  <h3 className="text-sm font-semibold text-foreground">Basic Information</h3>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Basic Information
+                  </h3>
                 </div>
                 <div className="divide-y divide-border">
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Load No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.loadNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Load No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.loadNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Ticket No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.ticketNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Ticket No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.ticketNo}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Pick Up No</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.pickUpNo}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Pick Up No
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.pickUpNo}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Vehicle</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Vehicle
+                      </p>
                       <p className="text-sm font-medium text-foreground font-mono flex items-center gap-1">
                         <Truck className="size-3" />
                         {selectedLoad.vehicle}
@@ -792,28 +850,48 @@ const Complete = () => {
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Customer</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customer}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Customer
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customer}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contract ID</p>
-                      <p className="text-sm font-medium text-foreground font-mono">{selectedLoad.customerContractId}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 divide-x divide-border">
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Region</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.customerRegion}</p>
-                    </div>
-                    <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Commodity</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.commodity}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contract ID
+                      </p>
+                      <p className="text-sm font-medium text-foreground font-mono">
+                        {selectedLoad.customerContractId}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Rates</p>
-                      <p className="text-sm font-semibold text-green-600">{selectedLoad.rates}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Region
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.customerRegion}
+                      </p>
+                    </div>
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Commodity
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.commodity}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-border">
+                    <div className="px-4 py-1.5">
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Rates
+                      </p>
+                      <p className="text-sm font-semibold text-green-600">
+                        {selectedLoad.rates}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -833,23 +911,39 @@ const Complete = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.pickup}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.pickup}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.pickupPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.pickupPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -869,23 +963,39 @@ const Complete = () => {
                 </div>
                 <div className="divide-y divide-border">
                   <div className="px-4 py-1.5">
-                    <p className="text-xs text-muted-foreground mb-0.5">Location</p>
-                    <p className="text-sm font-medium text-foreground">{selectedLoad.dropOff}</p>
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      Location
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {selectedLoad.dropOff}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Date</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffDate}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Date
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffDate}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Contact Name</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffContactName}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Contact Name
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffContactName}
+                      </p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-border">
                     <div className="px-4 py-1.5">
-                      <p className="text-xs text-muted-foreground mb-0.5">Phone</p>
-                      <p className="text-sm font-medium text-foreground">{selectedLoad.dropOffPhone}</p>
+                      <p className="text-xs text-muted-foreground mb-0.5">
+                        Phone
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {selectedLoad.dropOffPhone}
+                      </p>
                     </div>
                     <div className="px-4 py-1.5">
                       <p className="text-xs text-muted-foreground mb-0.5">-</p>
@@ -922,9 +1032,17 @@ const Complete = () => {
                 <AlertTriangle className="size-6 text-green-600" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-medium">Are you sure you want to change status?</p>
+                <p className="text-base font-medium">
+                  Are you sure you want to change status?
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  You are about to change the load <span className="font-mono font-medium text-foreground">{statusChangeLoad?.loadNo}</span> to <span className="font-medium text-foreground">Delivered</span> status in the delivered tab.
+                  You are about to change the load{" "}
+                  <span className="font-mono font-medium text-foreground">
+                    {statusChangeLoad?.loadNo}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-medium text-foreground">Delivered</span>{" "}
+                  status in the delivered tab.
                 </p>
               </div>
             </div>
@@ -951,7 +1069,10 @@ const Complete = () => {
       </Dialog>
 
       {/* Validation Details Dialog */}
-      <Dialog open={isValidationDialogOpen} onOpenChange={setIsValidationDialogOpen}>
+      <Dialog
+        open={isValidationDialogOpen}
+        onOpenChange={setIsValidationDialogOpen}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-red-600">
@@ -964,8 +1085,12 @@ const Complete = () => {
             <div className="space-y-4">
               {/* Load Info */}
               <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground mb-1">Load Number</p>
-                <p className="font-mono font-medium">{selectedLoadForValidation.loadNo}</p>
+                <p className="text-xs text-muted-foreground mb-1">
+                  Load Number
+                </p>
+                <p className="font-mono font-medium">
+                  {selectedLoadForValidation.loadNo}
+                </p>
               </div>
 
               {/* Validation Checks */}
@@ -999,7 +1124,8 @@ const Complete = () => {
                       <CreditCard className="size-4 text-muted-foreground" />
                       <span className="text-sm">Fuel Card Valid</span>
                     </div>
-                    {selectedLoadForValidation.validation?.fuelCardValid !== false ? (
+                    {selectedLoadForValidation.validation?.fuelCardValid !==
+                    false ? (
                       <CheckCircle2 className="size-4 text-green-600" />
                     ) : (
                       <XCircle className="size-4 text-red-600" />
@@ -1010,7 +1136,8 @@ const Complete = () => {
                       <AlertCircle className="size-4 text-muted-foreground" />
                       <span className="text-sm">No Dispute</span>
                     </div>
-                    {selectedLoadForValidation.validation?.noDispute !== false ? (
+                    {selectedLoadForValidation.validation?.noDispute !==
+                    false ? (
                       <CheckCircle2 className="size-4 text-green-600" />
                     ) : (
                       <XCircle className="size-4 text-red-600" />
@@ -1021,7 +1148,8 @@ const Complete = () => {
                       <FileCheck className="size-4 text-muted-foreground" />
                       <span className="text-sm">Accessorial Cleared</span>
                     </div>
-                    {selectedLoadForValidation.validation?.accessorialCleared !== false ? (
+                    {selectedLoadForValidation.validation
+                      ?.accessorialCleared !== false ? (
                       <CheckCircle2 className="size-4 text-green-600" />
                     ) : (
                       <XCircle className="size-4 text-red-600" />
@@ -1031,17 +1159,25 @@ const Complete = () => {
               </div>
 
               {/* Failure Reasons */}
-              {selectedLoadForValidation.validation?.failureReasons?.length > 0 && (
+              {selectedLoadForValidation.validation?.failureReasons?.length >
+                0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-red-600">Failure Reasons</p>
+                  <p className="text-sm font-medium text-red-600">
+                    Failure Reasons
+                  </p>
                   <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg">
                     <ul className="space-y-1.5">
-                      {selectedLoadForValidation.validation.failureReasons.map((reason, index) => (
-                        <li key={index} className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400">
-                          <span className="mt-1.5 size-1.5 rounded-full bg-red-500 flex-shrink-0" />
-                          {reason}
-                        </li>
-                      ))}
+                      {selectedLoadForValidation.validation.failureReasons.map(
+                        (reason, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400"
+                          >
+                            <span className="mt-1.5 size-1.5 rounded-full bg-red-500 flex-shrink-0" />
+                            {reason}
+                          </li>
+                        ),
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -1050,7 +1186,10 @@ const Complete = () => {
               {/* Checked At */}
               {selectedLoadForValidation.validation?.checkedAt && (
                 <p className="text-xs text-muted-foreground">
-                  Validated at: {new Date(selectedLoadForValidation.validation.checkedAt).toLocaleString()}
+                  Validated at:{" "}
+                  {new Date(
+                    selectedLoadForValidation.validation.checkedAt,
+                  ).toLocaleString()}
                 </p>
               )}
             </div>
