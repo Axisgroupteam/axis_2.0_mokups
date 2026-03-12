@@ -43,6 +43,8 @@ export const breadcrumbLabels = {
   assets: "Assets",
   rates: "Rates",
   location: "Location",
+  roles: "Roles",
+  permissions: "Role Permissions",
   "customer-details": "Customer Details",
   "rate-table-details": "Rate Table Details",
 
@@ -65,7 +67,6 @@ export const breadcrumbLabels = {
   // Brokerage sections
   brokerage: "Brokerage",
   queue: "Queue",
-  carriers: "Carriers",
 
   // Accessorial sections
   accessorial: "Accessorial",

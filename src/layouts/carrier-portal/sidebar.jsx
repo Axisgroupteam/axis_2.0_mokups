@@ -129,6 +129,11 @@ const CarrierPortalSidebar = () => {
       icon: UsersIcon,
     },
     {
+      label: "Roles",
+      href: "/app/carrier-portal/master/roles",
+      icon: UsersIcon,
+    },
+    {
       label: "Assets",
       href: "/app/carrier-portal/master/assets",
       icon: BoxIcon,

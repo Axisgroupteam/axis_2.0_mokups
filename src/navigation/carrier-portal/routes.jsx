@@ -33,6 +33,8 @@ import FuelReports from "@/pages/CarrierPortal/Fuel/Reports";
 import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
 import AccessorialCodes from "@/pages/CarrierPortal/Accessorial";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
+import RolesAndPermissions from "@/pages/CarrierPortal/RolesAndPermissions";
+import PermissionAssignment from "@/pages/CarrierPortal/RolesAndPermissions/PermissionAssignment";
 // Billing imports
 import Invoices from "@/pages/CarrierPortal/Billing/Invoicing/Invoices";
 import InvoiceDetails from "@/pages/CarrierPortal/Billing/Invoicing/InvoiceDetails";
@@ -189,6 +191,16 @@ export const carrierPortalRoutes = [
     path: "master/users",
     element: <Users />,
     label: "Users",
+  },
+  {
+    path: "master/roles",
+    element: <RolesAndPermissions />,
+    label: "Roles",
+  },
+  {
+    path: "master/roles/:roleId/permissions",
+    element: <PermissionAssignment />,
+    label: "Assign Permissions",
   },
   {
     path: "master/users/driver-details",
