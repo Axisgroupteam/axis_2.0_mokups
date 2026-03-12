@@ -88,31 +88,281 @@ const AssetDetails = () => {
 
   // Mock vehicle history data
   const vehicleHistoryData = [
-    { id: 1, date: "Jan 28, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0125", customer: "ABC Logistics Inc.", origin: "New York, NY", destination: "Boston, MA", miles: 215 },
-    { id: 2, date: "Jan 27, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0124", customer: "XYZ Transport", origin: "Boston, MA", destination: "Hartford, CT", miles: 102 },
-    { id: 3, date: "Jan 26, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0122", customer: "Global Freight Co.", origin: "Hartford, CT", destination: "Newark, NJ", miles: 118 },
-    { id: 4, date: "Jan 25, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0120", customer: "ABC Logistics Inc.", origin: "Newark, NJ", destination: "Philadelphia, PA", miles: 85 },
-    { id: 5, date: "Jan 24, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0118", customer: "Metro Shipping", origin: "Philadelphia, PA", destination: "Baltimore, MD", miles: 101 },
-    { id: 6, date: "Jan 23, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0115", customer: "East Coast Haulers", origin: "Baltimore, MD", destination: "Washington, DC", miles: 40 },
-    { id: 7, date: "Jan 22, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0112", customer: "Capital Freight", origin: "Washington, DC", destination: "Richmond, VA", miles: 109 },
-    { id: 8, date: "Jan 21, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0110", customer: "ABC Logistics Inc.", origin: "Richmond, VA", destination: "Raleigh, NC", miles: 154 },
-    { id: 9, date: "Jan 20, 2024", driverCode: "DRV-004", driverName: "David Wilson", loadNo: "LD-2024-0108", customer: "Southern Transport", origin: "Raleigh, NC", destination: "Charlotte, NC", miles: 167 },
-    { id: 10, date: "Jan 19, 2024", driverCode: "DRV-004", driverName: "David Wilson", loadNo: "LD-2024-0105", customer: "XYZ Transport", origin: "Charlotte, NC", destination: "Atlanta, GA", miles: 245 },
-    { id: 11, date: "Jan 18, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0102", customer: "Peach State Logistics", origin: "Atlanta, GA", destination: "Birmingham, AL", miles: 147 },
-    { id: 12, date: "Jan 17, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0100", customer: "Gulf Coast Shipping", origin: "Birmingham, AL", destination: "Nashville, TN", miles: 191 },
-    { id: 13, date: "Jan 16, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0098", customer: "Music City Freight", origin: "Nashville, TN", destination: "Louisville, KY", miles: 176 },
-    { id: 14, date: "Jan 15, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0095", customer: "Midwest Express", origin: "Louisville, KY", destination: "Cincinnati, OH", miles: 100 },
-    { id: 15, date: "Jan 14, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0092", customer: "ABC Logistics Inc.", origin: "Cincinnati, OH", destination: "Columbus, OH", miles: 107 },
-    { id: 16, date: "Jan 13, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0090", customer: "Buckeye Transport", origin: "Columbus, OH", destination: "Cleveland, OH", miles: 143 },
-    { id: 17, date: "Jan 12, 2024", driverCode: "DRV-005", driverName: "Emily Brown", loadNo: "LD-2024-0088", customer: "Lake Erie Shipping", origin: "Cleveland, OH", destination: "Pittsburgh, PA", miles: 133 },
-    { id: 18, date: "Jan 11, 2024", driverCode: "DRV-005", driverName: "Emily Brown", loadNo: "LD-2024-0085", customer: "Steel City Haulers", origin: "Pittsburgh, PA", destination: "Buffalo, NY", miles: 219 },
-    { id: 19, date: "Jan 10, 2024", driverCode: "DRV-004", driverName: "David Wilson", loadNo: "LD-2024-0082", customer: "Great Lakes Freight", origin: "Buffalo, NY", destination: "Syracuse, NY", miles: 150 },
-    { id: 20, date: "Jan 09, 2024", driverCode: "DRV-004", driverName: "David Wilson", loadNo: "LD-2024-0080", customer: "XYZ Transport", origin: "Syracuse, NY", destination: "Albany, NY", miles: 148 },
-    { id: 21, date: "Jan 08, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0078", customer: "Empire State Logistics", origin: "Albany, NY", destination: "Springfield, MA", miles: 89 },
-    { id: 22, date: "Jan 07, 2024", driverCode: "DRV-003", driverName: "Mike Davis", loadNo: "LD-2024-0075", customer: "New England Carriers", origin: "Springfield, MA", destination: "Providence, RI", miles: 82 },
-    { id: 23, date: "Jan 06, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0072", customer: "Ocean State Transport", origin: "Providence, RI", destination: "New Haven, CT", miles: 98 },
-    { id: 24, date: "Jan 05, 2024", driverCode: "DRV-002", driverName: "Sarah Johnson", loadNo: "LD-2024-0070", customer: "ABC Logistics Inc.", origin: "New Haven, CT", destination: "Stamford, CT", miles: 45 },
-    { id: 25, date: "Jan 04, 2024", driverCode: "DRV-001", driverName: "John Smith", loadNo: "LD-2024-0068", customer: "Metro Shipping", origin: "Stamford, CT", destination: "New York, NY", miles: 38 },
+    {
+      id: 1,
+      date: "Jan 28, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0125",
+      customer: "ABC Logistics Inc.",
+      origin: "New York, NY",
+      destination: "Boston, MA",
+      miles: 215,
+    },
+    {
+      id: 2,
+      date: "Jan 27, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0124",
+      customer: "XYZ Transport",
+      origin: "Boston, MA",
+      destination: "Hartford, CT",
+      miles: 102,
+    },
+    {
+      id: 3,
+      date: "Jan 26, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0122",
+      customer: "Global Freight Co.",
+      origin: "Hartford, CT",
+      destination: "Newark, NJ",
+      miles: 118,
+    },
+    {
+      id: 4,
+      date: "Jan 25, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0120",
+      customer: "ABC Logistics Inc.",
+      origin: "Newark, NJ",
+      destination: "Philadelphia, PA",
+      miles: 85,
+    },
+    {
+      id: 5,
+      date: "Jan 24, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0118",
+      customer: "Metro Shipping",
+      origin: "Philadelphia, PA",
+      destination: "Baltimore, MD",
+      miles: 101,
+    },
+    {
+      id: 6,
+      date: "Jan 23, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0115",
+      customer: "East Coast Haulers",
+      origin: "Baltimore, MD",
+      destination: "Washington, DC",
+      miles: 40,
+    },
+    {
+      id: 7,
+      date: "Jan 22, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0112",
+      customer: "Capital Freight",
+      origin: "Washington, DC",
+      destination: "Richmond, VA",
+      miles: 109,
+    },
+    {
+      id: 8,
+      date: "Jan 21, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0110",
+      customer: "ABC Logistics Inc.",
+      origin: "Richmond, VA",
+      destination: "Raleigh, NC",
+      miles: 154,
+    },
+    {
+      id: 9,
+      date: "Jan 20, 2024",
+      driverCode: "DRV-004",
+      driverName: "David Wilson",
+      loadNo: "LD-2024-0108",
+      customer: "Southern Transport",
+      origin: "Raleigh, NC",
+      destination: "Charlotte, NC",
+      miles: 167,
+    },
+    {
+      id: 10,
+      date: "Jan 19, 2024",
+      driverCode: "DRV-004",
+      driverName: "David Wilson",
+      loadNo: "LD-2024-0105",
+      customer: "XYZ Transport",
+      origin: "Charlotte, NC",
+      destination: "Atlanta, GA",
+      miles: 245,
+    },
+    {
+      id: 11,
+      date: "Jan 18, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0102",
+      customer: "Peach State Logistics",
+      origin: "Atlanta, GA",
+      destination: "Birmingham, AL",
+      miles: 147,
+    },
+    {
+      id: 12,
+      date: "Jan 17, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0100",
+      customer: "Gulf Coast Shipping",
+      origin: "Birmingham, AL",
+      destination: "Nashville, TN",
+      miles: 191,
+    },
+    {
+      id: 13,
+      date: "Jan 16, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0098",
+      customer: "Music City Freight",
+      origin: "Nashville, TN",
+      destination: "Louisville, KY",
+      miles: 176,
+    },
+    {
+      id: 14,
+      date: "Jan 15, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0095",
+      customer: "Midwest Express",
+      origin: "Louisville, KY",
+      destination: "Cincinnati, OH",
+      miles: 100,
+    },
+    {
+      id: 15,
+      date: "Jan 14, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0092",
+      customer: "ABC Logistics Inc.",
+      origin: "Cincinnati, OH",
+      destination: "Columbus, OH",
+      miles: 107,
+    },
+    {
+      id: 16,
+      date: "Jan 13, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0090",
+      customer: "Buckeye Transport",
+      origin: "Columbus, OH",
+      destination: "Cleveland, OH",
+      miles: 143,
+    },
+    {
+      id: 17,
+      date: "Jan 12, 2024",
+      driverCode: "DRV-005",
+      driverName: "Emily Brown",
+      loadNo: "LD-2024-0088",
+      customer: "Lake Erie Shipping",
+      origin: "Cleveland, OH",
+      destination: "Pittsburgh, PA",
+      miles: 133,
+    },
+    {
+      id: 18,
+      date: "Jan 11, 2024",
+      driverCode: "DRV-005",
+      driverName: "Emily Brown",
+      loadNo: "LD-2024-0085",
+      customer: "Steel City Haulers",
+      origin: "Pittsburgh, PA",
+      destination: "Buffalo, NY",
+      miles: 219,
+    },
+    {
+      id: 19,
+      date: "Jan 10, 2024",
+      driverCode: "DRV-004",
+      driverName: "David Wilson",
+      loadNo: "LD-2024-0082",
+      customer: "Great Lakes Freight",
+      origin: "Buffalo, NY",
+      destination: "Syracuse, NY",
+      miles: 150,
+    },
+    {
+      id: 20,
+      date: "Jan 09, 2024",
+      driverCode: "DRV-004",
+      driverName: "David Wilson",
+      loadNo: "LD-2024-0080",
+      customer: "XYZ Transport",
+      origin: "Syracuse, NY",
+      destination: "Albany, NY",
+      miles: 148,
+    },
+    {
+      id: 21,
+      date: "Jan 08, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0078",
+      customer: "Empire State Logistics",
+      origin: "Albany, NY",
+      destination: "Springfield, MA",
+      miles: 89,
+    },
+    {
+      id: 22,
+      date: "Jan 07, 2024",
+      driverCode: "DRV-003",
+      driverName: "Mike Davis",
+      loadNo: "LD-2024-0075",
+      customer: "New England Carriers",
+      origin: "Springfield, MA",
+      destination: "Providence, RI",
+      miles: 82,
+    },
+    {
+      id: 23,
+      date: "Jan 06, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0072",
+      customer: "Ocean State Transport",
+      origin: "Providence, RI",
+      destination: "New Haven, CT",
+      miles: 98,
+    },
+    {
+      id: 24,
+      date: "Jan 05, 2024",
+      driverCode: "DRV-002",
+      driverName: "Sarah Johnson",
+      loadNo: "LD-2024-0070",
+      customer: "ABC Logistics Inc.",
+      origin: "New Haven, CT",
+      destination: "Stamford, CT",
+      miles: 45,
+    },
+    {
+      id: 25,
+      date: "Jan 04, 2024",
+      driverCode: "DRV-001",
+      driverName: "John Smith",
+      loadNo: "LD-2024-0068",
+      customer: "Metro Shipping",
+      origin: "Stamford, CT",
+      destination: "New York, NY",
+      miles: 38,
+    },
   ];
 
   const vehicleHistoryColumns = [
@@ -131,7 +381,9 @@ const AssetDetails = () => {
       cell: ({ row }) => (
         <span
           className="text-foreground underline cursor-pointer"
-          onClick={() => navigate("/app/carrier-portal/master/users/driver-details")}
+          onClick={() =>
+            navigate("/app/carrier-portal/master/users/driver-details")
+          }
         >
           {row.getValue("driverCode")}
         </span>
@@ -168,7 +420,11 @@ const AssetDetails = () => {
       cell: ({ row }) => (
         <span
           className="text-foreground underline cursor-pointer"
-          onClick={() => navigate("/app/carrier-portal/master/customers/customer-details?id=1&tab=profile")}
+          onClick={() =>
+            navigate(
+              "/app/carrier-portal/master/customers/customer-details?id=1&tab=profile",
+            )
+          }
         >
           {row.getValue("customer")}
         </span>
@@ -194,9 +450,7 @@ const AssetDetails = () => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Miles" />
       ),
-      cell: ({ row }) => (
-        <span>{row.getValue("miles")} mi</span>
-      ),
+      cell: ({ row }) => <span>{row.getValue("miles")} mi</span>,
       enableSorting: true,
     },
   ];
@@ -224,7 +478,7 @@ const AssetDetails = () => {
     msrp: "$150,000",
     bodyType: "Sleeper Cab",
     bodySubtype: "Extended",
-    // Additional fields
+    // Accessorial fields
     serviceStatus: "In Service",
     inServiceDate: "2023-01-15",
     outServiceDate: "-",
@@ -348,13 +602,21 @@ const AssetDetails = () => {
 
   const getTypeBadgeColor = (type) => {
     const colors = {
-      Create: "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
-      Update: "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
-      Upload: "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
-      Status: "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
-      Verify: "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
+      Create:
+        "bg-green-500/10 hover:bg-green-500/30 text-green-700 dark:text-green-400 border border-green-500/50",
+      Update:
+        "bg-blue-500/10 hover:bg-blue-500/30 text-blue-700 dark:text-blue-400 border border-blue-500/50",
+      Upload:
+        "bg-purple-500/10 hover:bg-purple-500/30 text-purple-700 dark:text-purple-400 border border-purple-500/50",
+      Status:
+        "bg-orange-500/10 hover:bg-orange-500/30 text-orange-700 dark:text-orange-400 border border-orange-500/50",
+      Verify:
+        "bg-teal-500/10 hover:bg-teal-500/30 text-teal-700 dark:text-teal-400 border border-teal-500/50",
     };
-    return colors[type] || "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50";
+    return (
+      colors[type] ||
+      "bg-gray-500/10 hover:bg-gray-500/30 text-gray-700 dark:text-gray-400 border border-gray-500/50"
+    );
   };
 
   const auditLogColumns = [
@@ -372,9 +634,7 @@ const AssetDetails = () => {
       ),
       cell: ({ row }) => {
         const type = row.getValue("type");
-        return (
-          <Badge className={getTypeBadgeColor(type)}>{type}</Badge>
-        );
+        return <Badge className={getTypeBadgeColor(type)}>{type}</Badge>;
       },
       enableSorting: true,
     },

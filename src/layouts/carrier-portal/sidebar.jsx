@@ -65,6 +65,7 @@ import {
   FileTextIcon,
   SettingsIcon,
   NetworkIcon,
+  ShieldAlertIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
@@ -81,7 +82,6 @@ const CarrierPortalSidebar = () => {
       href: "/app/carrier-portal/metrics",
     },
   ];
-
 
   // Orders sub-menu items
   const ordersSubItems = [
@@ -144,7 +144,7 @@ const CarrierPortalSidebar = () => {
       icon: WalletIcon,
     },
     {
-      label: "Rates",
+      label: "Lanes",
       href: "/app/carrier-portal/master/rates",
       icon: DollarSignIcon,
     },
@@ -162,6 +162,11 @@ const CarrierPortalSidebar = () => {
       label: "Business Unit",
       href: "/app/carrier-portal/master/business-unit",
       icon: Building2Icon,
+    },
+    {
+      label: "Accessorial Code",
+      href: "/app/carrier-portal/master/accessorial-codes",
+      icon: DatabaseIcon,
     },
   ];
 
@@ -233,15 +238,6 @@ const CarrierPortalSidebar = () => {
     },
   ];
 
-  // Accessorial sub-menu items
-  const accessorialSubItems = [
-    {
-      label: "Accessorial Codes",
-      href: "/app/carrier-portal/accessorial/codes",
-      icon: ListIcon,
-    },
-  ];
-
   // Billing sub-menu items
   const billingSubItems = [
     {
@@ -277,14 +273,23 @@ const CarrierPortalSidebar = () => {
   // Automatically open the correct collapsible menu based on current URL
   useEffect(() => {
     const isOrdersPath = ordersSubItems.some((item) => pathname === item.href);
-    const isBrokeragePath = brokerageSubItems.some((item) => pathname === item.href);
+    const isBrokeragePath = brokerageSubItems.some(
+      (item) => pathname === item.href,
+    );
     const isMasterPath = masterSubItems.some((item) => pathname === item.href);
-    const isMaterialsPath = materialsSubItems.some((item) => pathname === item.href);
+    const isMaterialsPath = materialsSubItems.some(
+      (item) => pathname === item.href,
+    );
     const isFuelPath = fuelSubItems.some((item) => pathname === item.href);
-    const isAccessorialPath = accessorialSubItems.some((item) => pathname === item.href);
-    const isBillingPath = billingSubItems.some((item) => pathname === item.href) || pathname.includes("/billing/");
-    const isOnboardingPath = onboardingSubItems.some((item) => pathname === item.href);
-    const isSettingsPath = settingsSubItems.some((item) => pathname === item.href);
+    const isBillingPath =
+      billingSubItems.some((item) => pathname === item.href) ||
+      pathname.includes("/billing/");
+    const isOnboardingPath = onboardingSubItems.some(
+      (item) => pathname === item.href,
+    );
+    const isSettingsPath = settingsSubItems.some(
+      (item) => pathname === item.href,
+    );
 
     if (isOrdersPath) {
       setOpenMenu("orders");
@@ -296,8 +301,6 @@ const CarrierPortalSidebar = () => {
       setOpenMenu("materials");
     } else if (isFuelPath) {
       setOpenMenu("fuel");
-    } else if (isAccessorialPath) {
-      setOpenMenu("accessorial");
     } else if (isBillingPath) {
       setOpenMenu("billing");
     } else if (isOnboardingPath) {
@@ -344,14 +347,12 @@ const CarrierPortalSidebar = () => {
                       asChild
                       className={cn(
                         "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        isActive && "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        isActive && "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={isActive}
                     >
                       <Link to={item.href} onClick={handleLinkClick}>
-                        {IconComponent && (
-                          <IconComponent className="size-5" />
-                        )}
+                        {IconComponent && <IconComponent className="size-5" />}
                         <span className="text-md font-medium tracking-tight">
                           {item.label}
                         </span>
@@ -367,11 +368,15 @@ const CarrierPortalSidebar = () => {
                   asChild
                   className={cn(
                     "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                    pathname === "/app/carrier-portal/sales/orders" && "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                    pathname === "/app/carrier-portal/sales/orders" &&
+                      "bg-linear-to-r/oklch border-[#5D6B68]/10",
                   )}
                   isActive={pathname === "/app/carrier-portal/sales/orders"}
                 >
-                  <Link to="/app/carrier-portal/sales/orders" onClick={handleLinkClick}>
+                  <Link
+                    to="/app/carrier-portal/sales/orders"
+                    onClick={handleLinkClick}
+                  >
                     <BadgeDollarSignIcon className="size-5" />
                     <span className="text-md font-medium tracking-tight">
                       Load Requests
@@ -392,10 +397,10 @@ const CarrierPortalSidebar = () => {
                       className={cn(
                         "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                         ordersSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={ordersSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <ShoppingCartIcon className="size-5" />
@@ -405,7 +410,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "orders" && "rotate-90"
+                          openMenu === "orders" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -422,7 +427,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -444,7 +449,9 @@ const CarrierPortalSidebar = () => {
               {/* Brokerage with Sub-menu (Brokerage Coverage) */}
               <Collapsible
                 open={openMenu === "brokerage"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "brokerage" : null)}
+                onOpenChange={(isOpen) =>
+                  setOpenMenu(isOpen ? "brokerage" : null)
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -452,11 +459,12 @@ const CarrierPortalSidebar = () => {
                     <SidebarMenuButton
                       className={cn(
                         "h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        brokerageSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        brokerageSubItems.some(
+                          (item) => pathname === item.href,
+                        ) && "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={brokerageSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <HandshakeIcon className="size-5" />
@@ -466,7 +474,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "brokerage" && "rotate-90"
+                          openMenu === "brokerage" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -483,7 +491,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -514,10 +522,10 @@ const CarrierPortalSidebar = () => {
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                         masterSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={masterSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <DatabaseIcon className="size-5" />
@@ -527,7 +535,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "master" && "rotate-90"
+                          openMenu === "master" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -544,7 +552,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -566,7 +574,9 @@ const CarrierPortalSidebar = () => {
               {/* Materials with Sub-menu */}
               <Collapsible
                 open={openMenu === "materials"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "materials" : null)}
+                onOpenChange={(isOpen) =>
+                  setOpenMenu(isOpen ? "materials" : null)
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -574,11 +584,12 @@ const CarrierPortalSidebar = () => {
                     <SidebarMenuButton
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        materialsSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        materialsSubItems.some(
+                          (item) => pathname === item.href,
+                        ) && "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={materialsSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <BoxIcon className="size-5" />
@@ -588,7 +599,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "materials" && "rotate-90"
+                          openMenu === "materials" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -605,7 +616,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -636,10 +647,10 @@ const CarrierPortalSidebar = () => {
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                         fuelSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={fuelSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <FuelIcon className="size-5" />
@@ -649,7 +660,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "fuel" && "rotate-90"
+                          openMenu === "fuel" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -666,68 +677,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
-                              )}
-                              isActive={isActive}
-                            >
-                              <Link to={subItem.href} onClick={handleLinkClick}>
-                                {IconComponent && (
-                                  <IconComponent className="size-4" />
-                                )}
-                                <span>{subItem.label}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-
-              {/* Accessorial with Sub-menu */}
-              <Collapsible
-                open={openMenu === "accessorial"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "accessorial" : null)}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton
-                      className={cn(
-                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        accessorialSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
-                      )}
-                      isActive={accessorialSubItems.some(
-                        (item) => pathname === item.href
-                      )}
-                    >
-                      <ReceiptIcon className="size-5" />
-                      <span className="text-md font-medium tracking-tight">
-                        Accessorial
-                      </span>
-                      <ChevronRightIcon
-                        className={cn(
-                          "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "accessorial" && "rotate-90"
-                        )}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {accessorialSubItems.map((subItem) => {
-                        const isActive = pathname === subItem.href;
-                        const IconComponent = subItem.icon;
-                        return (
-                          <SidebarMenuSubItem key={subItem.href}>
-                            <SidebarMenuSubButton
-                              asChild
-                              className={cn(
-                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                                isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -749,7 +699,9 @@ const CarrierPortalSidebar = () => {
               {/* Billing with Sub-menu */}
               <Collapsible
                 open={openMenu === "billing"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "billing" : null)}
+                onOpenChange={(isOpen) =>
+                  setOpenMenu(isOpen ? "billing" : null)
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -757,12 +709,17 @@ const CarrierPortalSidebar = () => {
                     <SidebarMenuButton
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        (billingSubItems.some((item) => pathname === item.href) || pathname.includes("/billing/")) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        (billingSubItems.some(
+                          (item) => pathname === item.href,
+                        ) ||
+                          pathname.includes("/billing/")) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
-                      isActive={billingSubItems.some(
-                        (item) => pathname === item.href
-                      ) || pathname.includes("/billing/")}
+                      isActive={
+                        billingSubItems.some(
+                          (item) => pathname === item.href,
+                        ) || pathname.includes("/billing/")
+                      }
                     >
                       <DollarSignIcon className="size-5" />
                       <span className="text-md font-medium tracking-tight">
@@ -771,7 +728,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "billing" && "rotate-90"
+                          openMenu === "billing" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -788,7 +745,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -810,7 +767,9 @@ const CarrierPortalSidebar = () => {
               {/* Onboarding with Sub-menu */}
               <Collapsible
                 open={openMenu === "onboarding"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "onboarding" : null)}
+                onOpenChange={(isOpen) =>
+                  setOpenMenu(isOpen ? "onboarding" : null)
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -818,11 +777,12 @@ const CarrierPortalSidebar = () => {
                     <SidebarMenuButton
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        onboardingSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        onboardingSubItems.some(
+                          (item) => pathname === item.href,
+                        ) && "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={onboardingSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <ClipboardCheckIcon className="size-5" />
@@ -832,7 +792,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "onboarding" && "rotate-90"
+                          openMenu === "onboarding" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -849,7 +809,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >
@@ -871,7 +831,9 @@ const CarrierPortalSidebar = () => {
               {/* Settings with Sub-menu */}
               <Collapsible
                 open={openMenu === "settings"}
-                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "settings" : null)}
+                onOpenChange={(isOpen) =>
+                  setOpenMenu(isOpen ? "settings" : null)
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -879,11 +841,12 @@ const CarrierPortalSidebar = () => {
                     <SidebarMenuButton
                       className={cn(
                         "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                        settingsSubItems.some((item) => pathname === item.href) &&
-                          "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                        settingsSubItems.some(
+                          (item) => pathname === item.href,
+                        ) && "bg-linear-to-r/oklch border-[#5D6B68]/10",
                       )}
                       isActive={settingsSubItems.some(
-                        (item) => pathname === item.href
+                        (item) => pathname === item.href,
                       )}
                     >
                       <SettingsIcon className="size-5" />
@@ -893,7 +856,7 @@ const CarrierPortalSidebar = () => {
                       <ChevronRightIcon
                         className={cn(
                           "ml-auto size-4 transition-transform duration-200",
-                          openMenu === "settings" && "rotate-90"
+                          openMenu === "settings" && "rotate-90",
                         )}
                       />
                     </SidebarMenuButton>
@@ -910,7 +873,7 @@ const CarrierPortalSidebar = () => {
                               className={cn(
                                 "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
                                 isActive &&
-                                  "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
                               )}
                               isActive={isActive}
                             >

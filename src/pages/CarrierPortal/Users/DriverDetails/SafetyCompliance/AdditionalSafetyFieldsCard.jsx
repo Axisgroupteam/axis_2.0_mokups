@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { FaClipboard, FaEdit, FaPlus } from "react-icons/fa";
 
 const AdditionalSafetyFieldsCard = () => {
@@ -35,7 +40,7 @@ const AdditionalSafetyFieldsCard = () => {
         <div className="px-4 py-3 border-b bg-muted flex items-center justify-between">
           <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
             <FaClipboard className="size-4" />
-            Additional Safety Fields
+            Accessorial Safety Fields
           </h3>
           {hasData && (
             <button
@@ -50,21 +55,37 @@ const AdditionalSafetyFieldsCard = () => {
           <div className="divide-y divide-border">
             <div className="grid grid-cols-2 divide-x divide-border">
               <div className="px-4 py-2.5">
-                <p className="text-xs text-muted-foreground mb-0.5">Previous Job Type</p>
-                <p className="text-sm font-medium text-foreground">{data.previousJobType}</p>
+                <p className="text-xs text-muted-foreground mb-0.5">
+                  Previous Job Type
+                </p>
+                <p className="text-sm font-medium text-foreground">
+                  {data.previousJobType}
+                </p>
               </div>
               <div className="px-4 py-2.5">
-                <p className="text-xs text-muted-foreground mb-0.5">Experience</p>
-                <p className="text-sm font-medium text-foreground">{data.experience}</p>
+                <p className="text-xs text-muted-foreground mb-0.5">
+                  Experience
+                </p>
+                <p className="text-sm font-medium text-foreground">
+                  {data.experience}
+                </p>
               </div>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">Road Test Evaluation</p>
-              <p className="text-sm font-medium text-foreground">{data.roadTestEvaluation}</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                Road Test Evaluation
+              </p>
+              <p className="text-sm font-medium text-foreground">
+                {data.roadTestEvaluation}
+              </p>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-xs text-muted-foreground mb-0.5">Safety Meeting Attendance</p>
-              <p className="text-sm font-medium text-foreground">{data.safetyMeetingAttendance}</p>
+              <p className="text-xs text-muted-foreground mb-0.5">
+                Safety Meeting Attendance
+              </p>
+              <p className="text-sm font-medium text-foreground">
+                {data.safetyMeetingAttendance}
+              </p>
             </div>
           </div>
         ) : (
@@ -85,10 +106,15 @@ const AdditionalSafetyFieldsCard = () => {
       </div>
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-md overflow-y-auto"
+        >
           <SheetHeader className="pb-4 border-b px-6">
             <SheetTitle className="text-lg font-bold text-foreground">
-              {hasData ? "Edit Additional Safety Fields" : "Add Additional Safety Fields"}
+              {hasData
+                ? "Edit Accessorial Safety Fields"
+                : "Add Accessorial Safety Fields"}
             </SheetTitle>
           </SheetHeader>
 
@@ -136,7 +162,8 @@ const AdditionalSafetyFieldsCard = () => {
 
             <div className="space-y-2">
               <Label className="text-sm font-medium text-foreground">
-                Safety Meeting Attendance <span className="text-red-500">*</span>
+                Safety Meeting Attendance{" "}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"

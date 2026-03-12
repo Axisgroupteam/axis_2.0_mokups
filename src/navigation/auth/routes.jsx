@@ -5,6 +5,7 @@ import Shippers from "@/pages/Shippers";
 import CustomerDetail from "@/pages/CustomerDetail";
 import CustomerUsers from "@/pages/CustomerUsers";
 import SystemUsers from "@/pages/SystemUsers";
+import Accessorial from "@/pages/CarrierPortal/Accessorial";
 import ModuleLayouts from "@/layouts/auth";
 import CarrierPortalRoutes from "@/navigation/carrier-portal";
 import CustomerPortalRoutes from "@/navigation/customer-portal";
@@ -13,6 +14,7 @@ import {
   TruckIcon,
   PackageIcon,
   UsersIcon,
+  ReceiptIcon,
 } from "lucide-react";
 
 export const authRoutes = [
@@ -133,5 +135,19 @@ export const authRoutes = [
     icon: UsersIcon,
     label: "System Users",
     href: "system-users",
+  },
+  {
+    path: "accessorial",
+    access: ["All"],
+    description: "Accessorial Charges Management",
+    element: (
+      <ModuleLayouts>
+        <Accessorial />
+      </ModuleLayouts>
+    ),
+    isShowOnSidebar: true,
+    icon: ReceiptIcon,
+    label: "Accessorial",
+    href: "accessorial",
   },
 ];

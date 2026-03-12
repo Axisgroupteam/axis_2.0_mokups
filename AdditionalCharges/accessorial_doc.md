@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Accessorial Management module handles all additional charges beyond base freight rates, including detention, layover, stop-offs, diversions, and other accessorial services. The module provides automated tracking, tiered approval workflows, customer approval processes, and dispute resolution.
+The Accessorial Management module handles all Accessorial Charges beyond base freight rates, including detention, layover, stop-offs, diversions, and other accessorial services. The module provides automated tracking, tiered approval workflows, customer approval processes, and dispute resolution.
 
 ---
 
@@ -21,22 +21,22 @@ The Accessorial Management module handles all additional charges beyond base fre
 
 The system supports 14 standard accessorial codes:
 
-| Code | Name | Charge Structure | Approval Tier | Driver Paid | Driver Pay Method |
-|------|------|------------------|---------------|-------------|-------------------|
-| DET | Detention | Per Hour | Tier 1: Auto | Yes | Percentage (50%) |
-| LAY | Layover | Per Day | Tier 2: Dispatch Mgr | Yes | Flat ($150) |
-| STP | Stop Off | Flat + Mileage | Tier 2: Dispatch Mgr | Yes | Flat ($50) |
-| DIV | Diversion | Flat + OOR Miles | Tier 2: Dispatch Mgr | Yes | Same as Billed |
-| TNU | TONU | Flat Fee | Tier 2: Dispatch Mgr | Yes | Percentage (75%) |
-| DRV | Driver Assist | Flat Fee | Tier 2: Dispatch Mgr | Yes | Flat ($75) |
-| TRP | Tarping | Flat Fee | Tier 2: Dispatch Mgr | Yes | Flat ($50) |
-| HAZ | Hazmat | Flat Fee | Tier 2: Dispatch Mgr | No | N/A |
-| TOL | Tolls | Pass-through | Tier 1: Auto | No | N/A |
-| OVW | Overweight | Variable | Tier 2: Dispatch Mgr | No | N/A |
-| OOR | Out of Route Miles | Per Mile | Tier 2: Dispatch Mgr | Yes | Same as Billed |
-| RDL | Re-delivery | Flat Fee | Tier 2: Dispatch Mgr | Yes | Percentage (50%) |
-| PRM | Permits | Pass-through | Tier 1: Auto | No | N/A |
-| EMP | Empty Miles | Per Mile | Tier 2: Dispatch Mgr | Yes | Same as Billed |
+| Code | Name               | Charge Structure | Approval Tier        | Driver Paid | Driver Pay Method |
+| ---- | ------------------ | ---------------- | -------------------- | ----------- | ----------------- |
+| DET  | Detention          | Per Hour         | Tier 1: Auto         | Yes         | Percentage (50%)  |
+| LAY  | Layover            | Per Day          | Tier 2: Dispatch Mgr | Yes         | Flat ($150)       |
+| STP  | Stop Off           | Flat + Mileage   | Tier 2: Dispatch Mgr | Yes         | Flat ($50)        |
+| DIV  | Diversion          | Flat + OOR Miles | Tier 2: Dispatch Mgr | Yes         | Same as Billed    |
+| TNU  | TONU               | Flat Fee         | Tier 2: Dispatch Mgr | Yes         | Percentage (75%)  |
+| DRV  | Driver Assist      | Flat Fee         | Tier 2: Dispatch Mgr | Yes         | Flat ($75)        |
+| TRP  | Tarping            | Flat Fee         | Tier 2: Dispatch Mgr | Yes         | Flat ($50)        |
+| HAZ  | Hazmat             | Flat Fee         | Tier 2: Dispatch Mgr | No          | N/A               |
+| TOL  | Tolls              | Pass-through     | Tier 1: Auto         | No          | N/A               |
+| OVW  | Overweight         | Variable         | Tier 2: Dispatch Mgr | No          | N/A               |
+| OOR  | Out of Route Miles | Per Mile         | Tier 2: Dispatch Mgr | Yes         | Same as Billed    |
+| RDL  | Re-delivery        | Flat Fee         | Tier 2: Dispatch Mgr | Yes         | Percentage (50%)  |
+| PRM  | Permits            | Pass-through     | Tier 1: Auto         | No          | N/A               |
+| EMP  | Empty Miles        | Per Mile         | Tier 2: Dispatch Mgr | Yes         | Same as Billed    |
 
 ### Charge Structure Options
 
@@ -55,20 +55,22 @@ The system supports 14 standard accessorial codes:
 
 ### Tier Definitions
 
-| Tier | Authority | Description |
-|------|-----------|-------------|
-| **Tier 1: Auto** | System | Automatically applied (geofence/pass-through) |
-| **Tier 2: Dispatch Manager** | Dispatch Manager | Requires Dispatch Manager approval |
-| **Tier 3: VP of Operations** | VP Ops | Requires VP of Operations approval |
+| Tier                         | Authority        | Description                                   |
+| ---------------------------- | ---------------- | --------------------------------------------- |
+| **Tier 1: Auto**             | System           | Automatically applied (geofence/pass-through) |
+| **Tier 2: Dispatch Manager** | Dispatch Manager | Requires Dispatch Manager approval            |
+| **Tier 3: VP of Operations** | VP Ops           | Requires VP of Operations approval            |
 
 ### Tier Assignment by Code Type
 
 **Tier 1 (Auto-Apply):**
+
 - Detention (auto-triggered via geofence)
 - Tolls
 - Permits
 
 **Tier 2 (Dispatch Manager):**
+
 - Stop Off
 - Diversion
 - Tarping
@@ -88,6 +90,7 @@ The system supports 14 standard accessorial codes:
 ### Absorption Override
 
 When an accessorial is marked for absorption (company absorbs cost instead of billing customer):
+
 - **Always requires Level 2 Manager approval**
 - Must select a reason code for absorption
 - Driver is still paid according to the accessorial's pay configuration
@@ -138,11 +141,11 @@ The system uses real-time GPS/geofence tracking to automate detention:
 
 ### Detention Monitor States
 
-| State | Color | Description |
-|-------|-------|-------------|
-| **MONITORING** | Gray | Actively tracking, within threshold |
-| **WARNING SENT** | Yellow | 1-hour warning sent, approaching threshold |
-| **CHARGEABLE** | Red | Threshold exceeded, billable amount accumulating |
+| State            | Color  | Description                                      |
+| ---------------- | ------ | ------------------------------------------------ |
+| **MONITORING**   | Gray   | Actively tracking, within threshold              |
+| **WARNING SENT** | Yellow | 1-hour warning sent, approaching threshold       |
+| **CHARGEABLE**   | Red    | Threshold exceeded, billable amount accumulating |
 
 ---
 
@@ -161,11 +164,11 @@ The system uses real-time GPS/geofence tracking to automate detention:
 
 ### Customer Response Options
 
-| Response | Result |
-|----------|--------|
-| **Approved** | Status → APPROVED, ready for invoice |
-| **Rejected/Disputed** | Status → DISPUTED, enters dispute workflow |
-| **No Response (24 hrs)** | Escalation triggered |
+| Response                 | Result                                     |
+| ------------------------ | ------------------------------------------ |
+| **Approved**             | Status → APPROVED, ready for invoice       |
+| **Rejected/Disputed**    | Status → DISPUTED, enters dispute workflow |
+| **No Response (24 hrs)** | Escalation triggered                       |
 
 ### Escalation Timeline
 
@@ -194,11 +197,11 @@ The system uses real-time GPS/geofence tracking to automate detention:
 
 ### Resolution Options
 
-| Decision | Action |
-|----------|--------|
-| **UPHOLD** | Charge confirmed, proceed to invoice |
+| Decision   | Action                                                 |
+| ---------- | ------------------------------------------------------ |
+| **UPHOLD** | Charge confirmed, proceed to invoice                   |
 | **REDUCE** | Adjust amount (partial credit), invoice reduced amount |
-| **WAIVE** | Charge cancelled (requires reason code), no invoice |
+| **WAIVE**  | Charge cancelled (requires reason code), no invoice    |
 
 ### SLA Requirements
 
@@ -214,20 +217,21 @@ The system uses real-time GPS/geofence tracking to automate detention:
 Each customer can have a customized rate card with:
 
 **Billing Preferences:**
+
 - **Charge Display:** Itemized Separately OR Combined with Freight (Single Line)
 - **Bill-To Code:** Same as Freight OR Separate Code
 - **Invoice Method:** Include on Freight Invoice OR Separate Accessorial Invoice
 
 ### Sample Rate Card Structure
 
-| Accessorial | Rate | Threshold | Override Billing |
-|-------------|------|-----------|------------------|
-| Detention | $75.00 / hour | After 2 hours | - |
-| Layover | $350.00 / day | - | - |
-| Stop Off | $100.00 + $2.50/mi | - | - |
-| Diversion | $150.00 + $3.00/mi OOR | - | - |
-| TONU | $400.00 flat | - | - |
-| Tolls | Pass-through + $5.00 fee | - | Combined with freight |
+| Accessorial | Rate                     | Threshold     | Override Billing      |
+| ----------- | ------------------------ | ------------- | --------------------- |
+| Detention   | $75.00 / hour            | After 2 hours | -                     |
+| Layover     | $350.00 / day            | -             | -                     |
+| Stop Off    | $100.00 + $2.50/mi       | -             | -                     |
+| Diversion   | $150.00 + $3.00/mi OOR   | -             | -                     |
+| TONU        | $400.00 flat             | -             | -                     |
+| Tolls       | Pass-through + $5.00 fee | -             | Combined with freight |
 
 ---
 
@@ -235,12 +239,12 @@ Each customer can have a customized rate card with:
 
 ### Summary Metrics
 
-| Metric | Description |
-|--------|-------------|
-| **Pending Approval** | Total charges awaiting approval (internal + customer) |
-| **24-48 hrs (Urgent)** | Charges approaching SLA deadline |
-| **48+ hrs (SLA Breach)** | Charges past 48-hour SLA |
-| **Disputed** | Active disputes with at-risk revenue |
+| Metric                   | Description                                           |
+| ------------------------ | ----------------------------------------------------- |
+| **Pending Approval**     | Total charges awaiting approval (internal + customer) |
+| **24-48 hrs (Urgent)**   | Charges approaching SLA deadline                      |
+| **48+ hrs (SLA Breach)** | Charges past 48-hour SLA                              |
+| **Disputed**             | Active disputes with at-risk revenue                  |
 
 ### Dashboard Filters
 
@@ -262,24 +266,24 @@ Each customer can have a customized rate card with:
 
 ### Age Color Coding
 
-| Age | Color | Meaning |
-|-----|-------|---------|
-| 0-24 hrs | Normal (gray) | Within normal timeframe |
-| 24-48 hrs | Warning (yellow) | Approaching deadline |
-| 48+ hrs | Danger (red) | SLA breach |
+| Age       | Color            | Meaning                 |
+| --------- | ---------------- | ----------------------- |
+| 0-24 hrs  | Normal (gray)    | Within normal timeframe |
+| 24-48 hrs | Warning (yellow) | Approaching deadline    |
+| 48+ hrs   | Danger (red)     | SLA breach              |
 
 ---
 
 ## Accessorial Status Types
 
-| Status | Description | Color |
-|--------|-------------|-------|
-| **Awaiting Customer Approval** | Sent to customer, pending response | Blue |
-| **Pending Dispatch Manager** | Internal approval needed | Purple |
-| **Escalated - VP Approval** | Escalated to VP (>$500 or SLA breach) | Red |
-| **Approved** | Customer approved, ready for invoice | Green |
-| **Absorbed** | Company absorbed, not billed | Purple |
-| **Disputed** | Customer disputed, in resolution | Red |
+| Status                         | Description                           | Color  |
+| ------------------------------ | ------------------------------------- | ------ |
+| **Awaiting Customer Approval** | Sent to customer, pending response    | Blue   |
+| **Pending Dispatch Manager**   | Internal approval needed              | Purple |
+| **Escalated - VP Approval**    | Escalated to VP (>$500 or SLA breach) | Red    |
+| **Approved**                   | Customer approved, ready for invoice  | Green  |
+| **Absorbed**                   | Company absorbed, not billed          | Purple |
+| **Disputed**                   | Customer disputed, in resolution      | Red    |
 
 ---
 
@@ -288,12 +292,14 @@ Each customer can have a customized rate card with:
 When adding an accessorial, two dispositions are available:
 
 ### 1. Bill to Customer
+
 - Apply customer rate card
 - Check $500 escalation rule
 - Send for customer approval
 - Invoice upon approval
 
 ### 2. Absorb
+
 - Select reason code (required)
 - Requires Level 2 Manager approval
 - Driver still paid per configuration
@@ -307,16 +313,19 @@ When adding an accessorial, two dispositions are available:
 ### Information Displayed
 
 **Location Details:**
+
 - Location name
 - Appointment time
 - Actual arrival (with on-time indicator)
 - Time on-site
 
 **Driver/Equipment:**
+
 - Driver name
 - Truck number
 
 **Charge Details:**
+
 - Threshold
 - Rate
 - Billable hours/units
@@ -324,16 +333,19 @@ When adding an accessorial, two dispositions are available:
 - Driver pay amount
 
 **Audit Trail:**
+
 - Timestamped events
 - System triggers
 - Notifications sent
 - Status changes
 
 **Attachments:**
+
 - Geofence logs
 - Supporting documents
 
 **Notes:**
+
 - Free-text notes
 
 ### Available Actions
@@ -360,6 +372,7 @@ When adding an accessorial, two dispositions are available:
 ## Integration Points
 
 ### Inputs
+
 - Load/Order data
 - Geofence/GPS tracking
 - Customer master data
@@ -367,6 +380,7 @@ When adding an accessorial, two dispositions are available:
 - Appointment scheduling
 
 ### Outputs
+
 - Invoice line items
 - Driver settlement records
 - Customer portal notifications

@@ -1,4 +1,5 @@
 # Mega Materials Integration - Screen Flow
+
 ## Carrier Portal Integration Plan
 
 ---
@@ -37,7 +38,7 @@ CARRIER PORTAL (AXIS 2.0)
 │   ├── Location
 │   ├── Categories
 │   ├── Business Unit
-│   ├── Additional Charges
+│   ├── Accessorial Charges
 │   └── Product Sales
 │
 └── Onboarding
@@ -64,7 +65,7 @@ CARRIER PORTAL (AXIS 2.0) - UPDATED
 │   └── [unchanged]
 │
 ├── 🆕 MATERIALS ─────────── NEW SECTION (Vinnie/Jesus/Lisa)
-│   ├ 
+│   ├
 │   ├── Suppliers
 │   │   ├── Supplier List
 │   │   └── Supplier Details
@@ -91,7 +92,6 @@ CARRIER PORTAL (AXIS 2.0) - UPDATED
 Notes
 List of items
 
-
 ---
 
 ## Screen-by-Screen Flow
@@ -99,6 +99,7 @@ List of items
 ### PHASE 1: PROCURE (Supplier Management)
 
 #### Screen 1.1: Suppliers List
+
 **Path**: `/app/carrier-portal/materials/suppliers`
 **Owner**: Vinnie Bove
 
@@ -118,6 +119,7 @@ List of items
 ```
 
 **Actions**:
+
 - View Details → Supplier Details page
 - Edit Contract
 - Deactivate
@@ -125,6 +127,7 @@ List of items
 ---
 
 #### Screen 1.2: Supplier Details
+
 **Path**: `/app/carrier-portal/materials/suppliers/:id`
 
 ```
@@ -163,6 +166,7 @@ List of items
 ```
 
 **Tabs**:
+
 - Overview (shown above)
 - Contracts (history)
 - Orders (past orders from this supplier)
@@ -174,6 +178,7 @@ List of items
 ### PHASE 2: PRICE (Pricing Engine)
 
 #### Screen 2.1: Price List
+
 **Path**: `/app/carrier-portal/materials/price-list`
 **Owner**: Vinnie Bove + AXIS AI
 
@@ -198,6 +203,7 @@ List of items
 ```
 
 **AI Pricing Panel** (slide-out):
+
 ```
 ┌────────────────────────────────────────┐
 │ 🤖 AI Pricing Recommendation           │
@@ -224,6 +230,7 @@ List of items
 ### PHASE 3: MARKET (Campaigns)
 
 #### Screen 3.1: Campaigns List
+
 **Path**: `/app/carrier-portal/materials/campaigns`
 **Owner**: Vinnie Bove
 
@@ -241,6 +248,7 @@ List of items
 ```
 
 #### Screen 3.2: Campaign Details
+
 **Path**: `/app/carrier-portal/materials/campaigns/:id`
 
 ```
@@ -301,13 +309,13 @@ The Quote says:
 
 #### Quote vs Sale - The Difference
 
-| Quote | Sale |
-|-------|------|
-| A **proposal** (offer) | A **confirmed order** |
-| Customer can say yes or no | Customer already said YES |
-| Price is **promised** for 7 days | Price is **locked** |
-| No delivery scheduled yet | Delivery is scheduled |
-| No money owed yet | Invoice will be sent |
+| Quote                            | Sale                      |
+| -------------------------------- | ------------------------- |
+| A **proposal** (offer)           | A **confirmed order**     |
+| Customer can say yes or no       | Customer already said YES |
+| Price is **promised** for 7 days | Price is **locked**       |
+| No delivery scheduled yet        | Delivery is scheduled     |
+| No money owed yet                | Invoice will be sent      |
 
 #### The Quote Flow
 
@@ -342,13 +350,13 @@ Invoice sent after delivery
 
 #### Quote Statuses
 
-| Status | Meaning |
-|--------|---------|
-| **Draft** | Jesus is still creating it, not sent yet |
-| **Sent** | Emailed to customer, waiting for response |
-| **Accepted** | Customer said YES → becomes a Sale |
-| **Declined** | Customer said NO |
-| **Expired** | 7 days passed, no response |
+| Status       | Meaning                                   |
+| ------------ | ----------------------------------------- |
+| **Draft**    | Jesus is still creating it, not sent yet  |
+| **Sent**     | Emailed to customer, waiting for response |
+| **Accepted** | Customer said YES → becomes a Sale        |
+| **Declined** | Customer said NO                          |
+| **Expired**  | 7 days passed, no response                |
 
 #### In One Sentence
 
@@ -357,6 +365,7 @@ Invoice sent after delivery
 ---
 
 #### Screen 4.1: Quotes List
+
 **Path**: `/app/carrier-portal/materials/quotes`
 **Owner**: Jesus (Customer Experience)
 
@@ -376,6 +385,7 @@ Invoice sent after delivery
 ```
 
 #### Screen 4.2: Create/Edit Quote
+
 **Path**: `/app/carrier-portal/materials/quotes/new` or `/quotes/:id`
 
 ```
@@ -418,6 +428,7 @@ Invoice sent after delivery
 ```
 
 #### Screen 4.3: Quote Details (View/Convert)
+
 **Path**: `/app/carrier-portal/materials/quotes/:id`
 
 ```
@@ -452,6 +463,7 @@ Invoice sent after delivery
 ### PHASE 5 & 6: HANDOFF & FULFILL (Material Sales)
 
 #### Screen 5.1: Material Sales List
+
 **Path**: `/app/carrier-portal/materials/sales`
 **Owner**: Jesus + Tommy
 
@@ -471,6 +483,7 @@ Invoice sent after delivery
 ```
 
 #### Screen 5.2: Material Sale Details
+
 **Path**: `/app/carrier-portal/materials/sales/:id`
 
 ```
@@ -530,6 +543,7 @@ Invoice sent after delivery
 ### PHASE 7 & 8: INVOICE & PAY
 
 #### Screen 7.1: Material Invoices
+
 **Path**: `/app/carrier-portal/materials/invoices`
 **Owner**: Lisa (Finance)
 
@@ -552,6 +566,7 @@ Invoice sent after delivery
 ## Materials Dashboard
 
 #### Screen 0: Materials Dashboard
+
 **Path**: `/app/carrier-portal/materials/dashboard`
 **Owner**: Vinnie Bove
 
@@ -632,12 +647,16 @@ const materialsSubItems = [
 ## Integration Points with Existing Flow
 
 ### 1. Load Requests → Materials Quotes
+
 When Jesus receives an inquiry that includes materials:
+
 - Existing "Load Requests" for freight-only
 - New "Materials > Quotes" for material + freight bundles
 
 ### 2. Materials Sale → Orders (Bulk)
+
 When a Material Sale has `includes_freight = true`:
+
 ```
 Material Sale Created (MM)
         ↓
@@ -651,7 +670,9 @@ Normal Bulk Order flow continues
 ```
 
 ### 3. Brokerage Integration
+
 If MT declines (First Right):
+
 ```
 MT Declines in "Orders > Bulk > Inbox"
         ↓
@@ -663,6 +684,7 @@ Normal Brokerage flow continues
 ```
 
 ### 4. Master Data Links
+
 - **Master > Customers**: Shared between freight and materials
 - **Master > Location**: Supplier pickup locations added here
 - **Master > Rates**: Material rates managed in "Materials > Price List"
@@ -781,19 +803,19 @@ src/pages/CarrierPortal/Materials/
 
 ## Summary: What We're Building
 
-| Screen | Owner | Priority | Connects To |
-|--------|-------|----------|-------------|
-| Materials Dashboard | Vinnie | P1 | Overview of all MM |
-| Suppliers List | Vinnie | P1 | Master data |
-| Supplier Details | Vinnie | P1 | Contracts, Rates |
-| Price List | Vinnie | P1 | AI Pricing Engine |
-| Campaigns | Vinnie | P2 | Planet Build |
-| Quotes List | Jesus | P1 | Sales flow |
-| Create Quote | Jesus | P1 | Price List, Customers |
-| Quote Details | Jesus | P1 | Convert to Sale |
-| Material Sales List | Jesus/Tommy | P1 | Orders handoff |
-| Sale Details | Jesus/Tommy | P1 | Logistics tracking |
-| Material Invoices | Lisa | P2 | Billing Bot |
+| Screen              | Owner       | Priority | Connects To           |
+| ------------------- | ----------- | -------- | --------------------- |
+| Materials Dashboard | Vinnie      | P1       | Overview of all MM    |
+| Suppliers List      | Vinnie      | P1       | Master data           |
+| Supplier Details    | Vinnie      | P1       | Contracts, Rates      |
+| Price List          | Vinnie      | P1       | AI Pricing Engine     |
+| Campaigns           | Vinnie      | P2       | Planet Build          |
+| Quotes List         | Jesus       | P1       | Sales flow            |
+| Create Quote        | Jesus       | P1       | Price List, Customers |
+| Quote Details       | Jesus       | P1       | Convert to Sale       |
+| Material Sales List | Jesus/Tommy | P1       | Orders handoff        |
+| Sale Details        | Jesus/Tommy | P1       | Logistics tracking    |
+| Material Invoices   | Lisa        | P2       | Billing Bot           |
 
 ---
 
