@@ -97,6 +97,11 @@ const Orders = () => {
   const [commodityOpen, setCommodityOpen] = useState(false);
   const [selectedCommodity, setSelectedCommodity] = useState("");
 
+  // Product Sales fields for Add New Load form
+  const [productSalesOpen, setProductSalesOpen] = useState(false);
+  const [selectedProductSales, setSelectedProductSales] = useState("");
+  const [productQuantity, setProductQuantity] = useState("");
+
   // Edit form states
   const [editCustomerOpen, setEditCustomerOpen] = useState(false);
   const [editSelectedCustomer, setEditSelectedCustomer] = useState("");
@@ -463,6 +468,23 @@ const Orders = () => {
   const editAvailableCommodities = editSelectedFleetType
     ? commoditiesByFleetType[editSelectedFleetType] || []
     : [];
+
+  // Product Sales options for Add New Load form
+  const productSalesOptions = [
+    { value: "concrete-mix", label: "Concrete Mix", sku: "CM-001" },
+    { value: "ready-mix", label: "Ready Mix Concrete", sku: "RM-002" },
+    { value: "aggregate-base", label: "Aggregate Base", sku: "AB-003" },
+    { value: "precast-panel", label: "Precast Panel", sku: "PP-004" },
+    { value: "rebar", label: "Rebar", sku: "RB-005" },
+    { value: "structural-steel", label: "Structural Steel", sku: "SS-006" },
+    { value: "asphalt-mix", label: "Asphalt Mix", sku: "AM-007" },
+    { value: "portland-cement", label: "Portland Cement", sku: "PC-101" },
+    { value: "flyash-type-c", label: "Fly Ash Type C", sku: "FA-102" },
+    { value: "fine-sand", label: "Fine Sand", sku: "FS-104" },
+    { value: "coarse-aggregate", label: "Coarse Aggregate", sku: "CA-105" },
+    { value: "steel-fibers", label: "Steel Fibers", sku: "ST-107" },
+    { value: "lime-powder", label: "Lime Powder", sku: "LP-108" },
+  ];
 
   // Handle edit load
   const handleEditLoad = (load) => {
@@ -1250,6 +1272,80 @@ const Orders = () => {
                       <Input id="deliveryEndTime" type="time" />
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Product Sales & Quantity */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Product Sales */}
+                <div className="space-y-2">
+                  <Label>Product Sales</Label>
+                  <Popover open={productSalesOpen} onOpenChange={setProductSalesOpen} modal={true}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={productSalesOpen}
+                        className="w-full justify-between font-normal"
+                      >
+                        <span className="truncate">
+                          {selectedProductSales
+                            ? productSalesOptions.find((p) => p.value === selectedProductSales)?.label
+                            : "Select product..."}
+                        </span>
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="p-0"
+                      align="start"
+                      style={{ width: "var(--radix-popover-trigger-width)" }}
+                    >
+                      <Command>
+                        <CommandInput placeholder="Search product..." />
+                        <CommandList>
+                          <CommandEmpty>No product found.</CommandEmpty>
+                          <CommandGroup>
+                            {productSalesOptions.map((product) => (
+                              <CommandItem
+                                key={product.value}
+                                value={product.value}
+                                onSelect={(val) => {
+                                  setSelectedProductSales(val === selectedProductSales ? "" : val);
+                                  setProductSalesOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedProductSales === product.value ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                <div className="flex flex-col">
+                                  <span>{product.label}</span>
+                                  <span className="text-xs text-muted-foreground font-mono">{product.sku}</span>
+                                </div>
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Quantity */}
+                <div className="space-y-2">
+                  <Label htmlFor="productQuantity">Quantity</Label>
+                  <Input
+                    id="productQuantity"
+                    type="number"
+                    min={1}
+                    step={1}
+                    placeholder="Enter quantity"
+                    value={productQuantity}
+                    onChange={(e) => setProductQuantity(e.target.value)}
+                  />
                 </div>
               </div>
 
