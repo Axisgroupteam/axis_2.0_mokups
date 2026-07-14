@@ -74,6 +74,7 @@ import {
   BanknoteIcon,
   ShieldAlert,
   PowerIcon,
+  TrendingUpIcon,
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import BillingIntegration from "@/pages/CarrierPortal/Accessorial/BillingIntegration";
@@ -91,6 +92,7 @@ const LoadDetails = () => {
   const isFromHistory = location.pathname.includes("/history/");
   const showPodTab = isFromDelivered || isFromComplete || isFromHistory;
   const showTrackingTab = isViewOnly && !showPodTab;
+  const showFSCTab = isFromComplete; // Show FSC tab only for completed loads
 
   // Sheet states
   const [isChargeSheetOpen, setIsChargeSheetOpen] = useState(false);
@@ -315,6 +317,63 @@ const LoadDetails = () => {
       appointmentTime: "02:00 PM",
       startTime: "02:00 PM",
       endTime: "04:00 PM",
+    },
+  };
+
+  // Mock FSC data for the load - COMPREHENSIVE SCENARIO showing ALL features
+  const mockFSCData = {
+    customer: {
+      name: "Titan Industries",
+      fscFileId: "FSC-2025-001234",
+      fscApplies: "YES_ITEMIZED", // "YES_ITEMIZED", "YES_ALL_IN", "NO"
+    },
+    load: {
+      loadNo: loadId,
+      linehaul: 1500.00,
+      miles: 350,
+      pickupDate: "2024-12-10",
+      invoiceDate: "2024-12-15",
+    },
+    fsc: {
+      calculationMethod: "PERCENT_LINEHAUL", // "PER_MILE", "FLAT_FEE", "CUSTOMER_TABLE"
+      indexSource: "DOE_NATIONAL",
+      indexValue: 4.50,
+      indexEffectiveDate: "2024-12-10",
+      indexLastUpdated: "2024-12-10T10:00:00Z",
+
+      // Formula parameters
+      basePrice: 2.00,
+      incrementPrice: 0.10,
+      incrementValue: 1.00, // 1%
+
+      // Calculation results - HIGH FSC to show cap
+      rawFSCPercentage: 25.00, // ($4.50 - $2.00) / $0.10 × 1% = 25%
+      rawFSCAmount: 375.00, // $1,500 × 25% = $375
+
+      // Cap/Floor - SHOWING CAP APPLIED
+      capType: "PERCENTAGE", // "PERCENTAGE", "AMOUNT"
+      capValue: 20.00, // 20% cap
+      floorType: "PERCENTAGE",
+      floorValue: 3.00, // 3% floor
+
+      // Final - AFTER CAP APPLIED
+      finalFSCPercentage: 20.00, // Capped from 25% to 20%
+      finalFSCAmount: 300.00, // $1,500 × 20% = $300
+
+      // Settings
+      updateFrequency: "WEEKLY",
+      effectiveDateLogic: "PICKUP_DATE",
+      sanityThreshold: 50.00,
+
+      // Status - SHOWING ALL FEATURES
+      status: "APPLIED",
+      capApplied: true, // CAP WAS APPLIED
+      floorApplied: false,
+      exceedsSanityThreshold: false, // 20% < 50% threshold (PASS)
+
+      // Additional details
+      applicableDate: "2024-12-10", // Which date was used for FSC lookup
+      customerSaved: 75.00, // $375 - $300 = $75 saved due to cap
     },
   };
 
@@ -1426,6 +1485,12 @@ const LoadDetails = () => {
               <ShoppingCart className="size-4" />
               Product Sale
             </TabsTrigger>
+            {showFSCTab && (
+              <TabsTrigger value="fsc" className="h-full">
+                <TrendingUpIcon className="size-4" />
+                FSC Charge
+              </TabsTrigger>
+            )}
             <TabsTrigger value="audit" className="h-full">
               <History className="size-4" />
               Audit Log
@@ -1710,6 +1775,268 @@ const LoadDetails = () => {
               showViewOptions={false}
             />
           </TabsContent>
+
+          {/* FSC Charge Tab - Only visible for completed loads */}
+          {showFSCTab && (
+            <TabsContent
+              value="fsc"
+              className="space-y-3 h-full mt-0 px-4 py-4"
+            >
+              {mockFSCData.customer.fscApplies === "NO" ? (
+                <div className="w-full border rounded-sm bg-card flex flex-col">
+                  <div className="px-4 py-4 border-b bg-muted">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <TrendingUpIcon className="size-4" />
+                      FSC Charge
+                    </h3>
+                  </div>
+                  <div className="px-4 py-8 text-center">
+                    <Badge variant="secondary" className="mb-2">Not Applicable</Badge>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      This customer is configured with <strong>No FSC</strong>.
+                    </p>
+                    <p className="text-2xl font-semibold mt-3">$0.00</p>
+                  </div>
+                </div>
+              ) : mockFSCData.customer.fscApplies === "YES_ALL_IN" ? (
+                <div className="w-full border rounded-sm bg-card flex flex-col">
+                  <div className="px-4 py-4 border-b bg-muted">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <TrendingUpIcon className="size-4" />
+                      FSC Charge
+                    </h3>
+                  </div>
+                  <div className="px-4 py-8 text-center">
+                    <Badge className="mb-2 bg-blue-500">All-In Rate</Badge>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Fuel cost is built into the linehaul rate.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Card 1: Calculation Details */}
+                  <div className="w-full border rounded-sm bg-card flex flex-col">
+                    <div className="px-4 py-3 border-b bg-muted">
+                      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <TrendingUpIcon className="size-4" />
+                        Calculation Details
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Method</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.calculationMethod === "PERCENT_LINEHAUL" && "% of Linehaul"}
+                          {mockFSCData.fsc.calculationMethod === "PER_MILE" && "Per-Mile"}
+                          {mockFSCData.fsc.calculationMethod === "FLAT_FEE" && "Flat Fee"}
+                          {mockFSCData.fsc.calculationMethod === "CUSTOMER_TABLE" && "Custom Table"}
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Index Source</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.indexSource === "DOE_NATIONAL" && "DOE National"}
+                          {mockFSCData.fsc.indexSource === "DOE_GULF_COAST" && "DOE Gulf"}
+                          {mockFSCData.fsc.indexSource === "DOE_EAST_COAST" && "DOE East"}
+                          {mockFSCData.fsc.indexSource === "OPIS" && "OPIS"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border border-t">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Index Value</p>
+                        <p className="text-sm font-medium text-foreground">
+                          ${mockFSCData.fsc.indexValue.toFixed(2)}/gal
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Index Date</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.indexEffectiveDate}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border border-t">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Base Price</p>
+                        <p className="text-sm font-medium text-foreground">
+                          ${mockFSCData.fsc.basePrice.toFixed(2)}/gal
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Increment Price</p>
+                        <p className="text-sm font-medium text-foreground">
+                          ${mockFSCData.fsc.incrementPrice.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border border-t">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Increment Value</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.incrementValue.toFixed(2)}%
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Raw FSC %</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.rawFSCPercentage.toFixed(2)}%
+                        </p>
+                      </div>
+                    </div>
+                    <div className="px-4 py-2.5 bg-muted/30 border-t">
+                      <p className="text-xs text-muted-foreground mb-1">Formula</p>
+                      <p className="text-xs font-mono text-foreground">
+                        (${mockFSCData.fsc.indexValue.toFixed(2)} - ${mockFSCData.fsc.basePrice.toFixed(2)}) / ${mockFSCData.fsc.incrementPrice.toFixed(2)} × {mockFSCData.fsc.incrementValue.toFixed(2)}% = {mockFSCData.fsc.rawFSCPercentage.toFixed(2)}%
+                      </p>
+                      <p className="text-xs font-mono text-foreground mt-1">
+                        ${mockFSCData.load.linehaul.toFixed(2)} × {mockFSCData.fsc.rawFSCPercentage.toFixed(2)}% = ${mockFSCData.fsc.rawFSCAmount.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Cap & Floor Settings */}
+                  <div className="w-full border rounded-sm bg-card flex flex-col">
+                    <div className="px-4 py-3 border-b bg-muted">
+                      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <ShieldAlert className="size-4" />
+                        Cap & Floor Settings
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Cap Type</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.capType === "NONE" && "-"}
+                          {mockFSCData.fsc.capType === "PERCENTAGE" && "Percentage (%)"}
+                          {mockFSCData.fsc.capType === "AMOUNT" && "Dollar Amount ($)"}
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Cap Value</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.capValue ? `${mockFSCData.fsc.capValue}%` : "-"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border border-t">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Floor Type</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.floorType === "NONE" && "-"}
+                          {mockFSCData.fsc.floorType === "PERCENTAGE" && "Percentage (%)"}
+                          {mockFSCData.fsc.floorType === "AMOUNT" && "Dollar Amount ($)"}
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Floor Value</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.floorValue ? `${mockFSCData.fsc.floorValue}%` : "-"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 3: FSC Configuration */}
+                  <div className="w-full border rounded-sm bg-card flex flex-col">
+                    <div className="px-4 py-3 border-b bg-muted">
+                      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <Settings className="size-4" />
+                        FSC Configuration
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Update Frequency</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.updateFrequency === "WEEKLY" && "Weekly"}
+                          {mockFSCData.fsc.updateFrequency === "MONTHLY" && "Monthly"}
+                          {mockFSCData.fsc.updateFrequency === "QUARTERLY" && "Quarterly"}
+                          {mockFSCData.fsc.updateFrequency === "CUSTOM" && "Custom"}
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Effective Date Logic</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.effectiveDateLogic === "PICKUP_DATE" && "Pickup Date"}
+                          {mockFSCData.fsc.effectiveDateLogic === "INVOICE_DATE" && "Invoice Date"}
+                          {mockFSCData.fsc.effectiveDateLogic === "WEEK_OF_SERVICE" && "Week of Service"}
+                          {mockFSCData.fsc.effectiveDateLogic === "CUSTOMER_SPECIFIED" && "Customer Specified"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 divide-x divide-border border-t">
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Applicable Date</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.applicableDate || mockFSCData.load.pickupDate}
+                        </p>
+                      </div>
+                      <div className="px-4 py-2.5">
+                        <p className="text-xs text-muted-foreground mb-0.5">Sanity Threshold</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {mockFSCData.fsc.sanityThreshold}%
+                          {mockFSCData.fsc.exceedsSanityThreshold ? (
+                            <span className="ml-1 text-red-600">⚠️</span>
+                          ) : (
+                            <span className="ml-1 text-emerald-600">✓</span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Final FSC Charge */}
+                  <div className="w-full border rounded-sm bg-card flex flex-col">
+                    <div className="px-4 py-3 border-b bg-muted">
+                      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                        <TrendingUpIcon className="size-4" />
+                        Final FSC Charge
+                      </h3>
+                    </div>
+
+                    {/* Cap/Floor Applied Alert */}
+                    {mockFSCData.fsc.capApplied && (
+                      <div className="px-4 py-2.5 bg-amber-50/50 dark:bg-amber-950/20 border-b">
+                        <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">⚠️ Cap Applied</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-500 mt-0.5">
+                          Original: ${mockFSCData.fsc.rawFSCAmount.toFixed(2)} → Capped: ${mockFSCData.fsc.finalFSCAmount.toFixed(2)} (Customer saved: ${mockFSCData.fsc.customerSaved?.toFixed(2)})
+                        </p>
+                      </div>
+                    )}
+
+                    {mockFSCData.fsc.floorApplied && (
+                      <div className="px-4 py-2.5 bg-blue-50/50 dark:bg-blue-950/20 border-b">
+                        <p className="text-xs text-blue-700 dark:text-blue-400 font-medium">⚠️ Floor Applied</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-500 mt-0.5">
+                          Original: ${mockFSCData.fsc.rawFSCAmount.toFixed(2)} → Floor: ${mockFSCData.fsc.finalFSCAmount.toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 divide-x divide-border">
+                      <div className="px-4 py-3 text-center">
+                        <p className="text-xs text-muted-foreground mb-1">FSC Amount</p>
+                        <p className="text-2xl font-bold text-emerald-600">
+                          ${mockFSCData.fsc.finalFSCAmount.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="px-4 py-3 text-center">
+                        <p className="text-xs text-muted-foreground mb-1">FSC Percentage</p>
+                        <p className="text-2xl font-bold text-emerald-600">
+                          {mockFSCData.fsc.finalFSCPercentage.toFixed(2)}%
+                        </p>
+                      </div>
+                    </div>
+                    <div className="px-4 py-2 border-t bg-muted/30 text-center">
+                      <Badge className="bg-emerald-500 hover:bg-emerald-600">✓ Applied</Badge>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+          )}
 
           {/* Audit Log Tab */}
           <TabsContent

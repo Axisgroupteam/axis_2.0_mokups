@@ -76,6 +76,7 @@ import ReceivablesTable from "./CustomerDetails/Receivables/ReceivablesTable";
 import UnpostedMetricsCards from "./CustomerDetails/Unposted/UnpostedMetricsCards";
 import UnpostedTable from "./CustomerDetails/Unposted/UnpostedTable";
 import CustomerRateCard from "@/pages/CarrierPortal/Accessorial/CustomerRateCard";
+import FSCTab from "./CustomerDetails/FSC/FSCTab";
 
 const CustomerDetails = () => {
   const [searchParams] = useSearchParams();
@@ -1348,6 +1349,10 @@ const CustomerDetails = () => {
               <TrendingUpIcon className="size-4" />
               Rates
             </TabsTrigger>
+            <TabsTrigger value="fsc-profile" className="h-full">
+              <TrendingUpIcon className="size-4" />
+              FSC Profile
+            </TabsTrigger>
             <TabsTrigger value="accessorial-charges" className="h-full">
               <DollarSignIcon className="size-4" />
               Accessorial Charges
@@ -1464,6 +1469,10 @@ const CustomerDetails = () => {
           <TabsContent value="unposted" className="space-y-4 h-full mt-0 px-2">
             <UnpostedMetricsCards />
             <UnpostedTable />
+          </TabsContent>
+
+          <TabsContent value="fsc-profile" className="h-full mt-0 px-2 pt-2">
+            <FSCTab />
           </TabsContent>
 
           <TabsContent value="rates" className="space-y-4 px-2 h-full mt-0">

@@ -31,6 +31,7 @@ import FuelNetworkPartners from "@/pages/CarrierPortal/Fuel/NetworkPartners";
 import FuelCardProviders from "@/pages/CarrierPortal/Fuel/CardProviders";
 import FuelReports from "@/pages/CarrierPortal/Fuel/Reports";
 import FuelSettings from "@/pages/CarrierPortal/Fuel/Settings";
+import IndexManagement from "@/pages/CarrierPortal/FSC/IndexManagement";
 import Accessorial from "@/pages/CarrierPortal/Accessorial";
 import CategoriesAndOptions from "@/pages/CarrierPortal/CategoriesAndOptions";
 import RolesAndPermissions from "@/pages/CarrierPortal/RolesAndPermissions";
@@ -373,6 +374,12 @@ export const carrierPortalRoutes = [
     path: "fuel/settings",
     element: <FuelSettings />,
     label: "Fuel Settings",
+  },
+  // FSC (Fuel Surcharge) routes
+  {
+    path: "fsc/index-management",
+    element: <IndexManagement />,
+    label: "Index Management",
   },
   // Billing routes - Customer Invoicing (AR)
   {

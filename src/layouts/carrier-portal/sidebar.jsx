@@ -66,13 +66,19 @@ import {
   SettingsIcon,
   NetworkIcon,
   ShieldAlertIcon,
+  TrendingUpIcon,
+  CalculatorIcon,
+  DatabaseZapIcon,
+  TablePropertiesIcon,
+  ShieldCheckIcon,
+  ScrollTextIcon,
 } from "lucide-react";
 
 const CarrierPortalSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const { isMobile, setOpenMobile } = useSidebar();
-  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "materials" | "fuel" | "onboarding" | "settings" | null
+  const [openMenu, setOpenMenu] = useState(null); // "sales" | "orders" | "brokerage" | "customers" | "master" | "materials" | "fuel" | "fsc" | "billing" | "onboarding" | "settings" | null
 
   // Carrier portal menu items
   const menuItems = [
@@ -243,6 +249,40 @@ const CarrierPortalSidebar = () => {
     },
   ];
 
+  // FSC (Fuel Surcharge) sub-menu items
+  const fscSubItems = [
+    // {
+    //   label: "Dashboard",
+    //   href: "/app/carrier-portal/fsc/dashboard",
+    //   icon: LayoutDashboardIcon,
+    // },
+    {
+      label: "Index Management",
+      href: "/app/carrier-portal/fsc/index-management",
+      icon: TrendingUpIcon,
+    },
+    // {
+    //   label: "Calculation Methods",
+    //   href: "/app/carrier-portal/fsc/calculation-methods",
+    //   icon: CalculatorIcon,
+    // },
+    // {
+    //   label: "Custom Tables",
+    //   href: "/app/carrier-portal/fsc/custom-tables",
+    //   icon: TablePropertiesIcon,
+    // },
+    // {
+    //   label: "Master Data",
+    //   href: "/app/carrier-portal/fsc/master-data",
+    //   icon: ShieldCheckIcon,
+    // },
+    // {
+    //   label: "Reports & Audit",
+    //   href: "/app/carrier-portal/fsc/audit-trail",
+    //   icon: ScrollTextIcon,
+    // },
+  ];
+
   // Billing sub-menu items
   const billingSubItems = [
     {
@@ -286,6 +326,8 @@ const CarrierPortalSidebar = () => {
       (item) => pathname === item.href,
     );
     const isFuelPath = fuelSubItems.some((item) => pathname === item.href);
+    const isFSCPath = fscSubItems.some((item) => pathname === item.href) ||
+      pathname.includes("/fsc/");
     const isBillingPath =
       billingSubItems.some((item) => pathname === item.href) ||
       pathname.includes("/billing/");
@@ -306,6 +348,8 @@ const CarrierPortalSidebar = () => {
       setOpenMenu("materials");
     } else if (isFuelPath) {
       setOpenMenu("fuel");
+    } else if (isFSCPath) {
+      setOpenMenu("fsc");
     } else if (isBillingPath) {
       setOpenMenu("billing");
     } else if (isOnboardingPath) {
@@ -673,6 +717,69 @@ const CarrierPortalSidebar = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {fuelSubItems.map((subItem) => {
+                        const isActive = pathname === subItem.href;
+                        const IconComponent = subItem.icon;
+                        return (
+                          <SidebarMenuSubItem key={subItem.href}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={cn(
+                                "w-full h-10 mb-1 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                                isActive &&
+                                  "bg-linear-to-r/oklch border-[#5D6B68]/10",
+                              )}
+                              isActive={isActive}
+                            >
+                              <Link to={subItem.href} onClick={handleLinkClick}>
+                                {IconComponent && (
+                                  <IconComponent className="size-4" />
+                                )}
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* FSC (Fuel Surcharge) with Sub-menu */}
+              <Collapsible
+                open={openMenu === "fsc"}
+                onOpenChange={(isOpen) => setOpenMenu(isOpen ? "fsc" : null)}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 mb-1 mt-2 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                        (fscSubItems.some((item) => pathname === item.href) ||
+                          pathname.includes("/fsc/")) &&
+                          "bg-linear-to-r/oklch border-[#5D6B68]/10",
+                      )}
+                      isActive={
+                        fscSubItems.some((item) => pathname === item.href) ||
+                        pathname.includes("/fsc/")
+                      }
+                    >
+                      <TrendingUpIcon className="size-5" />
+                      <span className="text-md font-medium tracking-tight">
+                        FSC
+                      </span>
+                      <ChevronRightIcon
+                        className={cn(
+                          "ml-auto size-4 transition-transform duration-200",
+                          openMenu === "fsc" && "rotate-90",
+                        )}
+                      />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {fscSubItems.map((subItem) => {
                         const isActive = pathname === subItem.href;
                         const IconComponent = subItem.icon;
                         return (
